@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GUIDisplay : MonoBehaviour {
 
-	public GUISkin GUISkinHelloWorld;
+	GUISkin GUISkinHelloWorld;
 
 	// Use this for initialization
 	void OnGUI () {
