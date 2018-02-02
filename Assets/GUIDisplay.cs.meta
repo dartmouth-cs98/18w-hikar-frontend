@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b31ed0dbc9b71484290959e599673957
+timeCreated: 1517526812
+licenseType: Free
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - GUISkinHelloWorld: {fileID: 11400000, guid: 7dabb0e8215e6415397c5d00cd0f4e12,
+      type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
