@@ -3,7 +3,22 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - MapObject
+  - WWWObject
+  - text
+  - DirectionsObject
+  - distanceText
+  - locationText
+  - rootTransform
+  - cameraPosition
+  - billboardObject
+  - hudCamera
+  - compassText
+  - touchText
+  - uicanvas
+  - loadingText
+  - sceneManager
   layers:
   - Default
   - TransparentFX

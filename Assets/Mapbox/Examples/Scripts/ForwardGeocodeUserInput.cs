@@ -19,6 +19,7 @@ namespace Mapbox.Examples
 		InputField _inputField;
 
 		ForwardGeocodeResource _resource;
+	
 
 		Vector2d _coordinate;
 		public Vector2d Coordinate

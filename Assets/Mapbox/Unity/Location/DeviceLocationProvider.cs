@@ -1,6 +1,7 @@
 namespace Mapbox.Unity.Location
 {
 	using System.Collections;
+	using System.Collections.Generic;
 	using UnityEngine;
 	using Mapbox.Utils;
 
@@ -26,16 +27,28 @@ namespace Mapbox.Unity.Location
 		[SerializeField]
 		float _updateDistanceInMeters = 5f;
 
+		[SerializeField]
+		GameObject sceneManagerObject;
+
+		SceneManager sceneManager;
+
 		Coroutine _pollRoutine;
 
 		double _lastLocationTimestamp;
 
 		double _lastHeadingTimestamp;
 
+		bool isInitialLocation = true;
+
 		WaitForSeconds _wait;
 
 		void Awake()
 		{
+			if(sceneManagerObject == null){
+				sceneManagerObject = GameObject.FindGameObjectWithTag("sceneManager");
+			}
+			sceneManager = (SceneManager)sceneManagerObject.GetComponent(typeof(SceneManager));
+
 			_wait = new WaitForSeconds(1f);
 			if (_pollRoutine == null)
 			{
@@ -116,7 +129,15 @@ namespace Mapbox.Unity.Location
 
 				if (_currentLocation.IsHeadingUpdated || _currentLocation.IsLocationUpdated)
 				{
+
+
 					SendLocation(_currentLocation);
+					sceneManager.updateLocation(_currentLocation, isInitialLocation, 
+						_currentLocation.IsHeadingUpdated, _currentLocation.IsLocationUpdated);
+
+					if(isInitialLocation == true){
+						isInitialLocation = false;
+					}
 				}
 
 				yield return null;

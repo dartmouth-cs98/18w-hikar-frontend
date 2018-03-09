@@ -11,13 +11,15 @@
 	{
 		Camera _camera;
 		Vector3 _cameraStartPos;
+
+		[SerializeField]
 		AbstractMap _map;
 
 		[SerializeField]
 		ForwardGeocodeUserInput _forwardGeocoder;
 
-		[SerializeField]
-		Slider _zoomSlider;
+		//[SerializeField]
+		//Slider _zoomSlider;
 
 		Coroutine _reloadRoutine;
 
@@ -27,9 +29,9 @@
 		{
 			_camera = Camera.main;
 			_cameraStartPos = _camera.transform.position;
-			_map = FindObjectOfType<AbstractMap>();
+			//_map = FindObjectOfType<AbstractMap>();
 			_forwardGeocoder.OnGeocoderResponse += ForwardGeocoder_OnGeocoderResponse;
-			_zoomSlider.onValueChanged.AddListener(Reload);
+			//_zoomSlider.onValueChanged.AddListener(Reload);
 			_wait = new WaitForSeconds(.3f);
 		}
 
@@ -38,7 +40,7 @@
 			_camera.transform.position = _cameraStartPos;
 			if (null != response.Features && response.Features.Count > 0)
 			{
-				_map.Initialize(response.Features[0].Center, (int)_zoomSlider.value);
+				_map.Initialize(response.Features[0].Center, 16);
 			}
 		}
 
