@@ -27,8 +27,6 @@ Overpass Turbo -- Used to query OpenStreetMaps for trail information which is th
 
 ## Authors
 
-TODO: list of authors
-
 Joshua Thomas
 
 James Wang
@@ -41,4 +39,5 @@ Johnny Brady
 
 Dami Apoeso
 
-## Acknowledgments
+## Demonstrartion
+https://imgur.com/gallery/h2Wrc
