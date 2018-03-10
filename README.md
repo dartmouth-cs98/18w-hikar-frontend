@@ -5,9 +5,9 @@ HikAR is a hiking-focused navigation app that utilizes AR technology to effectiv
 
 ## Architecture
 
-Mapbox SDK -- Used for topographic map generation as well as retrieving elevation data
-
 Vuforia SDK -- Used for AR overlay
+
+Mapbox SDK -- Used for topographic map generation as well as retrieving elevation data
 
 Overpass Turbo -- Used to query OpenStreetMaps for trail information which is then stored in our backend
 
@@ -33,9 +33,9 @@ Joshua Thomas
 
 James Wang
 
-Raunak Bhojwani
-
 Gregory Hunter
+
+Raunak Bhojwani
 
 Johnny Brady
 
