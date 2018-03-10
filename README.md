@@ -39,5 +39,5 @@ Johnny Brady
 
 Dami Apoeso
 
-## Demonstrartion
+## Demonstration
 https://imgur.com/gallery/h2Wrc
