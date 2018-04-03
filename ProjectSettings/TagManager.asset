@@ -19,6 +19,7 @@ TagManager:
   - uicanvas
   - loadingText
   - sceneManager
+  - results
   layers:
   - Default
   - TransparentFX
