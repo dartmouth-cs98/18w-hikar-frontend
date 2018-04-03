@@ -7,8 +7,7 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour {
 
 	//TODO: populate list of trails with WWW call
-	private string[] trails;
-
+	private List<string> trails;
 	
 	private bool showForm = false;
 	private bool Mode2D = false;
@@ -23,6 +22,7 @@ public class UIManager : MonoBehaviour {
 	//2D UI
 	public Button submitSearch;
 	public InputField searchInput;
+	public ScrollRect scrollView;
 
 	//wwwHandler
 	public GameObject wwwHandler;
@@ -37,8 +37,16 @@ public class UIManager : MonoBehaviour {
 	private CameraHandler cameraHandler;
 
 	void Start () {
+		//DEBUG
+		trails = new List<string>();
+		trails.Add("hey trail");
+		trails.Add("heyy trail");
+		trails.Add("trail this string");
+		trails.Add("$that string");
+
+
+
 		annotationInput.gameObject.SetActive (false);
-		//searchInput.gameObject.SetActive(false);
 	}
 		
 	void Update(){
@@ -117,22 +125,31 @@ public class UIManager : MonoBehaviour {
 
 		} else {
 			createAnnotationButton.gameObject.SetActive (true);
-			//searchInput.gameObject.SetActive (false);
 		}	
 	}
+		
 	public void onValueChangedAnnotation(string annotation)
 	{
 		annotationText = annotation;
 	}
+		
 
-	public void onValueChangedSearch(string search)
+	public void onValueChangedSearch()
 	{
-//		for (int i = 0; i < trails.Length; i++) {
-//			if (string.IsNullOrEmpty (searchText) || trails [i].Contains (searchText)) {
-//				GUILayout.Button (trails [i]);
-//			}
-//		}
+		GameObject results = GameObject.FindGameObjectWithTag ("results");
+		for (int i = 0; i < trails.Count; i++) {
+			if (string.IsNullOrEmpty (searchInput.text) || trails [i].Contains (searchInput.text)) {
+				GameObject result = new GameObject ();
+				GameObject tempResult = (GameObject)Instantiate (result, results.transform);
+				tempResult.layer = 5;
+				RectTransform tempRect = tempResult.AddComponent<RectTransform>();
+				tempRect.sizeDelta = new Vector2 (600, 40);
+				Text text = tempResult.AddComponent<Text> ();
+				text.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
+				text.fontSize = 35;
+				text.color = Color.blue;
+				text.text = trails [i];
+			}
+		}
 	}
-
-
 }

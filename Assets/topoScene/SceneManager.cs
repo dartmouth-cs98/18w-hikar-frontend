@@ -29,10 +29,16 @@ public class SceneManager : MonoBehaviour {
 	public GameObject wwwHandler;
 	private WWWHandler wwwScript;
 
-	private GameObject directionsObject;
+	//directionsHandler
+	public GameObject directionsObject;
 	private DirectionsHandler directionHandler;
 
+	//UIHandler
+	public GameObject uiObject;
+	private UIManager UIHandler;
+
 	public GameObject playerObject;
+
 	private GameObject cameraPosition;
 
 	private GameObject distanceText;
@@ -85,15 +91,12 @@ public class SceneManager : MonoBehaviour {
 			wwwScript = (WWWHandler) wwwHandler.gameObject.GetComponent(typeof(WWWHandler));
 		}
 
-
 		//get reference to map handler script
 		if(mapObject != null) {
 			mapObjectHandler = (MapObjectHandler)mapObject.GetComponent(typeof(MapObjectHandler));
 			map = (Mapbox.Unity.Map.MapAtWorldScale) mapObject.GetComponent((typeof(Mapbox.Unity.Map.MapAtWorldScale)));
 		}
-
-
-		directionsObject = GameObject.FindGameObjectWithTag("DirectionsObject");
+			
 		if(directionsObject != null) {
 			directionHandler = (DirectionsHandler)directionsObject.GetComponent(typeof(DirectionsHandler));
 		}
@@ -101,10 +104,14 @@ public class SceneManager : MonoBehaviour {
 		if(locationManagerObject != null){
 			locationHandler = (LocationHandler)locationManagerObject.GetComponent(typeof(LocationHandler));
 		}
-		//StartCoroutine(locationHandler.StartLocationServices());
+
 		if (annotationObject != null){
 			annotationHandler = (AnnotationHandler)annotationObject.GetComponent (typeof(AnnotationHandler));
 		}
+
+//		if (uiObject != null) {
+//			UIHandler = (UIManager)uiObject.GetComponent (typeof(UIManager));
+//		}
 
 		if(playerObject == null)
 			playerObject = GameObject.FindGameObjectWithTag("Player");
