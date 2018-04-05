@@ -331,19 +331,6 @@ Transform:
   m_PrefabParentObject: {fileID: 4472224790931420, guid: 21028e8964c284982911d73f68d07739,
     type: 2}
   m_PrefabInternal: {fileID: 535884837}
---- !u!114 &97133400
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 97133395}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c00b1c78fb49f4ebd834aac587275216, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _map: {fileID: 0}
-  _forwardGeocoder: {fileID: 0}
 --- !u!114 &97133403
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1174,7 +1161,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 82.99998, y: -0.00004844743}
+  m_AnchoredPosition: {x: 82.99996, y: -0.000046033758}
   m_SizeDelta: {x: -83, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &558295378
