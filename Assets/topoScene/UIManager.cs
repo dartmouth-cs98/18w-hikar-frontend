@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class UIManager : MonoBehaviour {
 
@@ -13,8 +14,11 @@ public class UIManager : MonoBehaviour {
 	private bool Mode2D = false;
 	private string annotationText = "";
 	private string searchText = "";
+	private List<GameObject> resultList;
+	private GameObject result;
 
 	//Annotation UI
+	public Camera arCam;
 	public Button createAnnotationButton;
 	public Button submitAnnotationButton;
 	public InputField annotationInput;
@@ -37,19 +41,62 @@ public class UIManager : MonoBehaviour {
 	private CameraHandler cameraHandler;
 
 	void Start () {
+		result = new GameObject ();
+		resultList = new List<GameObject> ();
 		//DEBUG
 		trails = new List<string>();
+
 		trails.Add("hey trail");
 		trails.Add("heyy trail");
 		trails.Add("trail this string");
 		trails.Add("$that string");
 
 
-
+		scrollView.gameObject.SetActive (false);
 		annotationInput.gameObject.SetActive (false);
 	}
 		
-	void Update(){
+	void Update()
+	{
+		if (scrollView.gameObject.activeSelf && scrollView.content.childCount > 0) {
+			if (Input.touchSupported && Application.platform != RuntimePlatform.WebGLPlayer && Input.touchCount > 0) {
+				PointerEventData pointerData = new PointerEventData(EventSystem.current);
+				pointerData.position = Input.GetTouch(0).position;
+				List<RaycastResult> hits = new List<RaycastResult>();
+				EventSystem.current.RaycastAll(pointerData, hits);
+				Debug.Log (hits.Count);
+				if (hits.Count > 0) {
+					Debug.Log (hits[0].gameObject.GetComponent<Text>().text);
+					if (hits [0].gameObject.GetComponent<Text> ().text != "Submit") {
+						//Do the things here
+						scrollView.gameObject.SetActive (false);
+					}
+				} else {
+					Debug.Log ("No GUI element detected");
+				}
+			}
+//			if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
+//			{
+//				PointerEventData pointerData = new PointerEventData(EventSystem.current);
+//				pointerData.position = Input.mousePosition;
+//				List<RaycastResult> hits = new List<RaycastResult>();
+//				EventSystem.current.RaycastAll(pointerData, hits);
+//		
+//				if (hits.Count > 0) {
+//					try {
+//						//Transport camera to selected trail HERE
+//						Text selected = hits[0].gameObject.GetComponent<Text>();
+//						Debug.Log (selected.text);	
+//						scrollView.gameObject.SetActive (false);
+//					} catch {
+//						Debug.Log ("nope");
+//						scrollView.gameObject.SetActive (false);
+//					}
+//				} else {
+//					print (":(");
+//				}
+//			}
+		}
 	}
 
 	// When annotation button is clicked
@@ -97,7 +144,6 @@ public class UIManager : MonoBehaviour {
 		string type = "Billboard";
 		float lat = locationHandler.latitude;
 		float lon = locationHandler.longitude;
-//		print (type + text + lat + lon);
 		wwwScript.PostAnnotation (type, text, lat, lon);
 	}
 
@@ -136,19 +182,32 @@ public class UIManager : MonoBehaviour {
 
 	public void onValueChangedSearch()
 	{
+		if (scrollView.gameObject.activeSelf) {
+			scrollView.gameObject.SetActive (false);
+		} else {
+			scrollView.gameObject.SetActive (true);
+		}
+		//Clear the list
+		for(int i = 0; i < resultList.Count; i++)
+		{
+			Object.Destroy (resultList [i]);
+		}
+		resultList.Clear ();
+
 		GameObject results = GameObject.FindGameObjectWithTag ("results");
 		for (int i = 0; i < trails.Count; i++) {
 			if (string.IsNullOrEmpty (searchInput.text) || trails [i].Contains (searchInput.text)) {
-				GameObject result = new GameObject ();
 				GameObject tempResult = (GameObject)Instantiate (result, results.transform);
 				tempResult.layer = 5;
 				RectTransform tempRect = tempResult.AddComponent<RectTransform>();
 				tempRect.sizeDelta = new Vector2 (600, 40);
+				//Add text
 				Text text = tempResult.AddComponent<Text> ();
 				text.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
 				text.fontSize = 35;
 				text.color = Color.blue;
 				text.text = trails [i];
+				resultList.Add (tempResult);
 			}
 		}
 	}
