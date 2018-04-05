@@ -29,10 +29,16 @@ public class SceneManager : MonoBehaviour {
 	public GameObject wwwHandler;
 	private WWWHandler wwwScript;
 
-	private GameObject directionsObject;
+	//directionsHandler
+	public GameObject directionsObject;
 	private DirectionsHandler directionHandler;
 
+	//UIHandler
+	public GameObject uiObject;
+	private UIManager UIHandler;
+
 	public GameObject playerObject;
+
 	private GameObject cameraPosition;
 
 	private GameObject distanceText;
@@ -64,7 +70,6 @@ public class SceneManager : MonoBehaviour {
 	private float speed = 3.0f;
 	private float distanceScale = 1.0f;
 
-	private static bool isAutoDistance = false;
 
 	//private Vector2 testLocaiton = new Vector2((float)43.7021, (float)72.2890); //test location
 
@@ -85,15 +90,12 @@ public class SceneManager : MonoBehaviour {
 			wwwScript = (WWWHandler) wwwHandler.gameObject.GetComponent(typeof(WWWHandler));
 		}
 
-
 		//get reference to map handler script
 		if(mapObject != null) {
 			mapObjectHandler = (MapObjectHandler)mapObject.GetComponent(typeof(MapObjectHandler));
 			map = (Mapbox.Unity.Map.MapAtWorldScale) mapObject.GetComponent((typeof(Mapbox.Unity.Map.MapAtWorldScale)));
 		}
-
-
-		directionsObject = GameObject.FindGameObjectWithTag("DirectionsObject");
+			
 		if(directionsObject != null) {
 			directionHandler = (DirectionsHandler)directionsObject.GetComponent(typeof(DirectionsHandler));
 		}
@@ -101,10 +103,14 @@ public class SceneManager : MonoBehaviour {
 		if(locationManagerObject != null){
 			locationHandler = (LocationHandler)locationManagerObject.GetComponent(typeof(LocationHandler));
 		}
-		//StartCoroutine(locationHandler.StartLocationServices());
+
 		if (annotationObject != null){
 			annotationHandler = (AnnotationHandler)annotationObject.GetComponent (typeof(AnnotationHandler));
 		}
+
+//		if (uiObject != null) {
+//			UIHandler = (UIManager)uiObject.GetComponent (typeof(UIManager));
+//		}
 
 		if(playerObject == null)
 			playerObject = GameObject.FindGameObjectWithTag("Player");
@@ -167,22 +173,16 @@ public class SceneManager : MonoBehaviour {
 				//setMapForLocation(initialLocation, zoomFactor);
 			}
 
-			if(isAutoDistance == true) {
-				updateCameraPositionAuto();
-			}
-
 			//handle other location changes
 			//transform camera according to gps change
 			else if (location != lastLocation){
-				if (isAutoDistance == false) {
-					distanceText = GameObject.FindGameObjectWithTag("distanceText");
-					distanceText.GetComponent<UnityEngine.UI.Text> ().text = "hi";
-					locationText.GetComponent<UnityEngine.UI.Text>().text = "Updated Lat: " + location.x + " Lon: " + location.y;
-					playerObject = GameObject.FindGameObjectWithTag("Player");
-					map = (Mapbox.Unity.Map.MapAtWorldScale) mapObject.GetComponent((typeof(Mapbox.Unity.Map.MapAtWorldScale)));
-					playerObject.transform.MoveToGeocoordinate (location.x, location.y, map.CenterMercator, map.WorldRelativeScale);
-					//updateCameraPosition(lastLocation, location);
-				}
+				distanceText = GameObject.FindGameObjectWithTag("distanceText");
+				distanceText.GetComponent<UnityEngine.UI.Text> ().text = "hi";
+				locationText.GetComponent<UnityEngine.UI.Text>().text = "Updated Lat: " + location.x + " Lon: " + location.y;
+				playerObject = GameObject.FindGameObjectWithTag("Player");
+				map = (Mapbox.Unity.Map.MapAtWorldScale) mapObject.GetComponent((typeof(Mapbox.Unity.Map.MapAtWorldScale)));
+				playerObject.transform.MoveToGeocoordinate (location.x, location.y, map.CenterMercator, map.WorldRelativeScale);
+				//updateCameraPosition(lastLocation, location);
 			}
 		}
 	}
@@ -212,8 +212,6 @@ public class SceneManager : MonoBehaviour {
 
 		if(isHeadingUpdated){
 			string heading = "New heading: " + location.Heading.ToString();
-			print(heading);
-
 			if(compassText == null){
 				compassText = GameObject.FindGameObjectWithTag ("compassText");
 			}
@@ -223,8 +221,6 @@ public class SceneManager : MonoBehaviour {
 		if(isLatLngUpdated){
 
 			string loc = "New latLng: " + location.LatitudeLongitude.ToString();
-			print(loc);
-
 
 			locationText.GetComponent<UnityEngine.UI.Text>().text = "" + location.LatitudeLongitude.x + ", " + location.LatitudeLongitude.y;
 			if(hasMapChanged == false){
@@ -261,35 +257,35 @@ public class SceneManager : MonoBehaviour {
 	}
 
 	//updates camera position if user is touching screen
-	private void updateCameraPositionAuto(){ 
-
-		if(playerObject == null)
-			playerObject = GameObject.FindGameObjectWithTag("Player");
-
-		if(cameraPosition == null)
-			cameraPosition = GameObject.FindGameObjectWithTag("cameraPosition");
-
-		if (Input.touchSupported && Application.platform != RuntimePlatform.WebGLPlayer && Input.touchCount > 0) {
-
-			//Debug.Log("updating camera location Automatically");
-			playerObject.transform.position += UnityEngine.Camera.main.transform.forward * Time.deltaTime * speed;
-
-			//sets position for camera without rotation changes
-			Vector3 newPosition = new Vector3(playerObject.transform.position.x, cameraPosition.transform.position.y, playerObject.transform.position.z);
-			cameraPosition.transform.position = newPosition;
-
-			//		Camera hudCamera = playerObject.GetComponentInChildren<Camera>();
-			//		Quaternion camRot = new Quaternion(90, UnityEngine.Camera.main.transform.rotation.y, 0, 0);
-			//		hudCamera.transform.rotation = camRot;
-
-			lastPosition = playerObject.transform.position;
-			lastLocation = currentLocation;
-
-			distanceText.GetComponent<UnityEngine.UI.Text> ().text = "World Position: " + playerObject.transform.position.ToString();
-			//Debug.Log("New position: " + playerObject.transform.position);
-		}
-
-	}
+//	private void updateCameraPositionAuto(){ 
+//
+//		if(playerObject == null)
+//			playerObject = GameObject.FindGameObjectWithTag("Player");
+//
+//		if(cameraPosition == null)
+//			cameraPosition = GameObject.FindGameObjectWithTag("cameraPosition");
+//
+//		if (Input.touchSupported && Application.platform != RuntimePlatform.WebGLPlayer && Input.touchCount > 0) {
+//
+//			//Debug.Log("updating camera location Automatically");
+//			playerObject.transform.position += UnityEngine.Camera.main.transform.forward * Time.deltaTime * speed;
+//
+//			//sets position for camera without rotation changes
+//			Vector3 newPosition = new Vector3(playerObject.transform.position.x, cameraPosition.transform.position.y, playerObject.transform.position.z);
+//			cameraPosition.transform.position = newPosition;
+//
+//			//		Camera hudCamera = playerObject.GetComponentInChildren<Camera>();
+//			//		Quaternion camRot = new Quaternion(90, UnityEngine.Camera.main.transform.rotation.y, 0, 0);
+//			//		hudCamera.transform.rotation = camRot;
+//
+//			lastPosition = playerObject.transform.position;
+//			lastLocation = currentLocation;
+//
+//			distanceText.GetComponent<UnityEngine.UI.Text> ().text = "World Position: " + playerObject.transform.position.ToString();
+//			//Debug.Log("New position: " + playerObject.transform.position);
+//		}
+//
+//	}
 
 	// Update is called once per frame
 	void Update () {
@@ -302,8 +298,6 @@ public class SceneManager : MonoBehaviour {
 //		if(playerObject.transform.position != nextPositionObject.transform.position){
 //			Vector3.Lerp(playerObject.transform.position, nextPositionObject.transform.position, Time.deltaTime);
 //		}
-
-		updateCameraPositionAuto();
 
 		if(playerObject == null)
 			playerObject = GameObject.FindGameObjectWithTag("Player");
@@ -406,41 +400,5 @@ public class SceneManager : MonoBehaviour {
 	void getFeaturesForLocation(Vector2 latLong) {
 		//gets features at location
 		wwwScript.GetFeaturesAtLocation(latLong);
-	}
-
-	  //calculates distance between two sets of coordinates, taking into account the curvature of the earth.
-	private double Calc(float lat1, float lon1, float lat2, float lon2)
-	{
-
-		double distance = 0;
-
-		//disable for real-time positioning calculating TODO: fix this
-		if(!isAutoDistance) {
-			//calculate distance between two coordinates using curvature of earth
-
-			var R = 6378.137; // Radius of earth in KM
-			var dLat = lat2 * Mathf.PI / 180 - lat1 * Mathf.PI / 180;
-			var dLon = lon2 * Mathf.PI / 180 - lon1 * Mathf.PI / 180;
-			float a = Mathf.Sin(dLat / 2) * Mathf.Sin(dLat / 2) +
-				Mathf.Cos(lat1 * Mathf.PI / 180) * Mathf.Cos(lat2 * Mathf.PI / 180) *
-				Mathf.Sin(dLon / 2) * Mathf.Sin(dLon / 2);
-			var c = 2 * Mathf.Atan2(Mathf.Sqrt(a), Mathf.Sqrt(1 - a));
-			distance = R * c;
-			distance = distance * 1000f; // meters
-		}
-
-		//enable for testing camera movement
-		if(isAutoDistance){
-			distance = 0.01;
-		}
-
-		Debug.Log("Distance: " + distance);
-
-		if(distanceText == null){
-			distanceText = GameObject.FindGameObjectWithTag("distanceText");
-		}
-		distanceText.GetComponent<UnityEngine.UI.Text>().text = "Distance: " + distance;
-
-		return distance;
 	}
 }
