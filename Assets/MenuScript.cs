@@ -36,7 +36,7 @@ public class MenuScript : MonoBehaviour {
 		}
 	}
 
-	public void onClick() {
+	public void onClickHamburger() {
 		if (!isOpen) {
 			OpenMenu ();
 		} else {
