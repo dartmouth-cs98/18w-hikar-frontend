@@ -10,7 +10,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: -2067402452, guid: bab6fa851cf5a1a4bba3cec5f191cb8e, type: 3}
   m_Name: VuforiaConfiguration
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier:
   vuforia:
     vuforiaLicenseKey: AdFToIv/////AAAAmX46eS2nG0F1oD5Okjn2b/xui66lQUDghV+AWrIDsPEqnWDJQ/EpGcqo3hk1SIZwWpxWnNZLGW/4HaI4QHOgYwWp+nq/wwyWvMONDaWiu6vp0RT1xl+iu2OFr0DBZSjDgiDir9QDdzhIrYpRwG0NrliHkI4GPNiAcZiWNFukdswgrBJCBeMOW4aoaAF9G+dW2FnAOvc9lM+uvBSQ3Ub9uiibH8M+/OFTJAR8hKrsMGvgHUy3Gurvpy38U16m1jKIYNbD0jLFY2/wIVCmAJPkysn7zmAAATof0aDLCOBnp0MK4oyd7qtan4sCFdEsq9GBsSA0Rz9U/23RVjpDSziylSxSj2SE2R+O+EpmOq9FBUzN
     ufoLicenseKey: QVRVWURaNy8vLy8vQUFBQUtONkl1MnRHcWtPVmpMMVo0QmU2VEROT1dveHRIOWV0ekxyL0N5SFozaDlRWldxUlFFdW53WGpjb3hyUmZ4TlY1anBKRmNpdHV0dU5CL0dBNjVnRVNpVGNaekZLcmpieVdnQjBBdmRVemtGWHNMLzhMYlBFbGErK0JSL1MrWkFMdHBaVzdObU5xSDcvck9ZUk13dGxxbUVDQkh5UUtvZTR0azFvcEJabEdrU2g1K21mYkdlU0ZsQno4N29OdHVoNmZkQllDWnBYRStUVUVzWnR1U0hKV2c3TjZVcWxXR2h2RzFJQnNvbWhFTTQvZG9vUDRzbWt5WFhsSVphTkxmNWpsRVErdy9ZazFIUEpHbE5CakpiTWRLdnA0eU43S0ZUNjlGZ2ViT1pEcHB6UUw4UmdtYWw1MFlpQ3ZFWXpTNng1SnBNU0xKS1VrYjB0SUNhakV0Slk5Q3VlMnRYNHdBQTdZVDhhMVhvS2dFdVk=
@@ -27,13 +27,13 @@ MonoBehaviour:
     eyewearType: 0
     stereoFramework: 0
     seeThroughConfiguration: 0
-    viewerName: 
-    viewerManufacturer: 
+    viewerName: Generic Cardboard
+    viewerManufacturer: Vuforia
     useCustomViewer: 0
     customViewer:
       Version: 0
-      Name: 
-      Manufacturer: 
+      Name:
+      Manufacturer:
       ButtonType: 0
       ScreenToLensDistance: 0
       InterLensDistance: 0
@@ -64,7 +64,7 @@ MonoBehaviour:
     autoInitTracker: 0
     autoStartTracker: 0
   webcam:
-    deviceNameSetInEditor: 
+    deviceNameSetInEditor:
     flipHorizontally: 0
     turnOffWebCam: 0
     renderTextureLayer: 30

@@ -17,10 +17,6 @@ public class SceneManager : MonoBehaviour {
 	private MapObjectHandler mapObjectHandler;
 	private Mapbox.Unity.Map.MapAtWorldScale map;
 
-	//locationManager
-	public GameObject locationManagerObject;
-	private LocationHandler locationHandler;
-
 	//annotationHandler
 	public GameObject annotationObject;
 	private AnnotationHandler annotationHandler;
@@ -100,10 +96,6 @@ public class SceneManager : MonoBehaviour {
 			directionHandler = (DirectionsHandler)directionsObject.GetComponent(typeof(DirectionsHandler));
 		}
 
-		if(locationManagerObject != null){
-			locationHandler = (LocationHandler)locationManagerObject.GetComponent(typeof(LocationHandler));
-		}
-
 		if (annotationObject != null){
 			annotationHandler = (AnnotationHandler)annotationObject.GetComponent (typeof(AnnotationHandler));
 		}
@@ -128,8 +120,8 @@ public class SceneManager : MonoBehaviour {
 		compassText = GameObject.FindGameObjectWithTag ("compassText");
 		cameraObject.transform.eulerAngles = new Vector3 (0, currentLoc.Heading, 0);
 		if (currentLoc.Heading != null) {
-			compassText.GetComponent<UnityEngine.UI.Text> ().text = "Compass: " +  locationHandler.compassDirection;
-			mapObject.transform.Rotate(Vector3.up, -locationHandler.compassDirection);
+			compassText.GetComponent<UnityEngine.UI.Text> ().text = "Compass: " +  Input.compass.trueHeading.ToString();;
+			mapObject.transform.Rotate(Vector3.up, -Input.compass.trueHeading);
 		}
 	}
 
@@ -143,54 +135,7 @@ public class SceneManager : MonoBehaviour {
 		Debug.Log("Map y rotation: " + mapObject.transform.rotation.y);
 	}
 
-	public void updateLocation(Vector2 location, bool isInitialLocation) {
-
-		//Debug.Log("Update Location SceneManager called");
-		//Debug.Log("is initial loc: " + isInitialLocation);
-		//Debug.Log("this location: " + location);
-
-		if(location != Vector2.zero) {
-
-			//set initial map
-			if (isInitialLocation == true) {
-				Debug.Log("Initial location set");
-				//get initial location to build starting map
-				initialLocation = location;
-				lastLocation = location;
-
-				//set ui
-				locationText = GameObject.FindGameObjectWithTag("locationText");
-				locationText.GetComponent<UnityEngine.UI.Text>().text = "Lat: " + location.x + " Lon: " + location.y;
-
-				distanceText = GameObject.FindGameObjectWithTag("distanceText");
-				distanceText.GetComponent<UnityEngine.UI.Text> ().text = "Initialized";
-
-				compassText = GameObject.FindGameObjectWithTag ("compassText");
-
-				//get directions relevant to this location
-				//getDirectionsFromLocation(initialLocation);
-
-				//setMapForLocation(initialLocation, zoomFactor);
-			}
-
-			//handle other location changes
-			//transform camera according to gps change
-			else if (location != lastLocation){
-				distanceText = GameObject.FindGameObjectWithTag("distanceText");
-				distanceText.GetComponent<UnityEngine.UI.Text> ().text = "hi";
-				locationText.GetComponent<UnityEngine.UI.Text>().text = "Updated Lat: " + location.x + " Lon: " + location.y;
-				playerObject = GameObject.FindGameObjectWithTag("Player");
-				map = (Mapbox.Unity.Map.MapAtWorldScale) mapObject.GetComponent((typeof(Mapbox.Unity.Map.MapAtWorldScale)));
-				playerObject.transform.MoveToGeocoordinate (location.x, location.y, map.CenterMercator, map.WorldRelativeScale);
-				//updateCameraPosition(lastLocation, location);
-			}
-		}
-	}
-
-
 	public void updateLocation(Location location, bool isInitialLocation, bool isHeadingUpdated, bool isLatLngUpdated){
-
-
 
 		currentLoc = location;
 
