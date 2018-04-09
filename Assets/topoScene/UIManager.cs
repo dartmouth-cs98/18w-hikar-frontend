@@ -65,6 +65,7 @@ public class UIManager : MonoBehaviour {
 					Debug.Log (hits[0].gameObject.GetComponent<Text>().text);
 					if (hits [0].gameObject.GetComponent<Text> ().text != "Submit") {
 						//Do the things here
+						//get drop down clicking working ### josh 
 						scrollView.gameObject.SetActive (false);
 					}
 				} else {
@@ -185,6 +186,7 @@ public class UIManager : MonoBehaviour {
 			scrollView.gameObject.SetActive (true);
 			GameObject results = GameObject.FindGameObjectWithTag ("results");
 			for (int i = 0; i < trails.Count; i++) {
+        // checking trails agaist search input 
 				if (string.IsNullOrEmpty (searchInput.text) || trails [i].Contains (searchInput.text)) {
 					GameObject tempResult = (GameObject)Instantiate (result, results.transform);
 					tempResult.layer = 5;
@@ -197,7 +199,7 @@ public class UIManager : MonoBehaviour {
 					text.color = Color.blue;
 					text.text = trails [i];
 					resultList.Add (tempResult);
-				}
+        }
 			}
 		}
 	}
