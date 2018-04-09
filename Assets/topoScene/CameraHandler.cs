@@ -8,6 +8,7 @@ public class CameraHandler : MonoBehaviour {
 	public Camera HUDCam;
 	public Camera Cam2D;
 	public Camera ARCam;
+	public Camera SearchCam;
 
 	//Touch Capture
 	private Rect HUDRect = new Rect (Screen.width * 0.7f, Screen.height * 0.7f, Screen.width * 0.25f, Screen.height * 0.2f);
@@ -51,6 +52,14 @@ public class CameraHandler : MonoBehaviour {
 		} else {
 			HUDCam.depth = 2;
 			Cam2D.depth = 0;			
+		}
+	}
+
+	public void searchMap(bool show){
+		if(show){
+			SearchCam.depth = 3;
+		} else{
+			SearchCam.depth = -1;
 		}
 	}
 }
