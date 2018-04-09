@@ -1028,181 +1028,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 514013290}
---- !u!1001 &523404804
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4472224790931420, guid: 21028e8964c284982911d73f68d07739, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4472224790931420, guid: 21028e8964c284982911d73f68d07739, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 1000
-      objectReference: {fileID: 0}
-    - target: {fileID: 4472224790931420, guid: 21028e8964c284982911d73f68d07739, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4472224790931420, guid: 21028e8964c284982911d73f68d07739, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4472224790931420, guid: 21028e8964c284982911d73f68d07739, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4472224790931420, guid: 21028e8964c284982911d73f68d07739, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4472224790931420, guid: 21028e8964c284982911d73f68d07739, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4472224790931420, guid: 21028e8964c284982911d73f68d07739, type: 2}
-      propertyPath: m_RootOrder
-      value: 16
-      objectReference: {fileID: 0}
-    - target: {fileID: 114921574833524332, guid: 21028e8964c284982911d73f68d07739,
-        type: 2}
-      propertyPath: _zoom
-      value: 16
-      objectReference: {fileID: 0}
-    - target: {fileID: 114921574833524332, guid: 21028e8964c284982911d73f68d07739,
-        type: 2}
-      propertyPath: _useRelativeScale
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114921574833524332, guid: 21028e8964c284982911d73f68d07739,
-        type: 2}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114314119417719016, guid: 21028e8964c284982911d73f68d07739,
-        type: 2}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114326228179929922, guid: 21028e8964c284982911d73f68d07739,
-        type: 2}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114921574833524332, guid: 21028e8964c284982911d73f68d07739,
-        type: 2}
-      propertyPath: _snapMapHeightToZero
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114921574833524332, guid: 21028e8964c284982911d73f68d07739,
-        type: 2}
-      propertyPath: _unityTileSize
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 1962991681994872, guid: 21028e8964c284982911d73f68d07739, type: 2}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114921574833524332, guid: 21028e8964c284982911d73f68d07739,
-        type: 2}
-      propertyPath: _root
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 114921574833524332, guid: 21028e8964c284982911d73f68d07739,
-        type: 2}
-      propertyPath: _tileProvider
-      value: 
-      objectReference: {fileID: 523404810}
-    - target: {fileID: 114921574833524332, guid: 21028e8964c284982911d73f68d07739,
-        type: 2}
-      propertyPath: _latitudeLongitudeString
-      value: 0, 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1962991681994872, guid: 21028e8964c284982911d73f68d07739, type: 2}
-      propertyPath: m_TagString
-      value: MapObject
-      objectReference: {fileID: 0}
-    - target: {fileID: 1962991681994872, guid: 21028e8964c284982911d73f68d07739, type: 2}
-      propertyPath: m_Name
-      value: SearchMapObject
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 114527573822196840, guid: 21028e8964c284982911d73f68d07739, type: 2}
-  m_ParentPrefab: {fileID: 100100000, guid: 21028e8964c284982911d73f68d07739, type: 2}
-  m_IsPrefabParent: 0
---- !u!1 &523404805 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1962991681994872, guid: 21028e8964c284982911d73f68d07739,
-    type: 2}
-  m_PrefabInternal: {fileID: 523404804}
---- !u!114 &523404806 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114921574833524332, guid: 21028e8964c284982911d73f68d07739,
-    type: 2}
-  m_PrefabInternal: {fileID: 523404804}
-  m_Script: {fileID: 11500000, guid: bcbec1ed7768a40ea93d476c23a129c5, type: 3}
---- !u!114 &523404807
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 523404805}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 061d2afb48ace4fd19611279b6cf732f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _rotationFollowFactor: 0
-  _rotateZ: 0
-  _useTransformLocationProvider: 0
---- !u!114 &523404808
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 523404805}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c00b1c78fb49f4ebd834aac587275216, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _map: {fileID: 0}
-  _forwardGeocoder: {fileID: 0}
---- !u!114 &523404809
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 523404805}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76a256726e16d4966a3f30b97a17e1d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _mapInstance: {fileID: 523404806}
-  OnTileError:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: Mapbox.Unity.Map.TileErrorEvent, Assembly-CSharp, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
---- !u!114 &523404810
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 523404805}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d7ff8ed3b76a4ee5a451d64a5393e3f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _west: 1
-  _north: 1
-  _east: 1
-  _south: 1
 --- !u!1001 &535884837
 Prefab:
   m_ObjectHideFlags: 0
@@ -1336,7 +1161,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 83.00001, y: -0.0000007761279}
+  m_AnchoredPosition: {x: 83.00001, y: 0.000002744571}
   m_SizeDelta: {x: -83, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &558295378
@@ -4704,7 +4529,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1231297106}
   m_HandleRect: {fileID: 1231297105}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 0.99999976
   m_NumberOfSteps: 0
   m_OnValueChanged:

@@ -32,10 +32,6 @@ public class UIManager : MonoBehaviour {
 	public GameObject wwwHandler;
 	private WWWHandler wwwScript;
 
-	//locationManager
-	public GameObject locationManagerObject;
-	private LocationHandler locationHandler;
-
 	//cameraManager
 	public GameObject cameraObject;
 	private CameraHandler cameraHandler;
@@ -137,14 +133,9 @@ public class UIManager : MonoBehaviour {
 	private void sendAnnotation (string text) {
 		//get reference to WWWHandler and get server data and parse it
 		wwwScript = (WWWHandler) wwwHandler.gameObject.GetComponent(typeof(WWWHandler));
-
-		if(locationManagerObject != null){
-			locationHandler = (LocationHandler)locationManagerObject.GetComponent(typeof(LocationHandler));
-		}
-			
 		string type = "Billboard";
-		float lat = locationHandler.latitude;
-		float lon = locationHandler.longitude;
+		float lat = Input.location.lastData.latitude;
+		float lon = Input.location.lastData.longitude;
 		wwwScript.PostAnnotation (type, text, lat, lon);
 	}
 
