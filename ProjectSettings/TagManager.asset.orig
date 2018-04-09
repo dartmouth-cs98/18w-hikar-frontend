@@ -20,7 +20,6 @@ TagManager:
   - loadingText
   - sceneManager
   - SearchMapObject
-  - results
   layers:
   - Default
   - TransparentFX
