@@ -331,19 +331,6 @@ Transform:
   m_PrefabParentObject: {fileID: 4472224790931420, guid: 21028e8964c284982911d73f68d07739,
     type: 2}
   m_PrefabInternal: {fileID: 535884837}
---- !u!114 &97133400
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 97133395}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c00b1c78fb49f4ebd834aac587275216, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _map: {fileID: 0}
-  _forwardGeocoder: {fileID: 0}
 --- !u!114 &97133403
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -786,7 +773,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1393483683185582, guid: b95c449128f3b44bca8b83258c669aa5, type: 2}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1875442249485622, guid: b95c449128f3b44bca8b83258c669aa5, type: 2}
       propertyPath: m_IsActive
@@ -4717,7 +4704,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1231297106}
   m_HandleRect: {fileID: 1231297105}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 0.99999976
   m_NumberOfSteps: 0
   m_OnValueChanged:
