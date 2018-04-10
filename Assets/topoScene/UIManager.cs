@@ -9,7 +9,7 @@ public class UIManager : MonoBehaviour {
 
 	//TODO: populate list of trails with WWW call
 	private List<string> trails;
-	
+	private int radius = 5;
 	private bool showForm = false;
 	private bool Mode2D = false;
 	private string annotationText = "";
@@ -60,18 +60,15 @@ public class UIManager : MonoBehaviour {
 				pointerData.position = Input.GetTouch(0).position;
 				List<RaycastResult> hits = new List<RaycastResult>();
 				EventSystem.current.RaycastAll(pointerData, hits);
-				Debug.Log (hits.Count);
 				if (hits.Count > 0) {
-					Debug.Log (hits[0].gameObject.GetComponent<Text>().text);
 					if (hits [0].gameObject.GetComponent<Text> ().text != "Submit") {
 						//Do the things here
 						//get drop down clicking working ### josh 
 						scrollView.gameObject.SetActive (false);
 					}
-				} else {
-					Debug.Log ("No GUI element detected");
 				}
 			}
+			//Mouse input
 //			if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
 //			{
 //				PointerEventData pointerData = new PointerEventData(EventSystem.current);
@@ -170,6 +167,30 @@ public class UIManager : MonoBehaviour {
 	{
 		annotationText = annotation;
 	}
+
+	public void userSelection()
+	{
+		if (Input.touchSupported && Application.platform != RuntimePlatform.WebGLPlayer && Input.touchCount > 0) {
+			PointerEventData pointerData = new PointerEventData (EventSystem.current);
+			pointerData.position = Input.GetTouch (0).position;
+			List<RaycastResult> hits = new List<RaycastResult> ();
+			EventSystem.current.RaycastAll (pointerData, hits);
+			if (hits.Count > 0) {
+				if (hits [0].gameObject.GetComponent<Text> ().text == "Explore") {
+					//get player location in lat long
+					float plusMinus = radius/69f;
+
+				} else if (hits [0].gameObject.GetComponent<Text> ().text == "Your Places") {
+
+				} else if (hits [0].gameObject.GetComponent<Text> ().text == "Settings") {
+
+				} else if (hits [0].gameObject.GetComponent<Text> ().text == "Logout") {
+
+				}
+
+			}
+		}
+	}
 		
 
 	public void onValueChangedSearch()
@@ -201,6 +222,6 @@ public class UIManager : MonoBehaviour {
 					resultList.Add (tempResult);
 				}
 			}
-		}    
+		}
 	}
 }
