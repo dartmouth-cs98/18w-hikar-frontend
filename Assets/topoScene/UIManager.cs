@@ -38,10 +38,6 @@ public class UIManager : MonoBehaviour {
 	public GameObject wwwHandler;
 	private WWWHandler wwwScript;
 
-	//locationManager
-	public GameObject locationManagerObject;
-	private LocationHandler locationHandler;
-
 	//cameraManager
 	public GameObject cameraObject;
 	private CameraHandler cameraHandler;
@@ -94,6 +90,7 @@ public class UIManager : MonoBehaviour {
 						Debug.Log (resultText);
 						if (resultText != "Submit") {
 						//Do the things here
+						//get drop down clicking working ### josh 
 						scrollView.gameObject.SetActive (false);
 
 						
@@ -183,14 +180,9 @@ public class UIManager : MonoBehaviour {
 	private void sendAnnotation (string text) {
 		//get reference to WWWHandler and get server data and parse it
 		wwwScript = (WWWHandler) wwwHandler.gameObject.GetComponent(typeof(WWWHandler));
-
-		if(locationManagerObject != null){
-			locationHandler = (LocationHandler)locationManagerObject.GetComponent(typeof(LocationHandler));
-		}
-			
 		string type = "Billboard";
-		float lat = locationHandler.latitude;
-		float lon = locationHandler.longitude;
+		float lat = Input.location.lastData.latitude;
+		float lon = Input.location.lastData.longitude;
 		wwwScript.PostAnnotation (type, text, lat, lon);
 	}
 
@@ -239,32 +231,32 @@ public class UIManager : MonoBehaviour {
 
 	public void onValueChangedSearch()
 	{
-		if (scrollView.gameObject.activeSelf) {
-			scrollView.gameObject.SetActive (false);
-		} else {
-			scrollView.gameObject.SetActive (true);
-		}
 		//Clear the list
 		for(int i = 0; i < resultList.Count; i++)
 		{
 			Object.Destroy (resultList [i]);
 		}
 		resultList.Clear ();
-
-		GameObject results = GameObject.FindGameObjectWithTag ("results");
-		for (int i = 0; i < trails.Count; i++) {
-			if (string.IsNullOrEmpty (searchInput.text) || trails [i].Contains (searchInput.text)) {
-				GameObject tempResult = (GameObject)Instantiate (result, results.transform);
-				tempResult.layer = 5;
-				RectTransform tempRect = tempResult.AddComponent<RectTransform>();
-				tempRect.sizeDelta = new Vector2 (600, 40);
-				//Add text
-				Text text = tempResult.AddComponent<Text> ();
-				text.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
-				text.fontSize = 35;
-				text.color = Color.blue;
-				text.text = trails [i];
-				resultList.Add (tempResult);
+		if (scrollView.gameObject.activeSelf) {
+			scrollView.gameObject.SetActive (false);
+		} else {
+			scrollView.gameObject.SetActive (true);
+			GameObject results = GameObject.FindGameObjectWithTag ("results");
+			for (int i = 0; i < trails.Count; i++) {
+        // checking trails agaist search input 
+				if (string.IsNullOrEmpty (searchInput.text) || trails [i].Contains (searchInput.text)) {
+					GameObject tempResult = (GameObject)Instantiate (result, results.transform);
+					tempResult.layer = 5;
+					RectTransform tempRect = tempResult.AddComponent<RectTransform>();
+					tempRect.sizeDelta = new Vector2 (600, 40);
+					//Add text
+					Text text = tempResult.AddComponent<Text> ();
+					text.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
+					text.fontSize = 35;
+					text.color = Color.blue;
+					text.text = trails [i];
+					resultList.Add (tempResult);
+        }
 			}
 		}
 	}
