@@ -21,6 +21,7 @@ TagManager:
   - sceneManager
   - SearchMapObject
   - results
+  - SearchCamera
   layers:
   - Default
   - TransparentFX

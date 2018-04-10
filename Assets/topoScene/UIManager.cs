@@ -10,8 +10,13 @@ public class UIManager : MonoBehaviour {
 	//TODO: populate list of trails with WWW call
 	private List<string> trails;
 	private int radius = 5;
+	private Mapbox.Utils.Vector2d[] trailHeads;
+	private Hashtable trailTable;
+	
 	private bool showForm = false;
 	private bool Mode2D = false;
+	private bool showSearchMap = false;
+
 	private string annotationText = "";
 	private string searchText = "";
 	private List<GameObject> resultList;
@@ -19,6 +24,8 @@ public class UIManager : MonoBehaviour {
 
 	//Annotation UI
 	public Camera arCam;
+	public Camera searchCam;
+
 	public Button createAnnotationButton;
 	public Button submitAnnotationButton;
 	public InputField annotationInput;
@@ -42,10 +49,28 @@ public class UIManager : MonoBehaviour {
 		//DEBUG
 		trails = new List<string>();
 
-		trails.Add("hey trail");
-		trails.Add("heyy trail");
-		trails.Add("trail this string");
-		trails.Add("$that string");
+		trails.Add("Norwich Trail");
+		trails.Add("Lebanon Trail");
+		trails.Add("West Lebanon Trail");
+		trails.Add("Etna Trail");
+
+		//make 4 coordinates in the region
+		//vec2ds
+		Mapbox.Utils.Vector2d loc1 = new Mapbox.Utils.Vector2d(43.712967, -72.308092); //norwich
+		Mapbox.Utils.Vector2d loc2 = new Mapbox.Utils.Vector2d(43.641690, -72.250757); //lebanon
+		Mapbox.Utils.Vector2d loc3 = new Mapbox.Utils.Vector2d(43.642187, -72.309465); //west lebanon
+		Mapbox.Utils.Vector2d loc4 = new Mapbox.Utils.Vector2d(43.691168, -72.220568); //etna
+
+
+		//add vec2ds
+		trailHeads = new Mapbox.Utils.Vector2d[]{loc1, loc2, loc3, loc4};
+
+		//add trail name and vec2d
+		trailTable = new Hashtable();
+		trailTable.Add("Norwich Trail", loc1);
+		trailTable.Add("Lebanon Trail", loc2);
+		trailTable.Add("West Lebanon Trail", loc3);
+		trailTable.Add("Etna Trail", loc4);
 
 
 		scrollView.gameObject.SetActive (false);
@@ -61,35 +86,55 @@ public class UIManager : MonoBehaviour {
 				List<RaycastResult> hits = new List<RaycastResult>();
 				EventSystem.current.RaycastAll(pointerData, hits);
 				if (hits.Count > 0) {
-					if (hits [0].gameObject.GetComponent<Text> ().text != "Submit") {
-						//Do the things here
-						//get drop down clicking working ### josh 
+						string resultText = hits[0].gameObject.GetComponent<Text>().text;
+						if (resultText != "Submit") { 
 						scrollView.gameObject.SetActive (false);
+
+						
+						//search database for trail name
+						//get trail head node location
+						//reload search map with trail head location
+						//change camera to search map
+
+						Mapbox.Utils.Vector2d searchLoc = (Mapbox.Utils.Vector2d)trailTable[resultText];
+						Debug.Log(searchLoc.ToString());
+						SearchMap searchMap = GameObject.FindGameObjectWithTag("SearchMapObject").GetComponent<SearchMap>();
+						searchMap.searchForLocation(searchLoc);
+
+						toggleSearchMap(); //show search map if not currently showing
+
 					}
 				}
 			}
-			//Mouse input
-//			if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
-//			{
-//				PointerEventData pointerData = new PointerEventData(EventSystem.current);
-//				pointerData.position = Input.mousePosition;
-//				List<RaycastResult> hits = new List<RaycastResult>();
-//				EventSystem.current.RaycastAll(pointerData, hits);
-//		
-//				if (hits.Count > 0) {
-//					try {
-//						//Transport camera to selected trail HERE
-//						Text selected = hits[0].gameObject.GetComponent<Text>();
-//						Debug.Log (selected.text);	
-//						scrollView.gameObject.SetActive (false);
-//					} catch {
-//						Debug.Log ("nope");
-//						scrollView.gameObject.SetActive (false);
-//					}
-//				} else {
-//					print (":(");
-//				}
-//			}
+			if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
+			{
+				PointerEventData pointerData = new PointerEventData(EventSystem.current);
+				pointerData.position = Input.mousePosition;
+				List<RaycastResult> hits = new List<RaycastResult>();
+				EventSystem.current.RaycastAll(pointerData, hits);
+		
+				if (hits.Count > 0) {
+					try {
+						//Transport camera to selected trail HERE
+						string resultText = hits[0].gameObject.GetComponent<Text>().text;
+						Debug.Log (resultText);	
+						scrollView.gameObject.SetActive (false);
+
+						Mapbox.Utils.Vector2d searchLoc = (Mapbox.Utils.Vector2d)trailTable[resultText];
+						Debug.Log(searchLoc.ToString());
+						SearchMap searchMap = GameObject.FindGameObjectWithTag("SearchMapObject").GetComponent<SearchMap>();
+						searchMap.searchForLocation(searchLoc);
+
+						toggleSearchMap(); //show search map if not currently showing
+
+					} catch {
+						Debug.Log ("nope");
+						scrollView.gameObject.SetActive (false);
+					}
+				} else {
+					print (":(");
+				}
+			}
 		}
 	}
 
@@ -161,6 +206,16 @@ public class UIManager : MonoBehaviour {
 		} else {
 			createAnnotationButton.gameObject.SetActive (true);
 		}	
+	}
+
+	public void toggleSearchMap(){
+		if(showSearchMap == false){
+			searchCam.depth = 3; //highest depth in scene
+			showSearchMap = true;
+		} else {
+			searchCam.depth = -1; //lowest depth
+			showSearchMap = false;
+		}
 	}
 		
 	public void onValueChangedAnnotation(string annotation)
