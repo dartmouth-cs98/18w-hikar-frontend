@@ -261,6 +261,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   arCam: {fileID: 1366135902}
+  searchCam: {fileID: 0}
   createAnnotationButton: {fileID: 1027811460}
   submitAnnotationButton: {fileID: 1916866862}
   annotationInput: {fileID: 1689657053}
@@ -1112,7 +1113,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.0000076293945, y: 0.00001716903}
+  m_AnchoredPosition: {x: 82.999985, y: 0.00010725252}
   m_SizeDelta: {x: -83, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &558295378
@@ -2055,7 +2056,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   menuButton: {fileID: 514013290}
   MenuPanel: {fileID: 1168278570}
-  uiObject: {fileID: 0}
 --- !u!95 &907095097
 Animator:
   serializedVersion: 3
@@ -3711,6 +3711,7 @@ MonoBehaviour:
   annotationObject: {fileID: 564501454}
   wwwHandler: {fileID: 1225752238}
   directionsObject: {fileID: 0}
+  uiObject: {fileID: 0}
   playerObject: {fileID: 656005445}
   zoomFactor: 16
   hasMapChanged: 0
@@ -4277,6 +4278,7 @@ MonoBehaviour:
   HUDCam: {fileID: 938390817}
   Cam2D: {fileID: 920573821}
   ARCam: {fileID: 1366135902}
+  SearchCam: {fileID: 0}
   UIObject: {fileID: 92795634}
 --- !u!1 &1906361155
 GameObject:
@@ -4636,8 +4638,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1231297106}
   m_HandleRect: {fileID: 1231297105}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.9999999
+  m_Value: 0
+  m_Size: 0.99999934
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

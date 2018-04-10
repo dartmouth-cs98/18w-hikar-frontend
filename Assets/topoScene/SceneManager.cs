@@ -14,7 +14,6 @@ public class SceneManager : MonoBehaviour {
 
 	//mapBox
 	public GameObject mapObject;
-	private MapObjectHandler mapObjectHandler;
 	private Mapbox.Unity.Map.MapAtWorldScale map;
 
 	//annotationHandler
@@ -29,43 +28,21 @@ public class SceneManager : MonoBehaviour {
 	public GameObject directionsObject;
 	private DirectionsHandler directionHandler;
 
-	//UIHandler
-	public GameObject uiObject;
-	private UIManager UIHandler;
-
 	public GameObject playerObject;
 
 	private GameObject cameraPosition;
-
 	private GameObject distanceText;
 	private GameObject locationText;
 	private GameObject compassText;
-
-	//rastermap
-//	public GameObject rasterMapObject;
-//	private RasterMap rasterMap;
-
 
 	private Vector2 initialLocation; //where user is on app start
 	private Vector2 currentLocation; //where user is on latest location update with test = new Vector2((float)-4, 0);
 	private Vector2 lastLocation;
 
-	private Location initLoc;
 	private Location currentLoc;
 	private Location lastLoc;
 
-	private int updateCount = 0;
-
-	private Vector3 nextPosition;
-	private Vector3 lastPosition;
-
-	private GameObject nextPositionObject;
-
 	private bool isRootTransformSet = false;
-
-	private float speed = 3.0f;
-	private float distanceScale = 1.0f;
-
 
 	//private Vector2 testLocaiton = new Vector2((float)43.7021, (float)72.2890); //test location
 
@@ -88,7 +65,6 @@ public class SceneManager : MonoBehaviour {
 
 		//get reference to map handler script
 		if(mapObject != null) {
-			mapObjectHandler = (MapObjectHandler)mapObject.GetComponent(typeof(MapObjectHandler));
 			map = (Mapbox.Unity.Map.MapAtWorldScale) mapObject.GetComponent((typeof(Mapbox.Unity.Map.MapAtWorldScale)));
 		}
 			
@@ -100,18 +76,9 @@ public class SceneManager : MonoBehaviour {
 			annotationHandler = (AnnotationHandler)annotationObject.GetComponent (typeof(AnnotationHandler));
 		}
 
-//		if (uiObject != null) {
-//			UIHandler = (UIManager)uiObject.GetComponent (typeof(UIManager));
-//		}
-
-		if(playerObject == null)
-			playerObject = GameObject.FindGameObjectWithTag("Player");
-
-		lastPosition = playerObject.transform.position;
-		//nextPosition = playerObject.transform.position;
-
-		nextPositionObject = new GameObject();
-
+		if (playerObject == null) {
+			playerObject = GameObject.FindGameObjectWithTag ("Player");
+		}
 		setCompassDirection ();
 	}
 
@@ -119,10 +86,8 @@ public class SceneManager : MonoBehaviour {
 	{
 		compassText = GameObject.FindGameObjectWithTag ("compassText");
 		cameraObject.transform.eulerAngles = new Vector3 (0, currentLoc.Heading, 0);
-		if (currentLoc.Heading != null) {
-			compassText.GetComponent<UnityEngine.UI.Text> ().text = "Compass: " +  Input.compass.trueHeading.ToString();;
-			mapObject.transform.Rotate(Vector3.up, -Input.compass.trueHeading);
-		}
+		compassText.GetComponent<UnityEngine.UI.Text> ().text = "Compass: " +  Input.compass.trueHeading.ToString();;
+		mapObject.transform.Rotate(Vector3.up, -Input.compass.trueHeading);
 	}
 
 	public void setMapOrientation(float heading){
@@ -143,11 +108,8 @@ public class SceneManager : MonoBehaviour {
 		locationText.GetComponent<UnityEngine.UI.Text>().text = "" + location.LatitudeLongitude.x + ", " + location.LatitudeLongitude.y;
 		distanceText = GameObject.FindGameObjectWithTag("distanceText");
 
-
-
 		if(isInitialLocation == true){
 			Debug.Log("Initial location set: " + location.LatitudeLongitude.ToString() + " with heading: " + location.Heading);
-			initLoc = location;
 			setMapOrientation(location.Heading);
 			getDirectionsFromLocation(location);
 			StartCoroutine (annotationHandler.SetupMap (wwwScript));
@@ -156,7 +118,6 @@ public class SceneManager : MonoBehaviour {
 
 
 		if(isHeadingUpdated){
-			string heading = "New heading: " + location.Heading.ToString();
 			if(compassText == null){
 				compassText = GameObject.FindGameObjectWithTag ("compassText");
 			}
@@ -164,43 +125,14 @@ public class SceneManager : MonoBehaviour {
 		}
 
 		if(isLatLngUpdated){
-
-			string loc = "New latLng: " + location.LatitudeLongitude.ToString();
-
 			locationText.GetComponent<UnityEngine.UI.Text>().text = "" + location.LatitudeLongitude.x + ", " + location.LatitudeLongitude.y;
 			if(hasMapChanged == false){
 				map = (Mapbox.Unity.Map.MapAtWorldScale) mapObject.GetComponent((typeof(Mapbox.Unity.Map.MapAtWorldScale)));
-				//nextPositionObject.transform.MoveToGeocoordinate(location.LatitudeLongitude, map.CenterMercator, map.WorldRelativeScale);
 				playerObject.transform.MoveToGeocoordinate(location.LatitudeLongitude, map.CenterMercator, map.WorldRelativeScale);
-				//playerObject.transform.position.y = 3.0f;
 				distanceText.GetComponent<UnityEngine.UI.Text> ().text = "World Position: " + playerObject.transform.position.ToString();
 			}
 		}
-
 	}
-	//potentially don't need anymore
-	private void updateCameraPosition(Vector2 lastLocation, Vector2 currentLocation) {
-
-
-		playerObject.transform.position = Quaternion.AngleAxis(lastLocation[1], -Vector3.up) * Quaternion.AngleAxis(lastLocation[0], -Vector3.right) * new Vector3(0,0,1);
-
-//		float distance = (float)Calc(lastLocation.x, lastLocation.y, currentLocation.x, currentLocation.y);
-//
-//		nextPosition = lastPosition - new Vector3 (0, 0, distance * distanceScale);
-//
-//		if(playerObject == null)
-//			playerObject = GameObject.FindGameObjectWithTag("Player");
-//
-//		float transformDist = Vector3.Distance(playerObject.transform.position, nextPosition);
-//
-//		//nextPosition = playerObject.transform.TransformDirection(nextPosition);
-//		playerObject.transform.position = Vector3.Lerp(playerObject.transform.position, nextPosition, speed);
-
-		lastPosition = playerObject.transform.position;
-		lastLocation = currentLocation;
-			
-	}
-
 	//updates camera position if user is touching screen
 //	private void updateCameraPositionAuto(){ 
 //
@@ -234,15 +166,6 @@ public class SceneManager : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-//		compassText.GetComponent<UnityEngine.UI.Text> ().text = "Compass: " +  locationHandler.compassDirection;
-//
-//		if(compassText.GetComponent<UnityEngine.UI.Text> ().text == "0"){
-//			setCompassDirection ();
-//		}
-
-//		if(playerObject.transform.position != nextPositionObject.transform.position){
-//			Vector3.Lerp(playerObject.transform.position, nextPositionObject.transform.position, Time.deltaTime);
-//		}
 
 		if(playerObject == null)
 			playerObject = GameObject.FindGameObjectWithTag("Player");
@@ -274,22 +197,6 @@ public class SceneManager : MonoBehaviour {
 		//annotationHandler.updateLoc (currentLocation);
 	}
 
-//	void setMapForLocation(Vector2 latLong, int zFactor) {
-//
-//		Debug.Log("Setting map for location");
-//		Debug.Log(latLong);
-//
-//		if(latLong != Vector2.zero) {
-//			if(mapObjectHandler == null) {
-//				mapObjectHandler = (MapObjectHandler)mapObject.GetComponent(typeof(MapObjectHandler));
-//			}
-//				
-//			//initialize map
-//			mapObjectHandler.initiliazeMap(latLong, zFactor);
-//		}
-//
-//	}
-
 	private IEnumerator setPositionOnVuforiaEnabled() {
 		yield return new WaitForSeconds(0.2f);
 		// Define the Spawn position only once
@@ -319,9 +226,6 @@ public class SceneManager : MonoBehaviour {
 	void getDirectionsFromLocation(Location location){
 
 		if(true){
-			initLoc = location;
-			//initialLocation = initLoc;
-
 			if(directionsObject == null){
 				directionsObject = GameObject.FindGameObjectWithTag("DirectionsObject");
 			}
@@ -332,10 +236,6 @@ public class SceneManager : MonoBehaviour {
 			if(wwwScript == null && wwwHandler != null){
 				wwwScript = (WWWHandler)wwwHandler.GetComponent(typeof(WWWHandler));
 			}
-
-//			Debug.Log("get directions");
-//			Debug.Log(initLoc);
-//			Debug.Log(directionHandler.isActiveAndEnabled);
 
 			directionHandler.StartCoroutine(directionHandler.getDirectionsFromJSON(wwwScript, location));
 		}

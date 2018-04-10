@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour {
 
 	//TODO: populate list of trails with WWW call
 	private List<string> trails;
+	private int radius = 5;
 	private Mapbox.Utils.Vector2d[] trailHeads;
 	private Hashtable trailTable;
 	
@@ -25,12 +26,12 @@ public class UIManager : MonoBehaviour {
 	public Camera arCam;
 	public Camera searchCam;
 
+	public Button hikeButton;
 	public Button createAnnotationButton;
 	public Button submitAnnotationButton;
 	public InputField annotationInput;
 
 	//2D UI
-	public Button submitSearch;
 	public InputField searchInput;
 	public ScrollRect scrollView;
 
@@ -84,13 +85,9 @@ public class UIManager : MonoBehaviour {
 				pointerData.position = Input.GetTouch(0).position;
 				List<RaycastResult> hits = new List<RaycastResult>();
 				EventSystem.current.RaycastAll(pointerData, hits);
-				Debug.Log (hits.Count);
 				if (hits.Count > 0) {
 						string resultText = hits[0].gameObject.GetComponent<Text>().text;
-						Debug.Log (resultText);
-						if (resultText != "Submit") {
-						//Do the things here
-						//get drop down clicking working ### josh 
+						if (resultText != "Submit") { 
 						scrollView.gameObject.SetActive (false);
 
 						
@@ -107,8 +104,6 @@ public class UIManager : MonoBehaviour {
 						toggleSearchMap(); //show search map if not currently showing
 
 					}
-				} else {
-					Debug.Log ("No GUI element detected");
 				}
 			}
 			if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
@@ -131,6 +126,7 @@ public class UIManager : MonoBehaviour {
 						searchMap.searchForLocation(searchLoc);
 
 						toggleSearchMap(); //show search map if not currently showing
+
 
 					} catch {
 						Debug.Log ("nope");
@@ -217,6 +213,7 @@ public class UIManager : MonoBehaviour {
 		if(showSearchMap == false){
 			searchCam.depth = 3; //highest depth in scene
 			showSearchMap = true;
+			hikeButton.gameObject.SetActive (true);
 		} else {
 			searchCam.depth = -1; //lowest depth
 			showSearchMap = false;
@@ -226,6 +223,30 @@ public class UIManager : MonoBehaviour {
 	public void onValueChangedAnnotation(string annotation)
 	{
 		annotationText = annotation;
+	}
+
+	public void userSelection()
+	{
+		if (Input.touchSupported && Application.platform != RuntimePlatform.WebGLPlayer && Input.touchCount > 0) {
+			PointerEventData pointerData = new PointerEventData (EventSystem.current);
+			pointerData.position = Input.GetTouch (0).position;
+			List<RaycastResult> hits = new List<RaycastResult> ();
+			EventSystem.current.RaycastAll (pointerData, hits);
+			if (hits.Count > 0) {
+				if (hits [0].gameObject.GetComponent<Text> ().text == "Explore") {
+					//get player location in lat long
+					float plusMinus = radius/69f;
+
+				} else if (hits [0].gameObject.GetComponent<Text> ().text == "Your Places") {
+
+				} else if (hits [0].gameObject.GetComponent<Text> ().text == "Settings") {
+
+				} else if (hits [0].gameObject.GetComponent<Text> ().text == "Logout") {
+
+				}
+
+			}
+		}
 	}
 		
 
@@ -258,6 +279,6 @@ public class UIManager : MonoBehaviour {
 					resultList.Add (tempResult);
 				}
 			}
-		}    
+		}
 	}
 }
