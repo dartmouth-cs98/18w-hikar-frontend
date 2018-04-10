@@ -29,22 +29,12 @@ public class SceneManager : MonoBehaviour {
 	public GameObject directionsObject;
 	private DirectionsHandler directionHandler;
 
-	//UIHandler
-	public GameObject uiObject;
-	private UIManager UIHandler;
-
 	public GameObject playerObject;
 
 	private GameObject cameraPosition;
-
 	private GameObject distanceText;
 	private GameObject locationText;
 	private GameObject compassText;
-
-	//rastermap
-//	public GameObject rasterMapObject;
-//	private RasterMap rasterMap;
-
 
 	private Vector2 initialLocation; //where user is on app start
 	private Vector2 currentLocation; //where user is on latest location update with test = new Vector2((float)-4, 0);
@@ -100,18 +90,12 @@ public class SceneManager : MonoBehaviour {
 			annotationHandler = (AnnotationHandler)annotationObject.GetComponent (typeof(AnnotationHandler));
 		}
 
-//		if (uiObject != null) {
-//			UIHandler = (UIManager)uiObject.GetComponent (typeof(UIManager));
-//		}
-
-		if(playerObject == null)
-			playerObject = GameObject.FindGameObjectWithTag("Player");
+		if (playerObject == null) {
+			playerObject = GameObject.FindGameObjectWithTag ("Player");
+		}
 
 		lastPosition = playerObject.transform.position;
-		//nextPosition = playerObject.transform.position;
-
 		nextPositionObject = new GameObject();
-
 		setCompassDirection ();
 	}
 
@@ -142,8 +126,6 @@ public class SceneManager : MonoBehaviour {
 		locationText = GameObject.FindGameObjectWithTag("locationText");
 		locationText.GetComponent<UnityEngine.UI.Text>().text = "" + location.LatitudeLongitude.x + ", " + location.LatitudeLongitude.y;
 		distanceText = GameObject.FindGameObjectWithTag("distanceText");
-
-
 
 		if(isInitialLocation == true){
 			Debug.Log("Initial location set: " + location.LatitudeLongitude.ToString() + " with heading: " + location.Heading);
@@ -176,7 +158,6 @@ public class SceneManager : MonoBehaviour {
 				distanceText.GetComponent<UnityEngine.UI.Text> ().text = "World Position: " + playerObject.transform.position.ToString();
 			}
 		}
-
 	}
 	//potentially don't need anymore
 	private void updateCameraPosition(Vector2 lastLocation, Vector2 currentLocation) {
@@ -234,15 +215,6 @@ public class SceneManager : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-//		compassText.GetComponent<UnityEngine.UI.Text> ().text = "Compass: " +  locationHandler.compassDirection;
-//
-//		if(compassText.GetComponent<UnityEngine.UI.Text> ().text == "0"){
-//			setCompassDirection ();
-//		}
-
-//		if(playerObject.transform.position != nextPositionObject.transform.position){
-//			Vector3.Lerp(playerObject.transform.position, nextPositionObject.transform.position, Time.deltaTime);
-//		}
 
 		if(playerObject == null)
 			playerObject = GameObject.FindGameObjectWithTag("Player");

@@ -5,15 +5,14 @@ using UnityEngine;
 public class MenuScript : MonoBehaviour {
 
 	public GameObject menuButton;
-
-
-	//refrence for the pause menu panel in the hierarchy
 	public GameObject MenuPanel;
-	//animator reference
 	private Animator anim;
-	//variable for checking if the game is paused 
 	private bool isOpen = false;
-	// Use this for initialization
+
+	//UIHandler
+	public GameObject uiObject;
+	private UIManager UIHandler;
+
 	void Start () {
 		//unpause the game on start
 		Time.timeScale = 1;
@@ -21,6 +20,10 @@ public class MenuScript : MonoBehaviour {
 		anim = MenuPanel.GetComponent<Animator>();
 		//disable it on start to stop it from playing the default animation
 		anim.enabled = false;
+
+		if (uiObject != null) {
+			UIHandler = (UIManager)uiObject.GetComponent (typeof(UIManager));
+		}
 	}
 
 	// Update is called once per frame
@@ -29,6 +32,7 @@ public class MenuScript : MonoBehaviour {
 		if(SwipeManager.Instance.isSwiping(SwipeDirection.Right) && !isOpen){
 			OpenMenu ();
 			menuButton.SetActive (false);
+			UIHandler.userSelection ();
 		}
 		//unpause the game if its paused and the escape key is pressed
 		else if(SwipeManager.Instance.isSwiping(SwipeDirection.Left) && isOpen){
