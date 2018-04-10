@@ -186,21 +186,21 @@ public class UIManager : MonoBehaviour {
 			scrollView.gameObject.SetActive (true);
 			GameObject results = GameObject.FindGameObjectWithTag ("results");
 			for (int i = 0; i < trails.Count; i++) {
-        // checking trails agaist search input 
+        		// checking trails agaist search input 
 				if (string.IsNullOrEmpty (searchInput.text) || trails [i].Contains (searchInput.text)) {
 					GameObject tempResult = (GameObject)Instantiate (result, results.transform);
 					tempResult.layer = 5;
-					RectTransform tempRect = tempResult.AddComponent<RectTransform>();
+					RectTransform tempRect = tempResult.AddComponent<RectTransform> ();
 					tempRect.sizeDelta = new Vector2 (600, 40);
 					//Add text
 					Text text = tempResult.AddComponent<Text> ();
-					text.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
+					text.font = Resources.GetBuiltinResource (typeof(Font), "Arial.ttf") as Font;
 					text.fontSize = 35;
 					text.color = Color.blue;
 					text.text = trails [i];
 					resultList.Add (tempResult);
-        }
+				}
 			}
-		}
+		}    
 	}
 }

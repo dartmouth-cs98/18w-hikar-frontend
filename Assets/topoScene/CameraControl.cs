@@ -109,10 +109,8 @@ public class CameraControl : MonoBehaviour {
 	}
 
 	void ZoomCamera(float offset, float speed) {
-		if (offset == 0) {
-			return;
+		if (offset != 0) {
+			cam.fieldOfView = Mathf.Clamp(cam.fieldOfView - (offset * speed), ZoomBounds[0], ZoomBounds[1]);
 		}
-
-		cam.fieldOfView = Mathf.Clamp(cam.fieldOfView - (offset * speed), ZoomBounds[0], ZoomBounds[1]);
 	}
 }
