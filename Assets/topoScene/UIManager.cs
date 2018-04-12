@@ -324,27 +324,6 @@ public class UIManager : MonoBehaviour {
 			Object.Destroy (resultList [i]);
 		}
 		resultList.Clear ();
-<<<<<<< HEAD
-		if (scrollView.gameObject.activeSelf) {
-			scrollView.gameObject.SetActive (false);
-		} else {
-			scrollView.gameObject.SetActive (true);
-			GameObject results = GameObject.FindGameObjectWithTag ("results");
-			for (int i = 0; i < trails.Count; i++) {
-        		// checking trails agaist search input 
-				if (string.IsNullOrEmpty (searchInput.text) || trails [i].Contains (searchInput.text)) {
-					GameObject tempResult = (GameObject)Instantiate (result, results.transform);
-					tempResult.layer = 5;
-					RectTransform tempRect = tempResult.AddComponent<RectTransform> ();
-					tempRect.sizeDelta = new Vector2 (600, 40);
-					Text text = tempResult.AddComponent<Text> ();
-					text.font = Resources.GetBuiltinResource (typeof(Font), "Arial.ttf") as Font;
-					text.fontSize = 35;
-					text.color = Color.blue;
-					text.text = trails [i];
-					resultList.Add (tempResult);
-				}
-=======
 		scrollView.gameObject.SetActive (true);
 		GameObject results = GameObject.FindGameObjectWithTag ("results");
 		for (int i = 0; i < trails.Count; i++) {
@@ -361,7 +340,6 @@ public class UIManager : MonoBehaviour {
 				text.color = Color.blue;
 				text.text = trails [i];
 				resultList.Add (tempResult);
->>>>>>> 594a1251fabd5ee5720ebe110c9674f071e8ffbc
 			}
 		}
 	}

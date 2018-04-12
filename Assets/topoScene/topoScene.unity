@@ -715,7 +715,7 @@ GameObject:
   - component: {fileID: 342618194}
   - component: {fileID: 342618193}
   m_Layer: 0
-  m_Name: EveningCamera4-8
+  m_Name: EveningCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1465,7 +1465,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000061035156, y: 0.000058887283}
+  m_AnchoredPosition: {x: -0.000061035156, y: 0.0000835511}
   m_SizeDelta: {x: -83, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &558295378
@@ -1569,12 +1569,12 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 562692151}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -28.903126, y: 457.23, z: -942.87616}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.011297226, y: -3.5715027, z: 5.8238525}
   m_LocalScale: {x: 1, y: 0.8, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 23
+  m_Father: {fileID: 1675108778}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &564501454 stripped
 GameObject:
@@ -2438,7 +2438,7 @@ GameObject:
   - component: {fileID: 807381854}
   - component: {fileID: 807381853}
   m_Layer: 0
-  m_Name: NightCamera8-6
+  m_Name: NightCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4424,12 +4424,12 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1521760100}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -31.31, y: 462.21, z: -947.6}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -2.418171, y: 1.4084778, z: 1.1000366}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 22
+  m_Father: {fileID: 1675108778}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1533303791
 GameObject:
@@ -4981,7 +4981,7 @@ GameObject:
   - component: {fileID: 1675108778}
   - component: {fileID: 1675108777}
   m_Layer: 0
-  m_Name: sky
+  m_Name: EveningBackground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5040,7 +5040,9 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -28.891829, y: 460.8015, z: -948.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1521760102}
+  - {fileID: 562692153}
   m_Father: {fileID: 0}
   m_RootOrder: 21
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5523,7 +5525,9 @@ MonoBehaviour:
   HUDCam: {fileID: 938390817}
   Cam2D: {fileID: 920573821}
   SearchCam: {fileID: 0}
-  PlacesCam: {fileID: 1872574916}
+  DayCam: {fileID: 0}
+  EveningCam: {fileID: 0}
+  NightCam: {fileID: 0}
   UIObject: {fileID: 92795634}
 --- !u!1 &1872574913
 GameObject:
@@ -5536,7 +5540,7 @@ GameObject:
   - component: {fileID: 1872574916}
   - component: {fileID: 1872574915}
   m_Layer: 0
-  m_Name: DayCamera6-4
+  m_Name: DayCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6030,7 +6034,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1231297105}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.99999976
+  m_Size: 0.99999946
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
