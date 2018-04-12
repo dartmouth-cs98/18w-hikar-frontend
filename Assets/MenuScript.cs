@@ -32,12 +32,13 @@ public class MenuScript : MonoBehaviour {
 		if(SwipeManager.Instance.isSwiping(SwipeDirection.Right) && !isOpen){
 			OpenMenu ();
 			menuButton.SetActive (false);
-			UIHandler.userSelection ();
 		}
 		//unpause the game if its paused and the escape key is pressed
 		else if(SwipeManager.Instance.isSwiping(SwipeDirection.Left) && isOpen){
 			CloseMenu();
 		}
+		if(isOpen)
+			UIHandler.userSelection ();
 	}
 
 	public void onClickHamburger() {

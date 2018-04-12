@@ -22,13 +22,17 @@ public class UIManager : MonoBehaviour {
 	private List<GameObject> resultList;
 	private GameObject result;
 
-	//Annotation UI
-	public Camera arCam;
-	public Camera searchCam;
+	//Explore UI
+	private bool explore = false;
+	private List<GameObject> topTrails;
+	public GameObject topTrailsPanel;
 
+
+	//Annotation UI
 	public Button hikeButton;
 	public Button createAnnotationButton;
 	public Button submitAnnotationButton;
+	public Button toggleARButton;
 	public InputField annotationInput;
 
 	//2D UI
@@ -74,7 +78,10 @@ public class UIManager : MonoBehaviour {
 
 
 		scrollView.gameObject.SetActive (false);
-		annotationInput.gameObject.SetActive (false);
+		annotationInput.gameObject.SetActive (false);		
+		if(cameraObject != null) {
+			cameraHandler = (CameraHandler) cameraObject.gameObject.GetComponent(typeof(CameraHandler));
+		}
 	}
 		
 	void Update()
@@ -86,8 +93,8 @@ public class UIManager : MonoBehaviour {
 				List<RaycastResult> hits = new List<RaycastResult>();
 				EventSystem.current.RaycastAll(pointerData, hits);
 				if (hits.Count > 0) {
-						string resultText = hits[0].gameObject.GetComponent<Text>().text;
-						if (resultText != "Submit") { 
+					string resultText = hits[0].gameObject.GetComponent<Text>().text;
+					if (resultText != "Submit") { 
 						scrollView.gameObject.SetActive (false);
 
 						
@@ -101,8 +108,9 @@ public class UIManager : MonoBehaviour {
 						SearchMap searchMap = GameObject.FindGameObjectWithTag("SearchMapObject").GetComponent<SearchMap>();
 						searchMap.searchForLocation(searchLoc);
 
-						toggleSearchMap(); //show search map if not currently showing
-
+						cameraHandler.toggleSearchMap (showSearchMap); //show search map if not currently showing
+						hikeButton.gameObject.SetActive (true);
+						showSearchMap = !showSearchMap;
 					}
 				}
 			}
@@ -114,26 +122,25 @@ public class UIManager : MonoBehaviour {
 				EventSystem.current.RaycastAll(pointerData, hits);
 		
 				if (hits.Count > 0) {
-					try {
-						//Transport camera to selected trail HERE
-						string resultText = hits[0].gameObject.GetComponent<Text>().text;
-						Debug.Log (resultText);	
+					string resultText = hits [0].gameObject.GetComponent<Text> ().text;
+					if (resultText != "Submit") { 
 						scrollView.gameObject.SetActive (false);
 
-						Mapbox.Utils.Vector2d searchLoc = (Mapbox.Utils.Vector2d)trailTable[resultText];
-						Debug.Log(searchLoc.ToString());
-						SearchMap searchMap = GameObject.FindGameObjectWithTag("SearchMapObject").GetComponent<SearchMap>();
-						searchMap.searchForLocation(searchLoc);
 
-						toggleSearchMap(); //show search map if not currently showing
+						//search database for trail name
+						//get trail head node location
+						//reload search map with trail head location
+						//change camera to search map
 
+						Mapbox.Utils.Vector2d searchLoc = (Mapbox.Utils.Vector2d)trailTable [resultText];
+						Debug.Log (searchLoc.ToString ());
+						SearchMap searchMap = GameObject.FindGameObjectWithTag ("SearchMapObject").GetComponent<SearchMap> ();
+						searchMap.searchForLocation (searchLoc);
 
-					} catch {
-						Debug.Log ("nope");
-						scrollView.gameObject.SetActive (false);
+						cameraHandler.toggleSearchMap (showSearchMap); //show search map if not currently showing
+						hikeButton.gameObject.SetActive (true);
+						showSearchMap = !showSearchMap;
 					}
-				} else {
-					print (":(");
 				}
 			}
 		}
@@ -158,7 +165,6 @@ public class UIManager : MonoBehaviour {
 			cameraHandler = (CameraHandler) cameraObject.gameObject.GetComponent(typeof(CameraHandler));
 		}
 		enable2D (false);
-		cameraHandler.expand2D (false);
 	}
 
 	public void onAnnotationSubmit()
@@ -193,6 +199,11 @@ public class UIManager : MonoBehaviour {
 		//Vector3 lookAt = new Vector3(cam.transform.position.x, 1, cam.transform.position.z);
 		//billboard.transform.LookAt(lookAt);
 	}
+
+	public void disable2D()
+	{
+		enable2D (false);
+	}
 		
 	public void enable2D(bool enabled)
 	{
@@ -200,29 +211,34 @@ public class UIManager : MonoBehaviour {
 		if (enabled) {
 			annotationInput.gameObject.SetActive (false);
 			createAnnotationButton.gameObject.SetActive (false);
-
-			//Enable searchbar
 			searchInput.gameObject.SetActive (true);
-
+			cameraHandler.expand2D (true);
+			toggleARButton.gameObject.SetActive (true);
 		} else {
 			createAnnotationButton.gameObject.SetActive (true);
+			cameraHandler.expand2D (false);
+			toggleARButton.gameObject.SetActive (false);
 		}	
 	}
 
-	public void toggleSearchMap(){
-		if(showSearchMap == false){
-			searchCam.depth = 3; //highest depth in scene
-			showSearchMap = true;
-			hikeButton.gameObject.SetActive (true);
-		} else {
-			searchCam.depth = -1; //lowest depth
-			showSearchMap = false;
-		}
+	public void enablePlaces()
+	{
+		topTrailsPanel.gameObject.SetActive (true);
+		cameraHandler.enablePlaces ();
 	}
 		
 	public void onValueChangedAnnotation(string annotation)
 	{
 		annotationText = annotation;
+	}
+
+	public void resetUI()
+	{
+		annotationInput.gameObject.SetActive (false);
+		createAnnotationButton.gameObject.SetActive (false);
+		toggleARButton.gameObject.SetActive (false);
+		topTrailsPanel.gameObject.SetActive (false);
+		searchInput.gameObject.SetActive (false);
 	}
 
 	public void userSelection()
@@ -233,18 +249,52 @@ public class UIManager : MonoBehaviour {
 			List<RaycastResult> hits = new List<RaycastResult> ();
 			EventSystem.current.RaycastAll (pointerData, hits);
 			if (hits.Count > 0) {
-				if (hits [0].gameObject.GetComponent<Text> ().text == "Explore") {
+				//Reset all cams
+				cameraHandler.resetCams();
+				resetUI ();
+				string hit = hits [0].gameObject.GetComponent<Text> ().text;
+				if (hit == "Explore") {
 					//get player location in lat long
 					float plusMinus = radius/69f;
+					//					enableExplore (true);
+				} else if (hit == "Your Places") {
+					enablePlaces ();
+					Debug.Log ("Places");
 
-				} else if (hits [0].gameObject.GetComponent<Text> ().text == "Your Places") {
+				} else if (hit == "Settings") {
+					Debug.Log ("Settings");
 
-				} else if (hits [0].gameObject.GetComponent<Text> ().text == "Settings") {
-
-				} else if (hits [0].gameObject.GetComponent<Text> ().text == "Logout") {
-
+				} else if (hit == "Logout") {
+					Debug.Log ("Logout");
 				}
 
+			}
+		}
+		if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
+		{
+			PointerEventData pointerData = new PointerEventData(EventSystem.current);
+			pointerData.position = Input.mousePosition;
+			List<RaycastResult> hits = new List<RaycastResult>();
+			EventSystem.current.RaycastAll(pointerData, hits);
+
+			if (hits.Count > 0) {
+				//Reset all cams
+				cameraHandler.resetCams();
+				resetUI ();
+				string hit = hits [0].gameObject.GetComponent<Text> ().text;
+				if (hit == "Explore") {
+					//get player location in lat long
+					float plusMinus = radius/69f;
+//					enableExplore (true);
+				} else if (hit == "Your Places") {
+					enablePlaces ();
+				} else if (hit == "Settings") {
+					Debug.Log ("Settings");
+
+				} else if (hit == "Logout") {
+					Debug.Log ("Logout");
+
+				}
 			}
 		}
 	}
