@@ -96,7 +96,7 @@ public class UIManager : MonoBehaviour {
 				pointerData.position = Input.GetTouch(0).position;
 				List<RaycastResult> hits = new List<RaycastResult>();
 				EventSystem.current.RaycastAll(pointerData, hits);
-				if (hits.Count > 0) {
+				if (hits.Count > 0 && hits [0].gameObject.GetComponent<Text> ().text != null) {
 					string resultText = hits[0].gameObject.GetComponent<Text>().text;
 					if (resultText != "Submit") { 
 						scrollView.gameObject.SetActive (false);
@@ -124,8 +124,7 @@ public class UIManager : MonoBehaviour {
 				pointerData.position = Input.mousePosition;
 				List<RaycastResult> hits = new List<RaycastResult>();
 				EventSystem.current.RaycastAll(pointerData, hits);
-		
-				if (hits.Count > 0) {
+				if (hits.Count > 0 && hits [0].gameObject.GetComponent<Text> ().text != null) {
 					string resultText = hits [0].gameObject.GetComponent<Text> ().text;
 					if (resultText != "Submit") { 
 						scrollView.gameObject.SetActive (false);
@@ -315,26 +314,22 @@ public class UIManager : MonoBehaviour {
 			Object.Destroy (resultList [i]);
 		}
 		resultList.Clear ();
-		if (scrollView.gameObject.activeSelf) {
-			scrollView.gameObject.SetActive (false);
-		} else {
-			scrollView.gameObject.SetActive (true);
-			GameObject results = GameObject.FindGameObjectWithTag ("results");
-			for (int i = 0; i < trails.Count; i++) {
-        		// checking trails agaist search input 
-				if (string.IsNullOrEmpty (searchInput.text) || trails [i].Contains (searchInput.text)) {
-					GameObject tempResult = (GameObject)Instantiate (result, results.transform);
-					tempResult.layer = 5;
-					RectTransform tempRect = tempResult.AddComponent<RectTransform> ();
-					tempRect.sizeDelta = new Vector2 (600, 40);
-					//Add text
-					Text text = tempResult.AddComponent<Text> ();
-					text.font = Resources.GetBuiltinResource (typeof(Font), "Arial.ttf") as Font;
-					text.fontSize = 35;
-					text.color = Color.blue;
-					text.text = trails [i];
-					resultList.Add (tempResult);
-				}
+		scrollView.gameObject.SetActive (true);
+		GameObject results = GameObject.FindGameObjectWithTag ("results");
+		for (int i = 0; i < trails.Count; i++) {
+    		// checking trails agaist search input 
+			if (string.IsNullOrEmpty (searchInput.text) || trails [i].ToLower().Contains (searchInput.text.ToLower())) {
+				GameObject tempResult = (GameObject)Instantiate (result, results.transform);
+				tempResult.layer = 5;
+				RectTransform tempRect = tempResult.AddComponent<RectTransform> ();
+				tempRect.sizeDelta = new Vector2 (600, 40);
+				//Add text
+				Text text = tempResult.AddComponent<Text> ();
+				text.font = Resources.GetBuiltinResource (typeof(Font), "Arial.ttf") as Font;
+				text.fontSize = 35;
+				text.color = Color.blue;
+				text.text = trails [i];
+				resultList.Add (tempResult);
 			}
 		}
 	}
