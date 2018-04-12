@@ -30,7 +30,7 @@
 			_camera = Camera.main;
 			_cameraStartPos = _camera.transform.position;
 			//_map = FindObjectOfType<AbstractMap>();
-			_forwardGeocoder.OnGeocoderResponse += ForwardGeocoder_OnGeocoderResponse;
+//			_forwardGeocoder.OnGeocoderResponse += ForwardGeocoder_OnGeocoderResponse;
 			//_zoomSlider.onValueChanged.AddListener(Reload);
 			_wait = new WaitForSeconds(.3f);
 		}

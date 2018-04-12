@@ -54,7 +54,8 @@ public class CameraHandler : MonoBehaviour {
 			Cam2D.depth = 2;
 		} else {
 			HUDCam.depth = 2;
-			Cam2D.depth = 0;			
+			Cam2D.depth = 0;
+			ARCam.depth = 1;
 		}
 	}
 

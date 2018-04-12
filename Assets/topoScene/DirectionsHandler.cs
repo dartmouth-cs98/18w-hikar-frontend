@@ -24,9 +24,6 @@ public class DirectionsHandler : MonoBehaviour {
 
 	WWWHandler wwwScript;
 
-	private double testLat = 43.7058453;
-	private double testLon = -72.2890686;
-
 	// Use this for initialization
 
 	public void prepareForStart(WWWHandler www, Vector2 initLocation) {

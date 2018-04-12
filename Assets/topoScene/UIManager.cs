@@ -8,19 +8,17 @@ using UnityEngine.EventSystems;
 public class UIManager : MonoBehaviour {
 
 	//TODO: populate list of trails with WWW call
+
+	//Trail UI + Setup
 	private List<string> trails;
 	private int radius = 5;
 	private Mapbox.Utils.Vector2d[] trailHeads;
 	private Hashtable trailTable;
-	
 	private bool showForm = false;
-	private bool Mode2D = false;
 	private bool showSearchMap = false;
-
-	private string annotationText = "";
-	private string searchText = "";
 	private List<GameObject> resultList;
 	private GameObject result;
+	public Button hikeButton;
 
 	//Explore UI
 	private bool explore = false;
@@ -29,23 +27,26 @@ public class UIManager : MonoBehaviour {
 
 
 	//Annotation UI
-	public Button hikeButton;
 	public Button createAnnotationButton;
 	public Button submitAnnotationButton;
-	public Button toggleARButton;
 	public InputField annotationInput;
 
 	//2D UI
 	public InputField searchInput;
 	public ScrollRect scrollView;
+	public Button toggleARButton;
 
 	//wwwHandler
 	public GameObject wwwHandler;
 	private WWWHandler wwwScript;
 
-	//cameraManager
+	//cameraHandler
 	public GameObject cameraObject;
 	private CameraHandler cameraHandler;
+
+	//menuHandler
+	public GameObject menuObject;
+	private MenuScript menuHandler;
 
 	void Start () {
 		result = new GameObject ();
@@ -81,6 +82,9 @@ public class UIManager : MonoBehaviour {
 		annotationInput.gameObject.SetActive (false);		
 		if(cameraObject != null) {
 			cameraHandler = (CameraHandler) cameraObject.gameObject.GetComponent(typeof(CameraHandler));
+		}
+		if(menuObject != null) {
+			menuHandler = (MenuScript) menuObject.gameObject.GetComponent(typeof(MenuScript));
 		}
 	}
 		
@@ -170,8 +174,8 @@ public class UIManager : MonoBehaviour {
 	public void onAnnotationSubmit()
 	{
 		if (annotationInput.text != "") {
-			createAnnotation (annotationText);
-			sendAnnotation (annotationText);
+			createAnnotation (annotationInput.text);
+			sendAnnotation (annotationInput.text);
 		}
 		annotationInput.gameObject.SetActive (false);
 		showForm = false;
@@ -227,11 +231,6 @@ public class UIManager : MonoBehaviour {
 		cameraHandler.enablePlaces ();
 	}
 		
-	public void onValueChangedAnnotation(string annotation)
-	{
-		annotationText = annotation;
-	}
-
 	public void resetUI()
 	{
 		annotationInput.gameObject.SetActive (false);
@@ -248,26 +247,30 @@ public class UIManager : MonoBehaviour {
 			pointerData.position = Input.GetTouch (0).position;
 			List<RaycastResult> hits = new List<RaycastResult> ();
 			EventSystem.current.RaycastAll (pointerData, hits);
-			if (hits.Count > 0) {
+			if (hits.Count > 0 && hits [0].gameObject.GetComponent<Text> ().text != null) {
 				//Reset all cams
 				cameraHandler.resetCams();
 				resetUI ();
 				string hit = hits [0].gameObject.GetComponent<Text> ().text;
-				if (hit == "Explore") {
-					//get player location in lat long
-					float plusMinus = radius/69f;
-					//					enableExplore (true);
-				} else if (hit == "Your Places") {
-					enablePlaces ();
-					Debug.Log ("Places");
+				if(hit != null){
+					if (hit == "Map") {
+						enable2D (true);
+					}
+					else if (hit == "Explore") {
+						//get player location in lat long
+						float plusMinus = radius/69f;
+						//enableExplore (true);
+					} else if (hit == "Your Places") {
+						enablePlaces ();
+						Debug.Log ("Places");
 
-				} else if (hit == "Settings") {
-					Debug.Log ("Settings");
+					} else if (hit == "Settings") {
+						Debug.Log ("Settings");
 
-				} else if (hit == "Logout") {
-					Debug.Log ("Logout");
+					} else if (hit == "Logout") {
+						Debug.Log ("Logout");
+					}
 				}
-
 			}
 		}
 		if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
@@ -277,12 +280,15 @@ public class UIManager : MonoBehaviour {
 			List<RaycastResult> hits = new List<RaycastResult>();
 			EventSystem.current.RaycastAll(pointerData, hits);
 
-			if (hits.Count > 0) {
+			if (hits.Count > 0 && hits [0].gameObject.GetComponent<Text> ().text != null) {
 				//Reset all cams
 				cameraHandler.resetCams();
 				resetUI ();
 				string hit = hits [0].gameObject.GetComponent<Text> ().text;
-				if (hit == "Explore") {
+				if (hit == "Map") {
+					enable2D (true);
+				}
+				else if (hit == "Explore") {
 					//get player location in lat long
 					float plusMinus = radius/69f;
 //					enableExplore (true);
@@ -293,8 +299,9 @@ public class UIManager : MonoBehaviour {
 
 				} else if (hit == "Logout") {
 					Debug.Log ("Logout");
-
 				}
+				if (hit != null)
+					menuHandler.CloseMenu ();
 			}
 		}
 	}
