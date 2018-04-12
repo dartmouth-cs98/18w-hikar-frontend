@@ -5,10 +5,13 @@ using UnityEngine;
 public class CameraHandler : MonoBehaviour {
 
 	//Cameras
+	public Camera ARCam;
 	public Camera HUDCam;
 	public Camera Cam2D;
-	public Camera ARCam;
 	public Camera SearchCam;
+//	public Camera ExploreCam;
+	public Camera PlacesCam;
+
 
 	//Touch Capture
 	private Rect HUDRect = new Rect (Screen.width * 0.7f, Screen.height * 0.7f, Screen.width * 0.25f, Screen.height * 0.2f);
@@ -55,11 +58,28 @@ public class CameraHandler : MonoBehaviour {
 		}
 	}
 
-	public void searchMap(bool show){
-		if(show){
-			SearchCam.depth = 3;
-		} else{
-			SearchCam.depth = -1;
-		}
+	public void toggleSearchMap(bool showSearchMap){
+		if(showSearchMap == false)
+			SearchCam.depth = 3; //highest depth in scene
+	}
+
+//	public void enableExplore()
+//	{
+//		ExploreCam.depth = 3;
+//	}
+
+	public void enablePlaces()
+	{
+		PlacesCam.depth = 3;
+	}
+
+	public void resetCams()
+	{
+//		ExploreCam.depth = -1;
+//		SearchCam.depth = -1;
+		PlacesCam.depth = -1;
+		HUDCam.depth = -1;
+		Cam2D.depth = -1;
+		ARCam.depth = -1;
 	}
 }
