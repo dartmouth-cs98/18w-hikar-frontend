@@ -15,9 +15,9 @@ public class UIManager : MonoBehaviour {
 	private Mapbox.Utils.Vector2d[] trailHeads;
 	private Hashtable trailTable;
 	private bool showForm = false;
-	private bool showSearchMap = false;
 	private List<GameObject> resultList;
 	private GameObject result;
+	private string currentSelectedTrail;
 	public Button hikeButton;
 
 	//Explore UI
@@ -112,9 +112,9 @@ public class UIManager : MonoBehaviour {
 						SearchMap searchMap = GameObject.FindGameObjectWithTag("SearchMapObject").GetComponent<SearchMap>();
 						searchMap.searchForLocation(searchLoc);
 
-						cameraHandler.toggleSearchMap (showSearchMap); //show search map if not currently showing
+						cameraHandler.enableSearchMap (); //show search map if not currently showing
 						hikeButton.gameObject.SetActive (true);
-						showSearchMap = !showSearchMap;
+						currentSelectedTrail = resultText;
 					}
 				}
 			}
@@ -140,9 +140,9 @@ public class UIManager : MonoBehaviour {
 						SearchMap searchMap = GameObject.FindGameObjectWithTag ("SearchMapObject").GetComponent<SearchMap> ();
 						searchMap.searchForLocation (searchLoc);
 
-						cameraHandler.toggleSearchMap (showSearchMap); //show search map if not currently showing
+						cameraHandler.enableSearchMap (); //show search map if not currently showing
 						hikeButton.gameObject.SetActive (true);
-						showSearchMap = !showSearchMap;
+						currentSelectedTrail = resultText;
 					}
 				}
 			}
@@ -163,7 +163,6 @@ public class UIManager : MonoBehaviour {
 
 	public void onClickSearch()
 	{
-		// Retrieve the camera object
 		if(cameraObject != null) {
 			cameraHandler = (CameraHandler) cameraObject.gameObject.GetComponent(typeof(CameraHandler));
 		}
@@ -180,10 +179,7 @@ public class UIManager : MonoBehaviour {
 		showForm = false;
 	}
 		
-
-	// Use this for initialization
 	private void sendAnnotation (string text) {
-		//get reference to WWWHandler and get server data and parse it
 		wwwScript = (WWWHandler) wwwHandler.gameObject.GetComponent(typeof(WWWHandler));
 		string type = "Billboard";
 		float lat = Input.location.lastData.latitude;
@@ -201,6 +197,11 @@ public class UIManager : MonoBehaviour {
 		billboard.transform.position = cam.forward * 10;
 		//Vector3 lookAt = new Vector3(cam.transform.position.x, 1, cam.transform.position.z);
 		//billboard.transform.LookAt(lookAt);
+	}
+
+	public void onHike()
+	{
+		//retrieve user trail data from backend
 	}
 
 	public void disable2D()
@@ -227,7 +228,16 @@ public class UIManager : MonoBehaviour {
 	public void enablePlaces()
 	{
 		topTrailsPanel.gameObject.SetActive (true);
-		cameraHandler.enablePlaces ();
+	}
+
+	public void enableExplore()
+	{
+		//UI elements for explore
+	}
+
+	public void enableSettings()
+	{
+		//UI elements for settings
 	}
 		
 	public void resetUI()
@@ -269,6 +279,7 @@ public class UIManager : MonoBehaviour {
 					} else if (hit == "Logout") {
 						Debug.Log ("Logout");
 					}
+					cameraHandler.enableBackgroundTime ();
 				}
 			}
 		}
@@ -288,7 +299,6 @@ public class UIManager : MonoBehaviour {
 					enable2D (true);
 				}
 				else if (hit == "Explore") {
-					//get player location in lat long
 					float plusMinus = radius/69f;
 //					enableExplore (true);
 				} else if (hit == "Your Places") {
