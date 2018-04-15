@@ -11,6 +11,8 @@ public class CameraHandler : MonoBehaviour {
 	public Camera SearchCam;
 //	public Camera ExploreCam;
 	public Camera PlacesCam;
+	public Camera LoginCam;
+
 
 
 	//Touch Capture
@@ -74,6 +76,12 @@ public class CameraHandler : MonoBehaviour {
 		PlacesCam.depth = 3;
 	}
 
+	public void enableLogin()
+	{
+		LoginCam.depth = 5;
+
+	}
+
 	public void resetCams()
 	{
 //		ExploreCam.depth = -1;
@@ -82,5 +90,6 @@ public class CameraHandler : MonoBehaviour {
 		HUDCam.depth = -1;
 		Cam2D.depth = -1;
 		ARCam.depth = -1;
+		LoginCam.depth = -1;
 	}
 }
