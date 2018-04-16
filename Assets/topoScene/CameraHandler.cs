@@ -11,15 +11,10 @@ public class CameraHandler : MonoBehaviour {
 	public Camera Cam2D;
 	public Camera SearchCam;
 //	public Camera ExploreCam;
-//<<<<<<< HEAD
-	public Camera PlacesCam;
 	public Camera LoginCam;
-//
-//=======
 	public Camera DayCam;
 	public Camera EveningCam;
 	public Camera NightCam;
-//>>>>>>> 5a53bbcd7239730ed3172cd7543bf3e0c5a71825
 
 
 	//Touch Capture
