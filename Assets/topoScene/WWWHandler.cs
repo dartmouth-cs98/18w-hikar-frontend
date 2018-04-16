@@ -37,6 +37,8 @@ public class WWWHandler : MonoBehaviour {
 	const string postAnnotationUrl = "https://hikar.herokuapp.com/postAnnotation";
 
 	const string getTestTrailUrl = "https://hikar.herokuapp.com/getTest";
+	const string getTrailUrl = "https://hikar.herokuapp.com/getTrail/";
+	const string getTrailsUrl = "https://hikar.herokuapp.com/queryTrails/" //   latitude/longitude/radius
 
 	string getFeaturesUrl = "https://api.mapbox.com/v4/mapbox.mapbox-terrain-v2/tilequery/";
 
@@ -105,6 +107,34 @@ public class WWWHandler : MonoBehaviour {
 			if(www.error != null)
 				yield return www.error + ". Get unsuccessful";
 			else
+				yield return www.text;
+		}
+	}
+
+	public IEnumerator GetTrail(string name){
+
+		string query = string.Concat(getTrailUrl, name);
+
+		using (WWW www = new WWW (query))
+		{
+			yield return www;
+			if(www.error != null)
+				yield return www.error + ". Get unsuccessful";
+			else 
+				yield return www.text;
+		}
+	}
+
+	public IEnumerator GetTrails(float lat, float lon, float miles){
+
+		string query = getTrailsUrl + "/" + lat + "/" + lon + "/" + miles;
+
+		using (WWW www = new WWW (query))
+		{
+			yield return www;
+			if(www.error != null)
+				yield return www.error + ". Get unsuccessful";
+			else 
 				yield return www.text;
 		}
 	}

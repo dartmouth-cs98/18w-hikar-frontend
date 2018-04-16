@@ -80,7 +80,8 @@ public class DirectionsHandler : MonoBehaviour {
 
 		}
 
-		waypoints = new Mapbox.Utils.Vector2d[waypointList.Count];
+		//waypoints = new Mapbox.Utils.Vector2d[(waypointList.Count * 2) - 1]; //minus one because you can't calculate midpoint at
+		waypoints = new Mapbox.Utils.Vector2d[(waypointList.Count]; //1:1 trail 
 		waypoints = waypointList.ToArray();
 
 
@@ -93,7 +94,7 @@ public class DirectionsHandler : MonoBehaviour {
 	/*
 	public IEnumerator getDirectionsFromTrailName(WWWHandler www, string trailName){
 
-		//set initialLocation
+		//set initialLocation (probably as trail head node) as vec2
 
 		//store all waypoints as Vec2ds
 
