@@ -19,7 +19,7 @@ public class DirectionsHandler : MonoBehaviour {
 
 	private double[] coordinateArray;
 
-	private float scaleRadius = 50f;
+	private float scaleRadius = 100f;
 
 	//public Transform[] transforms;
 
@@ -91,16 +91,47 @@ public class DirectionsHandler : MonoBehaviour {
 
 
 	//**THIS FUNCTION QUERIES FOR THE TRAIL NAME**//
-	/*
-	public IEnumerator getDirectionsFromTrailName(WWWHandler www, string trailName){
+
+	public IEnumerator getDirectionsFromTrailName(WWWHandler www, string trailName, Mapbox.Unity.Location.Location location){
+
+		Debug.Log("Getting trail: " + trailName);
+
+		wwwScript = www;
+		waypointList = new List<Mapbox.Utils.Vector2d>();
 
 		//set initialLocation (probably as trail head node) as vec2
 
-		//store all waypoints as Vec2ds
+		//initialLocation
+		Vector2 refLoc = new Vector2((float)location.LatitudeLongitude.x, (float)location.LatitudeLongitude.y);
+		Vector3 initLoc = UnityVectorFromVec2d(location.LatitudeLongitude, refLoc, scaleRadius);
+		initialLocation = new Vector3(initLoc.x, initLoc.z);
 
-		//call startDirections()
+		//store all waypoints as Vec2ds
+		CoroutineWithData nodeData = new CoroutineWithData(this, wwwScript.GetTrail(trailName));
+		yield return nodeData.coroutine;
+		var parsedNode = SimpleJSON.JSON.Parse (nodeData.result.ToString ());
+
+		Debug.Log("trail node count: " + parsedNode["geometry"]["coordinates"].Count);
+
+		Debug.Log(parsedNode.ToString());
+
+		for(int i = 0; i < parsedNode["geometry"]["coordinates"].Count; i++) {
+
+			double lat = parsedNode["geometry"]["coordinates"][i][1].AsDouble;
+			double lon = parsedNode["geometry"]["coordinates"][i][0].AsDouble;
+
+			Mapbox.Utils.Vector2d vec2d = new Mapbox.Utils.Vector2d(lat, lon);
+
+			waypointList.Add(vec2d);
+
+		}
+
+		//waypoints = new Mapbox.Utils.Vector2d[(waypointList.Count * 2) - 1]; //minus one because you can't calculate midpoint at end
+		waypoints = new Mapbox.Utils.Vector2d[waypointList.Count]; //1:1 trail 
+		waypoints = waypointList.ToArray();
+
+		startDirections();
 	}
-	*/
 
 	public void getDirectionsFromLatLngs(Vector2[] latlngs){
 

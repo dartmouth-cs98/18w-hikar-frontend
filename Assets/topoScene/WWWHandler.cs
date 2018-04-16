@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using System.Text;
+using System;
 
 //Code adapted from answers.unity.com
 public class CoroutineWithData {
@@ -40,7 +42,7 @@ public class WWWHandler : MonoBehaviour {
 
 	const string getTestTrailUrl = "https://hikar.herokuapp.com/getTest";
 	const string getTrailUrl = "https://hikar.herokuapp.com/getTrail/";
-	const string getTrailsUrl = "https://hikar.herokuapp.com/queryTrails/"; //   latitude/longitude/radius
+	const string getTrailsUrl = "https://hikar.herokuapp.com/queryTrail/"; //   latitude/longitude/radius
 
 	string getFeaturesUrl = "https://api.mapbox.com/v4/mapbox.mapbox-terrain-v2/tilequery/";
 
@@ -151,9 +153,13 @@ public class WWWHandler : MonoBehaviour {
 
 	public IEnumerator GetTrail(string name){
 
-		string query = string.Concat(getTrailUrl, name);
+		StringBuilder query = new StringBuilder(getTrailUrl);
+		query.Append(name);
 
-		using (WWW www = new WWW (query))
+		String prequery = query.ToString();
+		prequery.Replace(' ', '-');
+
+		using (WWW www = new WWW (prequery))
 		{
 			yield return www;
 			if(www.error != null)
@@ -163,11 +169,12 @@ public class WWWHandler : MonoBehaviour {
 		}
 	}
 
-	public IEnumerator GetTrails(float lat, float lon, float miles){
+	public IEnumerator GetTrails(double lon, double lat, int miles){
+		StringBuilder query = new StringBuilder(getTrailsUrl);
 
-		string query = getTrailsUrl + "/" + lat + "/" + lon + "/" + miles;
+		query.Append("/" + lat.ToString() + "/" + lon.ToString() + "/" + miles.ToString());
 
-		using (WWW www = new WWW (query))
+		using (WWW www = new WWW (query.ToString()))
 		{
 			yield return www;
 			if(www.error != null)
