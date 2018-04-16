@@ -6,6 +6,13 @@ using Mapbox.Unity;
 
 public class DirectionsHandler : MonoBehaviour {
 
+
+	[SerializeField]
+	GameObject map;
+
+	[SerializeField]
+	GameObject rayCastObject;
+
 	private Mapbox.Utils.Vector2d[] waypoints;
 
 	private List<Mapbox.Utils.Vector2d> waypointList;
@@ -24,6 +31,7 @@ public class DirectionsHandler : MonoBehaviour {
 
 	WWWHandler wwwScript;
 
+
 	// Use this for initialization
 
 	public void prepareForStart(WWWHandler www, Vector2 initLocation) {
@@ -38,20 +46,24 @@ public class DirectionsHandler : MonoBehaviour {
 
 	}
 
+
+	//** THIS IS FOR THE TEST TRAIL **//
 	public IEnumerator getDirectionsFromJSON (WWWHandler www, Mapbox.Unity.Location.Location location) {
 
-//		Debug.Log("Converting JSON to vec2d");
+		Debug.Log("Converting JSON to vec2d");
 
 		wwwScript = www;
 
 		waypointList = new List<Mapbox.Utils.Vector2d>();
 
-		//insert initial location
-		//initialLocation = initLocation;
-		//Mapbox.Utils.Vector2d initVec2d = new Mapbox.Utils.Vector2d(initialLocation.x, initialLocation.y); //use initLocation variables for real
-		//waypointList.Add(initVec2d);
 
-		CoroutineWithData nodeData = new CoroutineWithData(this, wwwScript.GetNode());
+		//initialLocation
+		Vector2 refLoc = new Vector2((float)location.LatitudeLongitude.x, (float)location.LatitudeLongitude.y);
+		Vector3 initLoc = UnityVectorFromVec2d(location.LatitudeLongitude, refLoc, scaleRadius);
+		initialLocation = new Vector3(initLoc.x, initLoc.z);
+
+
+		CoroutineWithData nodeData = new CoroutineWithData(this, wwwScript.GetTestTrail());
 		yield return nodeData.coroutine;
 		var parsedNode = SimpleJSON.JSON.Parse (nodeData.result.ToString ());
 
@@ -76,9 +88,23 @@ public class DirectionsHandler : MonoBehaviour {
 
 	}
 
+
+	//**THIS FUNCTION QUERIES FOR THE TRAIL NAME**//
+	/*
+	public IEnumerator getDirectionsFromTrailName(WWWHandler www, string trailName){
+
+		//set initialLocation
+
+		//store all waypoints as Vec2ds
+
+		//call startDirections()
+	}
+	*/
+
 	public void getDirectionsFromLatLngs(Vector2[] latlngs){
 
 	}
+
 
 
 	public void startDirections () {
@@ -102,11 +128,81 @@ public class DirectionsHandler : MonoBehaviour {
 			}
 
 			//do something with y value ... calculate or normalize
-			position.y = 1;
+			//position.y = 1;
 
 			positions[i] = position;
 		}
 
+		//calculate heights of positions using raycasts
+		calculateHeights();
+
+	}
+
+	void calculateHeights(){
+
+		//RAYCASTOBJECT HEIGHT IS 1100
+		//MAP BASE HEIGHT IS 1000
+		//mapOffset should be 100
+
+		if(rayCastObject == null){
+			rayCastObject = GameObject.FindGameObjectWithTag("rayCastObject");
+		}
+
+		//calculate distance to map from rayOrigin
+		float mapOffset = rayCastObject.transform.position.y - map.transform.position.y;
+
+		//calculate height at player position for offset
+		Vector3 playerRayOrigin = new Vector3(initialLocation.x, rayCastObject.transform.position.y, initialLocation.y);
+		float playerOffset = castRaycastDownAtPosition(playerRayOrigin) - mapOffset; //mapOffset skews it
+
+		//calculate total path offset
+		float totalOffset = mapOffset + playerOffset;
+
+		Debug.Log("Height: " + playerOffset + " at player (x,z): (" + initialLocation.x + ", " + initialLocation.y + ")");
+
+		Debug.Log("Map Offset: " + mapOffset + "  playerOffset: " + playerOffset + "  totalOffset: " + totalOffset);
+
+
+		for(int i = 0; i < positions.Length; i++){
+			Vector3 rayOrigin = new Vector3(positions[i].x, rayCastObject.transform.position.y, positions[i].z);
+
+			float height = castRaycastDownAtPosition(rayOrigin);
+
+			if(height != rayOrigin.y){
+				//adjust path to player level
+				height -= totalOffset;
+
+				Vector3 newPos = new Vector3(positions[i].x, height, positions[i].z);
+				positions[i] = newPos;
+
+				//Debug.Log("height for position: " + i + " is " + height);
+			}
+		}
+
+		//call render function
+		drawLine();
+
+	}
+
+
+	public Vector3 UnityVectorFromVec2d(Mapbox.Utils.Vector2d vec2d, Vector2 refLoc, float radius) {
+
+		//Mapbox.Utils.Vector2d refVec2d = new Mapbox.Utils.Vector2d(refLoc.x, refLoc.y);
+
+		//GameObject mapObject = GameObject.FindGameObjectWithTag("MapObject");
+
+		Mapbox.Unity.Map.MapAtWorldScale _map = (Mapbox.Unity.Map.MapAtWorldScale)map.GetComponent(typeof(Mapbox.Unity.Map.MapAtWorldScale));
+
+		Mapbox.Utils.Vector2d worldPositionVec2d = Mapbox.Unity.Utilities.Conversions.GeoToWorldPosition(vec2d, _map.CenterMercator, _map.WorldRelativeScale);
+
+		Vector3 unityPosition = (Vector3)Mapbox.Unity.Utilities.Conversions.GeoToWorldGlobePosition(worldPositionVec2d, radius);
+
+		return unityPosition;
+
+	}
+
+	void drawLine(){
+		
 		//set lineRenderer positions to draw
 		lineRenderer = GetComponent<LineRenderer>();
 		lineRenderer.positionCount = positions.Length;
@@ -117,23 +213,25 @@ public class DirectionsHandler : MonoBehaviour {
 		lineRenderer.startColor = startColor;
 		lineRenderer.endColor = endColor;
 
+		lineRenderer.numCapVertices = 90; //adjust this value for smoother lines (90 MAX)
 	}
 
+	public float castRaycastDownAtPosition(Vector3 rayOrigin){
 
-	public Vector3 UnityVectorFromVec2d(Mapbox.Utils.Vector2d vec2d, Vector2 refLoc, float radius) {
+		rayCastObject.transform.position = rayOrigin;
+		Vector3 down = -Vector3.up;
+		RaycastHit hit;
+		float height;
 
-		//Mapbox.Utils.Vector2d refVec2d = new Mapbox.Utils.Vector2d(refLoc.x, refLoc.y);
-
-		GameObject mapObject = GameObject.FindGameObjectWithTag("MapObject");
-
-		Mapbox.Unity.Map.MapAtWorldScale map = (Mapbox.Unity.Map.MapAtWorldScale)mapObject.GetComponent(typeof(Mapbox.Unity.Map.MapAtWorldScale));
-
-		Mapbox.Utils.Vector2d worldPositionVec2d = Mapbox.Unity.Utilities.Conversions.GeoToWorldPosition(vec2d, map.CenterMercator, map.WorldRelativeScale);
-
-		Vector3 unityPosition = (Vector3)Mapbox.Unity.Utilities.Conversions.GeoToWorldGlobePosition(worldPositionVec2d, radius);
-
-		return unityPosition;
-
+		if(Physics.Raycast(rayOrigin, down, out hit)){
+			//Debug.DrawRay(rayOrigin, down * hit.distance);
+			height = (rayOrigin.y - hit.distance);
+		}
+		else{
+			Debug.Log("RayCast hit failed: " + hit.distance + " at location: " + rayOrigin);
+			height = rayOrigin.y;
+		}
+		return height;
 	}
 	
 	// Update is called once per frame

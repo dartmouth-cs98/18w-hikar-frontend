@@ -38,6 +38,8 @@ public class WWWHandler : MonoBehaviour {
 	const string updateUserTrail = "https://hikar.herokuapp.com/updateUserTrail";
 	const string getUserTrail = "https://hikar.herokuapp.com/getUserTrail";
 
+	const string getTestTrailUrl = "https://hikar.herokuapp.com/getTest";
+
 	string getFeaturesUrl = "https://api.mapbox.com/v4/mapbox.mapbox-terrain-v2/tilequery/";
 
 	Vector2 testLocation = new Vector2(43.7063846f, -72.29164739999999f);
@@ -125,7 +127,17 @@ public class WWWHandler : MonoBehaviour {
 	public IEnumerator UpdateUserTrail(string trailName)
 	{
 		//Post with the unique ID given by mLab (can't find update function)
-		using (WWW www = new WWW (updateUserTrail))
+		using (WWW www = new WWW (updateUserTrail)) {
+			yield return www;
+			if(www.error != null)
+				yield return www.error + ". Get unsuccessful";
+			else
+				yield return www.text;
+		}
+	}
+	public IEnumerator GetTestTrail()
+	{
+		using (WWW www = new WWW (getTestTrailUrl))
 		{
 			yield return www;
 			if(www.error != null)
