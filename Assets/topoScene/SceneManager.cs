@@ -48,8 +48,6 @@ public class SceneManager : MonoBehaviour {
 
 	public int zoomFactor = 16; //handles the zoom level on the map (hardcode for now)
 
-	public bool hasMapChanged = false;
-
 	void Start () {
 
 		//object that updates camera position based on player position
@@ -126,11 +124,9 @@ public class SceneManager : MonoBehaviour {
 
 		if(isLatLngUpdated){
 			locationText.GetComponent<UnityEngine.UI.Text>().text = "" + location.LatitudeLongitude.x + ", " + location.LatitudeLongitude.y;
-			if(hasMapChanged == false){
-				map = (Mapbox.Unity.Map.MapAtWorldScale) mapObject.GetComponent((typeof(Mapbox.Unity.Map.MapAtWorldScale)));
-				playerObject.transform.MoveToGeocoordinate(location.LatitudeLongitude, map.CenterMercator, map.WorldRelativeScale);
-				distanceText.GetComponent<UnityEngine.UI.Text> ().text = "World Position: " + playerObject.transform.position.ToString();
-			}
+			map = (Mapbox.Unity.Map.MapAtWorldScale) mapObject.GetComponent((typeof(Mapbox.Unity.Map.MapAtWorldScale)));
+			playerObject.transform.MoveToGeocoordinate(location.LatitudeLongitude, map.CenterMercator, map.WorldRelativeScale);
+			distanceText.GetComponent<UnityEngine.UI.Text> ().text = "World Position: " + playerObject.transform.position.ToString();
 		}
 	}
 	//updates camera position if user is touching screen

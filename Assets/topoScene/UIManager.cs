@@ -143,6 +143,7 @@ public class UIManager : MonoBehaviour {
 						cameraHandler.enableSearchMap (); //show search map if not currently showing
 						hikeButton.gameObject.SetActive (true);
 						currentSelectedTrail = resultText;
+						searchInput.text = "";
 					}
 				}
 			}
@@ -216,13 +217,12 @@ public class UIManager : MonoBehaviour {
 			annotationInput.gameObject.SetActive (false);
 			createAnnotationButton.gameObject.SetActive (false);
 			searchInput.gameObject.SetActive (true);
-			cameraHandler.expand2D (true);
 			toggleARButton.gameObject.SetActive (true);
 		} else {
 			createAnnotationButton.gameObject.SetActive (true);
-			cameraHandler.expand2D (false);
 			toggleARButton.gameObject.SetActive (false);
 		}	
+		cameraHandler.expand2D (enabled);
 	}
 
 	public void enablePlaces()
@@ -261,25 +261,22 @@ public class UIManager : MonoBehaviour {
 				cameraHandler.resetCams();
 				resetUI ();
 				string hit = hits [0].gameObject.GetComponent<Text> ().text;
-				if(hit != null){
+				if (hit != null) {
 					if (hit == "Map") {
 						enable2D (true);
-					}
-					else if (hit == "Explore") {
-						//get player location in lat long
-						float plusMinus = radius/69f;
-						//enableExplore (true);
+					} else if (hit == "Explore") {
+						float plusMinus = radius / 69f;
+						//					enableExplore (true);
 					} else if (hit == "Your Places") {
 						enablePlaces ();
-						Debug.Log ("Places");
-
+						cameraHandler.enableBackgroundTime ();
 					} else if (hit == "Settings") {
 						Debug.Log ("Settings");
 
 					} else if (hit == "Logout") {
 						Debug.Log ("Logout");
 					}
-					cameraHandler.enableBackgroundTime ();
+					menuHandler.CloseMenu ();
 				}
 			}
 		}
@@ -289,28 +286,29 @@ public class UIManager : MonoBehaviour {
 			pointerData.position = Input.mousePosition;
 			List<RaycastResult> hits = new List<RaycastResult>();
 			EventSystem.current.RaycastAll(pointerData, hits);
-
-			if (hits.Count > 0 && hits [0].gameObject.GetComponent<Text> ().text != null) {
+			if (hits.Count > 0 && hits [0].gameObject.GetComponent<Text> () != null) {
 				//Reset all cams
 				cameraHandler.resetCams();
 				resetUI ();
 				string hit = hits [0].gameObject.GetComponent<Text> ().text;
-				if (hit == "Map") {
-					enable2D (true);
-				}
-				else if (hit == "Explore") {
-					float plusMinus = radius/69f;
-//					enableExplore (true);
-				} else if (hit == "Your Places") {
-					enablePlaces ();
-				} else if (hit == "Settings") {
-					Debug.Log ("Settings");
+				if (hit != null) {
+					if (hit == "Map") {
+						enable2D (true);
+					} else if (hit == "Explore") {
+						float plusMinus = radius / 69f;
+						//					enableExplore (true);
+					} else if (hit == "Your Places") {
+						enablePlaces ();
+						cameraHandler.enableBackgroundTime ();
+					} else if (hit == "Settings") {
+						Debug.Log ("Settings");
 
-				} else if (hit == "Logout") {
-					Debug.Log ("Logout");
-				}
-				if (hit != null)
+					} else if (hit == "Logout") {
+						Debug.Log ("Logout");
+					}
 					menuHandler.CloseMenu ();
+				}
+					
 			}
 		}
 	}

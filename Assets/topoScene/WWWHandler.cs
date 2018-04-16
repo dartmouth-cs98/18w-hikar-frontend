@@ -28,13 +28,15 @@ public class WWWHandler : MonoBehaviour {
 
 	//References this tutorial: https://docs.unity3d.com/ScriptReference/WWW.html
 
-	string debugPostNodeUrl = "http://localhost:9090/postNode";
+//	string debugPostNodeUrl = "http://localhost:9090/postNode";
 
  	const string baseUrl = "https://hikar.herokuapp.com";
 	const string getNodeUrl = "https://hikar.herokuapp.com/getNode";
 	const string postNodeUrl = "https://hikar.herokuapp.com/postNode";
 	const string getAnnotationUrl = "https://hikar.herokuapp.com/getAnnotation";
 	const string postAnnotationUrl = "https://hikar.herokuapp.com/postAnnotation";
+	const string updateUserTrail = "https://hikar.herokuapp.com/updateUserTrail";
+	const string getUserTrail = "https://hikar.herokuapp.com/getUserTrail";
 
 	string getFeaturesUrl = "https://api.mapbox.com/v4/mapbox.mapbox-terrain-v2/tilequery/";
 
@@ -86,6 +88,44 @@ public class WWWHandler : MonoBehaviour {
 	public IEnumerator GetNode()
 	{
 		using (WWW www = new WWW (getNodeUrl))
+		{
+			yield return www;
+			if(www.error != null)
+				yield return www.error + ". Get unsuccessful";
+			else
+				yield return www.text;
+		}
+	}
+
+	//query by radius
+	public IEnumerator GetNode(int radius)
+	{
+		using (WWW www = new WWW (getNodeUrl))
+		{
+			yield return www;
+			if(www.error != null)
+				yield return www.error + ". Get unsuccessful";
+			else
+				yield return www.text;
+		}
+	}
+
+	public IEnumerator GetUserTrail()
+	{
+		using (WWW www = new WWW (getUserTrail))
+		{
+			yield return www;
+			if(www.error != null)
+				yield return www.error + ". Get unsuccessful";
+			else
+				yield return www.text;
+		}
+	}
+
+	public IEnumerator UpdateUserTrail(string trailName)
+	{
+		//Post with the unique ID given by mLab (can't find update function)
+		using (WWW www = new WWW (updateUserTrail))
 		{
 			yield return www;
 			if(www.error != null)
