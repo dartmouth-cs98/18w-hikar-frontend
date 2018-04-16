@@ -23,6 +23,7 @@ TagManager:
   - results
   - SearchCamera
   - explorePanel
+  - rayCastObject
   layers:
   - Default
   - TransparentFX

@@ -36,6 +36,8 @@ public class WWWHandler : MonoBehaviour {
 	const string getAnnotationUrl = "https://hikar.herokuapp.com/getAnnotation";
 	const string postAnnotationUrl = "https://hikar.herokuapp.com/postAnnotation";
 
+	const string getTestTrailUrl = "https://hikar.herokuapp.com/getTest";
+
 	string getFeaturesUrl = "https://api.mapbox.com/v4/mapbox.mapbox-terrain-v2/tilequery/";
 
 	Vector2 testLocation = new Vector2(43.7063846f, -72.29164739999999f);
@@ -94,6 +96,19 @@ public class WWWHandler : MonoBehaviour {
 				yield return www.text;
 		}
 	}
+
+	public IEnumerator GetTestTrail()
+	{
+		using (WWW www = new WWW (getTestTrailUrl))
+		{
+			yield return www;
+			if(www.error != null)
+				yield return www.error + ". Get unsuccessful";
+			else
+				yield return www.text;
+		}
+	}
+		
 
 	public IEnumerator GetAnnotation()
 	{
