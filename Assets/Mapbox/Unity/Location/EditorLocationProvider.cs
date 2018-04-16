@@ -31,6 +31,13 @@ namespace Mapbox.Unity.Location
 		[SerializeField]
 		AbstractMap _map;
 
+		[SerializeField]
+		GameObject sceneManagerObject;
+
+		SceneManager sceneManager;
+
+		bool isInitialLocation = true;
+
 		bool _mapInitialized;
 
 #if UNITY_EDITOR
@@ -42,6 +49,11 @@ namespace Mapbox.Unity.Location
 			{
 				_targetTransform = transform;
 			}
+
+			if(sceneManagerObject == null){
+				sceneManagerObject = GameObject.FindGameObjectWithTag("sceneManager");
+			}
+			sceneManager = (SceneManager)sceneManagerObject.GetComponent(typeof(SceneManager));
 
 			base.Awake();
 		}
@@ -79,6 +91,15 @@ namespace Mapbox.Unity.Location
 			_currentLocation.Timestamp = UnixTimestampUtils.To(DateTime.UtcNow);
 			_currentLocation.IsLocationUpdated = true;
 			_currentLocation.IsHeadingUpdated = true;
+
+
+			sceneManager.updateLocation(_currentLocation, isInitialLocation, 
+				_currentLocation.IsHeadingUpdated, _currentLocation.IsLocationUpdated);
+
+			if(isInitialLocation == true){
+				isInitialLocation = false;
+			}
+				
 		}
 	}
 }
