@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,7 +11,15 @@ public class CameraHandler : MonoBehaviour {
 	public Camera Cam2D;
 	public Camera SearchCam;
 //	public Camera ExploreCam;
+<<<<<<< HEAD
 	public Camera PlacesCam;
+	public Camera LoginCam;
+
+=======
+	public Camera DayCam;
+	public Camera EveningCam;
+	public Camera NightCam;
+>>>>>>> 5a53bbcd7239730ed3172cd7543bf3e0c5a71825
 
 
 	//Touch Capture
@@ -59,9 +68,8 @@ public class CameraHandler : MonoBehaviour {
 		}
 	}
 
-	public void toggleSearchMap(bool showSearchMap){
-		if(showSearchMap == false)
-			SearchCam.depth = 3; //highest depth in scene
+	public void enableSearchMap(){
+		SearchCam.depth = 3; //highest depth in scene
 	}
 
 //	public void enableExplore()
@@ -69,18 +77,33 @@ public class CameraHandler : MonoBehaviour {
 //		ExploreCam.depth = 3;
 //	}
 
-	public void enablePlaces()
+	public void enableBackgroundTime()
 	{
-		PlacesCam.depth = 3;
+		int time = (int)DateTime.Now.Hour;
+		if (time > 6 && time < 16)
+			DayCam.depth = 3;
+		else if (time > 16 && time < 20)
+			EveningCam.depth = 3;
+		else if ((time > 20 && time < 24) || (time > 0 && time < 6))
+			NightCam.depth = 3;
+	}
+
+	public void enableLogin()
+	{
+		LoginCam.depth = 5;
+
 	}
 
 	public void resetCams()
 	{
 //		ExploreCam.depth = -1;
-//		SearchCam.depth = -1;
-		PlacesCam.depth = -1;
+		SearchCam.depth = -1;
+		DayCam.depth = -1;
+		EveningCam.depth = -1;
+		NightCam.depth = -1;
 		HUDCam.depth = -1;
 		Cam2D.depth = -1;
 		ARCam.depth = -1;
+		LoginCam.depth = -1;
 	}
 }
