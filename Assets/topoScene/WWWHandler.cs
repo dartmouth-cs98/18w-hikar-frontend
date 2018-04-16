@@ -38,7 +38,7 @@ public class WWWHandler : MonoBehaviour {
 
 	const string getTestTrailUrl = "https://hikar.herokuapp.com/getTest";
 	const string getTrailUrl = "https://hikar.herokuapp.com/getTrail/";
-	const string getTrailsUrl = "https://hikar.herokuapp.com/queryTrails/" //   latitude/longitude/radius
+	const string getTrailsUrl = "https://hikar.herokuapp.com/queryTrails/"; //   latitude/longitude/radius
 
 	string getFeaturesUrl = "https://api.mapbox.com/v4/mapbox.mapbox-terrain-v2/tilequery/";
 

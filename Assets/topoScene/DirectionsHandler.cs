@@ -80,8 +80,8 @@ public class DirectionsHandler : MonoBehaviour {
 
 		}
 
-		//waypoints = new Mapbox.Utils.Vector2d[(waypointList.Count * 2) - 1]; //minus one because you can't calculate midpoint at
-		waypoints = new Mapbox.Utils.Vector2d[(waypointList.Count]; //1:1 trail 
+		//waypoints = new Mapbox.Utils.Vector2d[(waypointList.Count * 2) - 1]; //minus one because you can't calculate midpoint at end
+		waypoints = new Mapbox.Utils.Vector2d[waypointList.Count]; //1:1 trail 
 		waypoints = waypointList.ToArray();
 
 
