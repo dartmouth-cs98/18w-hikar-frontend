@@ -6,6 +6,13 @@ using Mapbox.Unity;
 
 public class DirectionsHandler : MonoBehaviour {
 
+
+	[SerializeField]
+	GameObject map;
+
+	[SerializeField]
+	GameObject rayCastObject;
+
 	private Mapbox.Utils.Vector2d[] waypoints;
 
 	private List<Mapbox.Utils.Vector2d> waypointList;
@@ -24,7 +31,6 @@ public class DirectionsHandler : MonoBehaviour {
 
 	WWWHandler wwwScript;
 
-	public GameObject rayCastObject;
 
 	// Use this for initialization
 
@@ -40,6 +46,8 @@ public class DirectionsHandler : MonoBehaviour {
 
 	}
 
+
+	//** THIS IS FOR THE TEST TRAIL **//
 	public IEnumerator getDirectionsFromJSON (WWWHandler www, Mapbox.Unity.Location.Location location) {
 
 		Debug.Log("Converting JSON to vec2d");
@@ -80,9 +88,23 @@ public class DirectionsHandler : MonoBehaviour {
 
 	}
 
+
+	//**THIS FUNCTION QUERIES FOR THE TRAIL NAME**//
+	/*
+	public IEnumerator getDirectionsFromTrailName(WWWHandler www, string trailName){
+
+		//set initialLocation
+
+		//store all waypoints as Vec2ds
+
+		//call startDirections()
+	}
+	*/
+
 	public void getDirectionsFromLatLngs(Vector2[] latlngs){
 
 	}
+
 
 
 	public void startDirections () {
@@ -127,11 +149,9 @@ public class DirectionsHandler : MonoBehaviour {
 		}
 
 		//calculate distance to map from rayOrigin
-		GameObject map = GameObject.FindGameObjectWithTag("MapObject");
 		float mapOffset = rayCastObject.transform.position.y - map.transform.position.y;
 
 		//calculate height at player position for offset
-		//GameObject player = GameObject.FindGameObjectWithTag("Player");
 		Vector3 playerRayOrigin = new Vector3(initialLocation.x, rayCastObject.transform.position.y, initialLocation.y);
 		float playerOffset = castRaycastDownAtPosition(playerRayOrigin) - mapOffset; //mapOffset skews it
 
@@ -169,11 +189,11 @@ public class DirectionsHandler : MonoBehaviour {
 
 		//Mapbox.Utils.Vector2d refVec2d = new Mapbox.Utils.Vector2d(refLoc.x, refLoc.y);
 
-		GameObject mapObject = GameObject.FindGameObjectWithTag("MapObject");
+		//GameObject mapObject = GameObject.FindGameObjectWithTag("MapObject");
 
-		Mapbox.Unity.Map.MapAtWorldScale map = (Mapbox.Unity.Map.MapAtWorldScale)mapObject.GetComponent(typeof(Mapbox.Unity.Map.MapAtWorldScale));
+		Mapbox.Unity.Map.MapAtWorldScale _map = (Mapbox.Unity.Map.MapAtWorldScale)map.GetComponent(typeof(Mapbox.Unity.Map.MapAtWorldScale));
 
-		Mapbox.Utils.Vector2d worldPositionVec2d = Mapbox.Unity.Utilities.Conversions.GeoToWorldPosition(vec2d, map.CenterMercator, map.WorldRelativeScale);
+		Mapbox.Utils.Vector2d worldPositionVec2d = Mapbox.Unity.Utilities.Conversions.GeoToWorldPosition(vec2d, _map.CenterMercator, _map.WorldRelativeScale);
 
 		Vector3 unityPosition = (Vector3)Mapbox.Unity.Utilities.Conversions.GeoToWorldGlobePosition(worldPositionVec2d, radius);
 
@@ -204,7 +224,7 @@ public class DirectionsHandler : MonoBehaviour {
 		float height;
 
 		if(Physics.Raycast(rayOrigin, down, out hit)){
-			Debug.DrawRay(rayOrigin, down * hit.distance);
+			//Debug.DrawRay(rayOrigin, down * hit.distance);
 			height = (rayOrigin.y - hit.distance);
 		}
 		else{
