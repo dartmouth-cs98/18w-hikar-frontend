@@ -99,8 +99,6 @@ public class UIManager : MonoBehaviour {
 				if (hits.Count > 0 && hits [0].gameObject.GetComponent<Text> ().text != null) {
 					string resultText = hits[0].gameObject.GetComponent<Text>().text;
 					if (resultText != "Submit") { 
-						scrollView.gameObject.SetActive (false);
-
 						
 						//search database for trail name
 						//get trail head node location
@@ -115,6 +113,8 @@ public class UIManager : MonoBehaviour {
 						cameraHandler.enableSearchMap (); //show search map if not currently showing
 						hikeButton.gameObject.SetActive (true);
 						currentSelectedTrail = resultText;
+						searchInput.text = "";
+						scrollView.gameObject.SetActive (false);
 					}
 				}
 			}
@@ -144,6 +144,7 @@ public class UIManager : MonoBehaviour {
 						hikeButton.gameObject.SetActive (true);
 						currentSelectedTrail = resultText;
 						searchInput.text = "";
+						scrollView.gameObject.SetActive (false);
 					}
 				}
 			}
@@ -257,11 +258,12 @@ public class UIManager : MonoBehaviour {
 			List<RaycastResult> hits = new List<RaycastResult> ();
 			EventSystem.current.RaycastAll (pointerData, hits);
 			if (hits.Count > 0 && hits [0].gameObject.GetComponent<Text> ().text != null) {
-				//Reset all cams
-				cameraHandler.resetCams();
-				resetUI ();
 				string hit = hits [0].gameObject.GetComponent<Text> ().text;
-				if (hit != null) {
+				if( hit == "_________")
+					hikeButton.gameObject.SetActive (false);
+				if (hit != null && hit != "_________") {
+					cameraHandler.resetCams();
+					resetUI ();
 					if (hit == "Map") {
 						enable2D (true);
 					} else if (hit == "Explore") {
@@ -276,7 +278,7 @@ public class UIManager : MonoBehaviour {
 					} else if (hit == "Logout") {
 						Debug.Log ("Logout");
 					}
-					menuHandler.CloseMenu ();
+					menuHandler.CloseMenu ();		
 				}
 			}
 		}
@@ -287,11 +289,11 @@ public class UIManager : MonoBehaviour {
 			List<RaycastResult> hits = new List<RaycastResult>();
 			EventSystem.current.RaycastAll(pointerData, hits);
 			if (hits.Count > 0 && hits [0].gameObject.GetComponent<Text> () != null) {
-				//Reset all cams
-				cameraHandler.resetCams();
-				resetUI ();
 				string hit = hits [0].gameObject.GetComponent<Text> ().text;
-				if (hit != null) {
+				if (hit != null && hit != "_________") {
+					cameraHandler.resetCams();
+					resetUI ();
+					hikeButton.gameObject.SetActive (false);
 					if (hit == "Map") {
 						enable2D (true);
 					} else if (hit == "Explore") {

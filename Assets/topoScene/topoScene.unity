@@ -895,7 +895,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 21
+  m_RootOrder: 22
   m_LocalEulerAnglesHint: {x: 3, y: 180, z: 0}
 --- !u!1 &351885287
 GameObject:
@@ -914,7 +914,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &351885288
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1762,7 +1762,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000061035156, y: -0.000103039165}
+  m_AnchoredPosition: {x: -0.000061035156, y: 0.00001951782}
   m_SizeDelta: {x: -83, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &558295378
@@ -6378,7 +6378,6 @@ MonoBehaviour:
   HUDCam: {fileID: 938390817}
   Cam2D: {fileID: 920573821}
   SearchCam: {fileID: 537359745}
-  PlacesCam: {fileID: 0}
   LoginCam: {fileID: 1177432146}
   DayCam: {fileID: 1872574916}
   EveningCam: {fileID: 342618195}
