@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -381,7 +381,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 97133395}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 061d2afb48ace4fd19611279b6cf732f, type: 3}
   m_Name: 
@@ -676,7 +676,7 @@ Prefab:
         type: 2}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 55643c4fd976d7e429bda0a90c976b14, type: 2}
+      objectReference: {fileID: 2100000, guid: 80bd19d68c4ef4a659db43cfb6b09b91, type: 2}
     - target: {fileID: 120852220835190894, guid: ed0b4f7d5e35d485d9c34aa9bf71bed8,
         type: 2}
       propertyPath: m_LightmapParameters
@@ -1638,7 +1638,7 @@ Prefab:
         type: 2}
       propertyPath: _root
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1680802589}
     - target: {fileID: 114921574833524332, guid: 21028e8964c284982911d73f68d07739,
         type: 2}
       propertyPath: _tileProvider
@@ -1728,7 +1728,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 24
+  m_RootOrder: 22
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!1 &558295376
 GameObject:
@@ -3102,7 +3102,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4711998923348182, guid: ed0b4f7d5e35d485d9c34aa9bf71bed8, type: 2}
       propertyPath: m_RootOrder
-      value: 21
+      value: 23
       objectReference: {fileID: 0}
     - target: {fileID: 120852220835190894, guid: ed0b4f7d5e35d485d9c34aa9bf71bed8,
         type: 2}
@@ -3143,7 +3143,7 @@ Prefab:
         type: 2}
       propertyPath: map
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1414637089}
     - target: {fileID: 1281087856729222, guid: ed0b4f7d5e35d485d9c34aa9bf71bed8, type: 2}
       propertyPath: m_Name
       value: SearchDirectionsObject
@@ -4837,7 +4837,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4472224790931420, guid: 21028e8964c284982911d73f68d07739, type: 2}
       propertyPath: m_RootOrder
-      value: 23
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 114921574833524332, guid: 21028e8964c284982911d73f68d07739,
         type: 2}
@@ -5892,8 +5892,13 @@ Transform:
   - {fileID: 1521760102}
   - {fileID: 562692153}
   m_Father: {fileID: 0}
-  m_RootOrder: 25
+  m_RootOrder: 24
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1680802589 stripped
+Transform:
+  m_PrefabParentObject: {fileID: 4341777293307454, guid: 1329e22075103473e912805f8c1fc7af,
+    type: 2}
+  m_PrefabInternal: {fileID: 74969943}
 --- !u!1 &1689657052
 GameObject:
   m_ObjectHideFlags: 0
@@ -6916,7 +6921,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1231297105}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.99999976
+  m_Size: 0.9999995
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

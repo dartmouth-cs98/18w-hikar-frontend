@@ -109,7 +109,8 @@ public class SceneManager : MonoBehaviour {
 		if(isInitialLocation == true){
 			Debug.Log("Initial location set: " + location.LatitudeLongitude.ToString() + " with heading: " + location.Heading);
 			setMapOrientation(location.Heading);
-			getDirectionsFromLocation(location);
+			StartCoroutine(getTrailsForLocation(location, 50)); //50 miles
+			//getDirectionsFromLocation(location);
 			StartCoroutine (annotationHandler.SetupMap (wwwScript));
 			distanceText.GetComponent<UnityEngine.UI.Text> ().text = "Initialized";
 		}
@@ -238,8 +239,46 @@ public class SceneManager : MonoBehaviour {
 
 	}
 
+	void getTrailByName(string trailName, Location userLoc){
+
+
+		if(directionHandler == null) {
+			directionHandler = (DirectionsHandler)directionsObject.GetComponent(typeof(DirectionsHandler));
+		}
+		if(wwwScript == null && wwwHandler != null){
+			wwwScript = (WWWHandler)wwwHandler.GetComponent(typeof(WWWHandler));
+		}
+
+		directionHandler.StartCoroutine(directionHandler.getDirectionsFromTrailName(wwwScript, trailName, userLoc));
+
+	}
+
 	void getFeaturesForLocation(Vector2 latLong) {
 		//gets features at location
 		wwwScript.GetFeaturesAtLocation(latLong);
+	}
+
+
+	public IEnumerator getTrailsForLocation(Location location, int radius){
+
+		Debug.Log("getting trails at location: " + location.LatitudeLongitude.ToString());
+
+		CoroutineWithData nearbyData = new CoroutineWithData(this, wwwScript.GetTrails(location.LatitudeLongitude.x, location.LatitudeLongitude.y, radius));
+		yield return nearbyData.coroutine;
+
+		var parsedNearby = SimpleJSON.JSON.Parse (nearbyData.result.ToString());
+
+		Debug.Log("parsedNearby count: " + parsedNearby.Count);
+
+		for(int i = 0; i < parsedNearby.Count; i++){
+			//Debug.Log(parsedNearby[i][0] + "  " + parsedNearby[i][1]);
+			//do something with trail names and distances
+		}
+
+
+		//test first trail in renderer
+		string trail = parsedNearby[1][0];
+		getTrailByName(trail, location);
+			
 	}
 }
