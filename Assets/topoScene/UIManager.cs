@@ -6,23 +6,25 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 public class UIManager : MonoBehaviour {
-
 	//TODO: populate list of trails with WWW call
 
 	//Trail UI + Setup
 	private List<string> trails;
-	private int radius = 5;
 	private Mapbox.Utils.Vector2d[] trailHeads;
 	private Hashtable trailTable;
 	private bool showForm = false;
 	private List<GameObject> resultList;
 	private GameObject result;
 	private string currentSelectedTrail;
+	private List<string[]> nearbyTrails;
 	public Button hikeButton;
 
 	//Explore UI
 	private bool explore = false;
 	private List<GameObject> topTrails;
+	public GameObject exploreTrailsPanel;
+
+	//Your Places UI
 	public GameObject topTrailsPanel;
 
 
@@ -51,6 +53,7 @@ public class UIManager : MonoBehaviour {
 	void Start () {
 		result = new GameObject ();
 		resultList = new List<GameObject> ();
+		nearbyTrails = new List<string[]> ();
 		//DEBUG
 		trails = new List<string>();
 
@@ -248,6 +251,7 @@ public class UIManager : MonoBehaviour {
 		toggleARButton.gameObject.SetActive (false);
 		topTrailsPanel.gameObject.SetActive (false);
 		searchInput.gameObject.SetActive (false);
+		exploreTrailsPanel.gameObject.SetActive (false);
 	}
 
 	public void userSelection()
@@ -267,8 +271,8 @@ public class UIManager : MonoBehaviour {
 					if (hit == "Map") {
 						enable2D (true);
 					} else if (hit == "Explore") {
-						float plusMinus = radius / 69f;
-						//					enableExplore (true);
+						populateExplore ();
+						cameraHandler.enableBackgroundTime ();
 					} else if (hit == "Your Places") {
 						enablePlaces ();
 						cameraHandler.enableBackgroundTime ();
@@ -297,8 +301,8 @@ public class UIManager : MonoBehaviour {
 					if (hit == "Map") {
 						enable2D (true);
 					} else if (hit == "Explore") {
-						float plusMinus = radius / 69f;
-						//					enableExplore (true);
+						populateExplore ();
+						cameraHandler.enableBackgroundTime ();
 					} else if (hit == "Your Places") {
 						enablePlaces ();
 						cameraHandler.enableBackgroundTime ();
@@ -341,6 +345,28 @@ public class UIManager : MonoBehaviour {
 				text.text = trails [i];
 				resultList.Add (tempResult);
 			}
+		}
+	}
+
+	public void populateNearby(string trailName, string trailDist){
+		string[] trail = new string[2];
+		trail [0] = trailName.Replace("\"" , "");
+		trail [1] = trailDist.ToString ();
+		nearbyTrails.Add (trail);
+	}
+
+	public void populateExplore(){
+		exploreTrailsPanel.gameObject.SetActive (true);
+		nearbyTrails.Sort ((t1, t2) => float.Parse(t1 [1]).CompareTo (float.Parse(t2 [1])));
+		for (int i = 0; i < 10; i++) {
+			GameObject tempResult = (GameObject)Instantiate (result, exploreTrailsPanel.transform);
+			Text text = tempResult.AddComponent<Text> ();
+			text.font = Resources.GetBuiltinResource (typeof(Font), "Arial.ttf") as Font;
+			text.fontSize = 20;
+			text.transform.position = new Vector3 (400f, 100f);
+			text.transform.localScale = new Vector3 (0.5f, 1f, 1f);
+			text.color = Color.black;
+			text.text = nearbyTrails [i] [0] + "\t" + (System.Math.Truncate(100* double.Parse(nearbyTrails [i] [1]))/100d).ToString() + " mi";
 		}
 	}
 }
