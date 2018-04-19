@@ -7,22 +7,26 @@ using UnityEngine.EventSystems;
 
 public class UIManager : MonoBehaviour {
 
-	//TODO: populate list of trails with WWW call
-
-	//Trail UI + Setup
-	private List<string> trails;
-	private int radius = 5;
+	//Setup
 	private Mapbox.Utils.Vector2d[] trailHeads;
 	private Hashtable trailTable;
 	private bool showForm = false;
 	private List<GameObject> resultList;
 	private GameObject result;
+
+	//Trail UI + Setup
+	private List<string> trails;
 	private string currentSelectedTrail;
 	public Button hikeButton;
 
 	//Explore UI
+	private List<string[]> nearbyTrails;
+	private List<string> trailNames;
 	private bool explore = false;
-	private List<GameObject> topTrails;
+	public GameObject exploreTrailsPanel;
+
+	//Your Places UI
+	private List<string[]> topTrails;
 	public GameObject topTrailsPanel;
 
 
@@ -51,6 +55,9 @@ public class UIManager : MonoBehaviour {
 	void Start () {
 		result = new GameObject ();
 		resultList = new List<GameObject> ();
+		nearbyTrails = new List<string[]> ();
+		topTrails = new List<string[]> ();
+		trailNames = new List<string> ();
 		//DEBUG
 		trails = new List<string>();
 
@@ -99,6 +106,8 @@ public class UIManager : MonoBehaviour {
 				if (hits.Count > 0 && hits [0].gameObject.GetComponent<Text> ().text != null) {
 					string resultText = hits[0].gameObject.GetComponent<Text>().text;
 					if (resultText != "Submit") { 
+						scrollView.gameObject.SetActive (false);
+
 						
 						//search database for trail name
 						//get trail head node location
@@ -113,8 +122,6 @@ public class UIManager : MonoBehaviour {
 						cameraHandler.enableSearchMap (); //show search map if not currently showing
 						hikeButton.gameObject.SetActive (true);
 						currentSelectedTrail = resultText;
-						searchInput.text = "";
-						scrollView.gameObject.SetActive (false);
 					}
 				}
 			}
@@ -144,7 +151,6 @@ public class UIManager : MonoBehaviour {
 						hikeButton.gameObject.SetActive (true);
 						currentSelectedTrail = resultText;
 						searchInput.text = "";
-						scrollView.gameObject.SetActive (false);
 					}
 				}
 			}
@@ -248,6 +254,7 @@ public class UIManager : MonoBehaviour {
 		toggleARButton.gameObject.SetActive (false);
 		topTrailsPanel.gameObject.SetActive (false);
 		searchInput.gameObject.SetActive (false);
+		exploreTrailsPanel.gameObject.SetActive (false);
 	}
 
 	public void userSelection()
@@ -258,17 +265,16 @@ public class UIManager : MonoBehaviour {
 			List<RaycastResult> hits = new List<RaycastResult> ();
 			EventSystem.current.RaycastAll (pointerData, hits);
 			if (hits.Count > 0 && hits [0].gameObject.GetComponent<Text> ().text != null) {
+				//Reset all cams
+				cameraHandler.resetCams();
+				resetUI ();
 				string hit = hits [0].gameObject.GetComponent<Text> ().text;
-				if( hit == "_________")
-					hikeButton.gameObject.SetActive (false);
-				if (hit != null && hit != "_________") {
-					cameraHandler.resetCams();
-					resetUI ();
+				if (hit != null) {
 					if (hit == "Map") {
 						enable2D (true);
 					} else if (hit == "Explore") {
-						float plusMinus = radius / 69f;
-						//					enableExplore (true);
+						populateExplore ();
+						cameraHandler.enableBackgroundTime ();
 					} else if (hit == "Your Places") {
 						enablePlaces ();
 						cameraHandler.enableBackgroundTime ();
@@ -278,7 +284,7 @@ public class UIManager : MonoBehaviour {
 					} else if (hit == "Logout") {
 						Debug.Log ("Logout");
 					}
-					menuHandler.CloseMenu ();		
+					menuHandler.CloseMenu ();
 				}
 			}
 		}
@@ -289,16 +295,16 @@ public class UIManager : MonoBehaviour {
 			List<RaycastResult> hits = new List<RaycastResult>();
 			EventSystem.current.RaycastAll(pointerData, hits);
 			if (hits.Count > 0 && hits [0].gameObject.GetComponent<Text> () != null) {
+				//Reset all cams
+				cameraHandler.resetCams();
+				resetUI ();
 				string hit = hits [0].gameObject.GetComponent<Text> ().text;
-				if (hit != null && hit != "_________") {
-					cameraHandler.resetCams();
-					resetUI ();
-					hikeButton.gameObject.SetActive (false);
+				if (hit != null) {
 					if (hit == "Map") {
 						enable2D (true);
 					} else if (hit == "Explore") {
-						float plusMinus = radius / 69f;
-						//					enableExplore (true);
+						populateExplore ();
+						cameraHandler.enableBackgroundTime ();
 					} else if (hit == "Your Places") {
 						enablePlaces ();
 						cameraHandler.enableBackgroundTime ();
@@ -314,9 +320,8 @@ public class UIManager : MonoBehaviour {
 			}
 		}
 	}
-		
 
-	public void onValueChangedSearch()
+	public void clearResults()
 	{
 		//Clear the list
 		for(int i = 0; i < resultList.Count; i++)
@@ -324,6 +329,12 @@ public class UIManager : MonoBehaviour {
 			Object.Destroy (resultList [i]);
 		}
 		resultList.Clear ();
+	}
+		
+
+	public void onValueChangedSearch()
+	{
+		clearResults ();
 		scrollView.gameObject.SetActive (true);
 		GameObject results = GameObject.FindGameObjectWithTag ("results");
 		for (int i = 0; i < trails.Count; i++) {
@@ -341,6 +352,39 @@ public class UIManager : MonoBehaviour {
 				text.text = trails [i];
 				resultList.Add (tempResult);
 			}
+		}
+	}
+
+	public void populateNearby(string trailName, string trailDist){
+		string[] trail = new string[2];
+		trail [0] = trailName.Replace("\"" , "");
+		trail [1] = trailDist.ToString ();
+		nearbyTrails.Add (trail);
+	}
+
+	public void populateExplore(){
+		clearResults ();
+		exploreTrailsPanel.gameObject.SetActive (true);
+		nearbyTrails.Sort ((t1, t2) => float.Parse(t1 [1]).CompareTo (float.Parse(t2 [1])));
+		for (int i = 0; i < nearbyTrails.Count; i++) {
+			if (!trailNames.Contains (nearbyTrails [i] [0]))
+				trailNames.Add (nearbyTrails [i] [0]);
+			else
+				nearbyTrails.RemoveAt (i);
+		}
+		trailNames.Clear ();
+		for (int i = 0; i < 10; i++) {
+			GameObject tempResult = (GameObject)Instantiate (result, exploreTrailsPanel.transform);
+			Text text = tempResult.AddComponent<Text> ();
+			text.font = Resources.GetBuiltinResource (typeof(Font), "Arial.ttf") as Font;
+			text.fontSize = 25;
+			RectTransform tempTransform = text.GetComponent<RectTransform> ();
+			tempTransform.sizeDelta = new Vector2 (400f, 100f);
+			text.transform.position = new Vector3 (400f, 100f);
+			text.transform.localScale = new Vector3 (0.25f, 3f, 1f);
+			text.color = Color.black;
+			text.text = System.String.Format("{0,-10} {1,10}", nearbyTrails [i] [0], (System.Math.Truncate(100* double.Parse(nearbyTrails [i] [1]))/100d).ToString() + " mi");
+			resultList.Add (tempResult);
 		}
 	}
 }
