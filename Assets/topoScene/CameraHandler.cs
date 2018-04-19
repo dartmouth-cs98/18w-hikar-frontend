@@ -11,10 +11,14 @@ public class CameraHandler : MonoBehaviour {
 	public Camera Cam2D;
 	public Camera SearchCam;
 //	public Camera ExploreCam;
+<<<<<<< HEAD
 	public Camera LoginCam;
 	public Camera DayCam;
 	public Camera EveningCam;
 	public Camera NightCam;
+=======
+	public Camera PlacesCam;
+>>>>>>> parent of f7eb8fd... Part of login/sign up
 
 
 	//Touch Capture
@@ -83,12 +87,6 @@ public class CameraHandler : MonoBehaviour {
 			NightCam.depth = 3;
 	}
 
-	public void enableLogin()
-	{
-		LoginCam.depth = 5;
-
-	}
-
 	public void resetCams()
 	{
 //		ExploreCam.depth = -1;
@@ -99,6 +97,5 @@ public class CameraHandler : MonoBehaviour {
 		HUDCam.depth = -1;
 		Cam2D.depth = -1;
 		ARCam.depth = -1;
-		LoginCam.depth = -1;
 	}
 }
