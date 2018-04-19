@@ -1603,7 +1603,7 @@ Prefab:
     - target: {fileID: 114921574833524332, guid: 21028e8964c284982911d73f68d07739,
         type: 2}
       propertyPath: _useRelativeScale
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114921574833524332, guid: 21028e8964c284982911d73f68d07739,
         type: 2}
@@ -1762,7 +1762,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000061035156, y: -0.000103039165}
+  m_AnchoredPosition: {x: -0.000061035156, y: -0.00011926448}
   m_SizeDelta: {x: -83, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &558295378
@@ -6378,7 +6378,6 @@ MonoBehaviour:
   HUDCam: {fileID: 938390817}
   Cam2D: {fileID: 920573821}
   SearchCam: {fileID: 537359745}
-  PlacesCam: {fileID: 0}
   LoginCam: {fileID: 1177432146}
   DayCam: {fileID: 1872574916}
   EveningCam: {fileID: 342618195}
