@@ -31,6 +31,8 @@ public class DirectionsHandler : MonoBehaviour {
 
 	WWWHandler wwwScript;
 
+	public bool overlayPathOnMap = false;
+
 
 	// Use this for initialization
 
@@ -182,10 +184,19 @@ public class DirectionsHandler : MonoBehaviour {
 
 		//calculate distance to map from rayOrigin
 		float mapOffset = rayCastObject.transform.position.y - map.transform.position.y;
+		float playerOffset = 0;
 
-		//calculate height at player position for offset
-		Vector3 playerRayOrigin = new Vector3(initialLocation.x, rayCastObject.transform.position.y, initialLocation.y);
-		float playerOffset = castRaycastDownAtPosition(playerRayOrigin) - mapOffset; //mapOffset skews it
+		if(overlayPathOnMap == false){
+			//position map at player's level i.e. in front of AR view
+
+			//calculate height at player position for offset
+			Vector3 playerRayOrigin = new Vector3(initialLocation.x, rayCastObject.transform.position.y, initialLocation.y);
+			playerOffset = castRaycastDownAtPosition(playerRayOrigin) - mapOffset; //mapOffset skews it
+		} else {
+			mapOffset = 0; //fix it onto the map
+		}
+
+
 
 		//calculate total path offset
 		float totalOffset = mapOffset + playerOffset;
@@ -225,9 +236,13 @@ public class DirectionsHandler : MonoBehaviour {
 
 		Mapbox.Unity.Map.MapAtWorldScale _map = (Mapbox.Unity.Map.MapAtWorldScale)map.GetComponent(typeof(Mapbox.Unity.Map.MapAtWorldScale));
 
-		Mapbox.Utils.Vector2d worldPositionVec2d = Mapbox.Unity.Utilities.Conversions.GeoToWorldPosition(vec2d, _map.CenterMercator, _map.WorldRelativeScale);
+		//Mapbox.Utils.Vector2d worldPositionVec2d = Mapbox.Unity.Utilities.Conversions.GeoToWorldPosition(vec2d, _map.CenterMercator, _map.WorldRelativeScale);
 
-		Vector3 unityPosition = (Vector3)Mapbox.Unity.Utilities.Conversions.GeoToWorldGlobePosition(worldPositionVec2d, radius);
+		//Vector3 unityPosition = (Vector3)Mapbox.Unity.Utilities.Conversions.GeoToWorldGlobePosition(worldPositionVec2d, _map.WorldRelativeScale);
+
+		Vector3 unityPosition = (Vector3)_map.GeoToWorldPosition(vec2d);
+
+		//print("position 1: " + unityPosition.ToString() + "    position 2: " + testPosition.ToString());
 
 		return unityPosition;
 
@@ -262,6 +277,7 @@ public class DirectionsHandler : MonoBehaviour {
 		else{
 			Debug.Log("RayCast hit failed: " + hit.distance + " at location: " + rayOrigin);
 			height = rayOrigin.y;
+
 		}
 		return height;
 	}

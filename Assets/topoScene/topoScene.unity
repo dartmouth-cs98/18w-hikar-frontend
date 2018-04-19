@@ -1603,7 +1603,7 @@ Prefab:
     - target: {fileID: 114921574833524332, guid: 21028e8964c284982911d73f68d07739,
         type: 2}
       propertyPath: _useRelativeScale
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114921574833524332, guid: 21028e8964c284982911d73f68d07739,
         type: 2}
