@@ -47,9 +47,15 @@ public class SearchMap : MonoBehaviour {
 		yield return nodeData.coroutine;
 		var parsedNode = SimpleJSON.JSON.Parse (nodeData.result.ToString ());
 
-		Debug.Log("trail node count: " + parsedNode["geometry"]["coordinates"].Count);
+		double south = double.MinValue;
+		double north = double.MaxValue;
+		double west = double.MinValue;
+		double east = double.MaxValue;
 
-		Debug.Log(parsedNode.ToString());
+
+
+		//Mapbox.Utils.Vector2dBounds bounds = new Mapbox.Utils.Vector2dBounds
+
 
 		for(int i = 0; i < parsedNode["geometry"]["coordinates"].Count; i++) {
 
@@ -58,11 +64,12 @@ public class SearchMap : MonoBehaviour {
 
 			Mapbox.Utils.Vector2d vec2d = new Mapbox.Utils.Vector2d(lat, lon);
 
-			if(i == 0){
+			waypointList.Add(vec2d);
+
+			//set map center to first 
+			if(i == 0){ 
 				searchForLocation(vec2d);
 			}
-
-			waypointList.Add(vec2d);
 
 		}
 
