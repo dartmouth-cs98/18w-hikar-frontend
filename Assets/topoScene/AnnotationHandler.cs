@@ -1,21 +1,41 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using SimpleJSON;
 
 public class AnnotationHandler : MonoBehaviour 
 {
+
 	public Camera m_Camera;
 	// Annotation assets
 	public GameObject billboardAnnotation;
-	private ArrayList billboards = new ArrayList();
+	private ArrayList billboards;
+
+	//uiHandler
+	public GameObject uiObject;
+	private UIManager uiHandler;
+
+	//wwwHandler
+	public GameObject wwwHandler;
+	private WWWHandler wwwScript;
 
 	private Vector2 currentLocation;
+
 
 	//hardcoded radius
 	private int radius = 5;
 
-	public IEnumerator SetupMap(WWWHandler wwwScript) 
+	void Start(){
+		billboards = new ArrayList ();
+		if (wwwHandler != null) {
+			wwwScript = (WWWHandler)wwwHandler.gameObject.GetComponent (typeof(WWWHandler));
+		}
+		if (uiObject != null) {
+			uiHandler = (UIManager)uiObject.GetComponent (typeof(UIManager));
+		}
+	}
+	public IEnumerator SetupMap() 
 	{
 		CoroutineWithData annotationData = new CoroutineWithData(this, wwwScript.GetAnnotation());
 		yield return annotationData.coroutine;
@@ -91,12 +111,22 @@ public class AnnotationHandler : MonoBehaviour
 	{
 		currentLocation = currentVec;
 	}
-	void Start () {
 
+	public void sendAnnotation (string text) {
+		wwwScript = (WWWHandler) wwwHandler.gameObject.GetComponent(typeof(WWWHandler));
+		string type = "Billboard";
+		float lat = Input.location.lastData.latitude;
+		float lon = Input.location.lastData.longitude;
+		wwwScript.PostAnnotation (type, text, lat, lon);
 	}
 
-	public void addBillboard(GameObject billboard){
-
+	public void addBillboard(string text){
+		Transform cam = m_Camera.transform;
+		GameObject billboard = Instantiate(GameObject.FindGameObjectWithTag("billboardObject"));
+		billboard.GetComponentInChildren<TextMesh>().text = text;
+		billboard.transform.position = cam.forward * 10;
+		//Vector3 lookAt = new Vector3(cam.transform.position.x, 1, cam.transform.position.z);
+		//billboard.transform.LookAt(lookAt);
 	}
 	
 	// Update is called once per frame

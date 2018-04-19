@@ -67,31 +67,24 @@ public class CameraHandler : MonoBehaviour {
 		SearchCam.depth = 3; //highest depth in scene
 	}
 
-//	public void enableExplore()
-//	{
-//		ExploreCam.depth = 3;
-//	}
-
 	public void enableBackgroundTime()
 	{
 		int time = (int)DateTime.Now.Hour;
 		if (time > 6 && time < 16)
 			DayCam.depth = 3;
-		else if (time > 16 && time < 20)
+		else if (time >= 16 && time < 20)
 			EveningCam.depth = 3;
-		else if ((time > 20 && time < 24) || (time > 0 && time < 6))
+		else
 			NightCam.depth = 3;
 	}
 
 	public void enableLogin()
 	{
 		LoginCam.depth = 5;
-
 	}
 
 	public void resetCams()
 	{
-//		ExploreCam.depth = -1;
 		SearchCam.depth = -1;
 		DayCam.depth = -1;
 		EveningCam.depth = -1;
