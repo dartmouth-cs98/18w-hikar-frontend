@@ -119,7 +119,7 @@ public class SceneManager : MonoBehaviour {
 			setMapOrientation(location.Heading);
 			StartCoroutine(getTrailsForLocation(location, 50)); //50 miles
 			//getDirectionsFromLocation(location);
-			StartCoroutine (annotationHandler.SetupMap (wwwScript));
+			StartCoroutine (annotationHandler.SetupMap ());
 			distanceText.GetComponent<UnityEngine.UI.Text> ().text = "Initialized";
 		}
 

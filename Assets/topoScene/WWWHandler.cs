@@ -86,6 +86,7 @@ public class WWWHandler : MonoBehaviour {
 			}
 			else
 			{
+				Debug.Log (w);
 				yield return "Annotation successfully posted";
 			}
 		}
