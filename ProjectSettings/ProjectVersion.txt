@@ -1,5 +1,9 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 m_EditorVersion: 2017.4.1f1
+=======
+m_EditorVersion: 2017.3.0f3
+>>>>>>> parent of f7eb8fd... Part of login/sign up
 =======
 m_EditorVersion: 2017.3.0f3
 >>>>>>> parent of f7eb8fd... Part of login/sign up

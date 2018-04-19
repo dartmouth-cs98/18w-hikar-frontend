@@ -21,9 +21,12 @@ public class CameraHandler : MonoBehaviour {
 >>>>>>> parent of f7eb8fd... Part of login/sign up
 =======
 	public Camera PlacesCam;
+<<<<<<< HEAD
 	public Camera LoginCam;
 
 >>>>>>> parent of 3edef45... Merge branch 'master' of https://github.com/dartmouth-cs98/18w-hikar-frontend
+=======
+>>>>>>> parent of f7eb8fd... Part of login/sign up
 
 
 	//Touch Capture
