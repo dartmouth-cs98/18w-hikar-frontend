@@ -58,6 +58,7 @@ public class UIManager : MonoBehaviour {
 		trails.Add("Lebanon Trail");
 		trails.Add("West Lebanon Trail");
 		trails.Add("Etna Trail");
+		trails.Add("The Goat Path");
 
 		//make 4 coordinates in the region
 		//vec2ds
@@ -76,6 +77,7 @@ public class UIManager : MonoBehaviour {
 		trailTable.Add("Lebanon Trail", loc2);
 		trailTable.Add("West Lebanon Trail", loc3);
 		trailTable.Add("Etna Trail", loc4);
+		trailTable.Add("The Goat Path", 0);
 
 
 		scrollView.gameObject.SetActive (false);
@@ -85,6 +87,9 @@ public class UIManager : MonoBehaviour {
 		}
 		if(menuObject != null) {
 			menuHandler = (MenuScript) menuObject.gameObject.GetComponent(typeof(MenuScript));
+		}
+		if(wwwHandler != null) {
+			wwwScript = (WWWHandler)wwwHandler.gameObject.GetComponent(typeof(WWWHandler)); 
 		}
 	}
 		
@@ -101,16 +106,21 @@ public class UIManager : MonoBehaviour {
 					if (resultText != "Submit") { 
 						scrollView.gameObject.SetActive (false);
 
-						
+						SearchMap searchMap = GameObject.FindGameObjectWithTag ("SearchMapObject").GetComponent<SearchMap> ();
+
 						//search database for trail name
 						//get trail head node location
 						//reload search map with trail head location
 						//change camera to search map
 
-						Mapbox.Utils.Vector2d searchLoc = (Mapbox.Utils.Vector2d)trailTable[resultText];
-						Debug.Log(searchLoc.ToString());
-						SearchMap searchMap = GameObject.FindGameObjectWithTag("SearchMapObject").GetComponent<SearchMap>();
-						searchMap.searchForLocation(searchLoc);
+						if(resultText == "The Goat Path"){
+							//this is what we will use to get search trail from UI
+							StartCoroutine(searchMap.getTrailForLocation(wwwScript, resultText));
+						} else {
+							Mapbox.Utils.Vector2d searchLoc = (Mapbox.Utils.Vector2d)trailTable [resultText];
+							Debug.Log (searchLoc.ToString ());
+							searchMap.searchForLocation (searchLoc);
+						}
 
 						cameraHandler.enableSearchMap (); //show search map if not currently showing
 						hikeButton.gameObject.SetActive (true);
@@ -129,16 +139,21 @@ public class UIManager : MonoBehaviour {
 					if (resultText != "Submit") { 
 						scrollView.gameObject.SetActive (false);
 
+						SearchMap searchMap = GameObject.FindGameObjectWithTag ("SearchMapObject").GetComponent<SearchMap> ();
 
 						//search database for trail name
 						//get trail head node location
 						//reload search map with trail head location
 						//change camera to search map
 
-						Mapbox.Utils.Vector2d searchLoc = (Mapbox.Utils.Vector2d)trailTable [resultText];
-						Debug.Log (searchLoc.ToString ());
-						SearchMap searchMap = GameObject.FindGameObjectWithTag ("SearchMapObject").GetComponent<SearchMap> ();
-						searchMap.searchForLocation (searchLoc);
+						if(resultText == "The Goat Path"){
+							//this is what we will use to get search trail from UI
+							StartCoroutine(searchMap.getTrailForLocation(wwwScript, resultText));
+						} else {
+							Mapbox.Utils.Vector2d searchLoc = (Mapbox.Utils.Vector2d)trailTable [resultText];
+							Debug.Log (searchLoc.ToString ());
+							searchMap.searchForLocation (searchLoc);
+						}
 
 						cameraHandler.enableSearchMap (); //show search map if not currently showing
 						hikeButton.gameObject.SetActive (true);
