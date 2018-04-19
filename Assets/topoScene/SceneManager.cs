@@ -28,6 +28,10 @@ public class SceneManager : MonoBehaviour {
 	public GameObject directionsObject;
 	private DirectionsHandler directionHandler;
 
+	//uiHandler
+	public GameObject uiObject;
+	private UIManager uiHandler;
+
 	public GameObject playerObject;
 
 	private GameObject cameraPosition;
@@ -72,6 +76,10 @@ public class SceneManager : MonoBehaviour {
 
 		if (annotationObject != null){
 			annotationHandler = (AnnotationHandler)annotationObject.GetComponent (typeof(AnnotationHandler));
+		}
+
+		if (uiObject != null) {
+			uiHandler = (UIManager)uiObject.GetComponent (typeof(UIManager));
 		}
 
 		if (playerObject == null) {
@@ -269,10 +277,11 @@ public class SceneManager : MonoBehaviour {
 		var parsedNearby = SimpleJSON.JSON.Parse (nearbyData.result.ToString());
 
 		Debug.Log("parsedNearby count: " + parsedNearby.Count);
-
+//		if (uiObject != null) {
+//			uiHandler = (UIManager)uiObject.GetComponent (typeof(UIManager));
+//		}
 		for(int i = 0; i < parsedNearby.Count; i++){
-			//Debug.Log(parsedNearby[i][0] + "  " + parsedNearby[i][1]);
-			//do something with trail names and distances
+			uiHandler.populateNearby(parsedNearby[i][0].ToString(), parsedNearby[i][1].ToString());
 		}
 
 
