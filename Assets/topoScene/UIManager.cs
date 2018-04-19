@@ -11,12 +11,16 @@ public class UIManager : MonoBehaviour {
 	private Mapbox.Utils.Vector2d[] trailHeads;
 	private Hashtable trailTable;
 	private bool showForm = false;
+	private bool showSearchMap = false;
 	private List<GameObject> resultList;
 	private GameObject result;
+<<<<<<< HEAD
 
 	//Trail UI + Setup
 	private List<string> trails;
 	private string currentSelectedTrail;
+=======
+>>>>>>> parent of 3edef45... Merge branch 'master' of https://github.com/dartmouth-cs98/18w-hikar-frontend
 	public Button hikeButton;
 
 	//Explore UI
@@ -119,9 +123,9 @@ public class UIManager : MonoBehaviour {
 						SearchMap searchMap = GameObject.FindGameObjectWithTag("SearchMapObject").GetComponent<SearchMap>();
 						searchMap.searchForLocation(searchLoc);
 
-						cameraHandler.enableSearchMap (); //show search map if not currently showing
+						cameraHandler.toggleSearchMap (showSearchMap); //show search map if not currently showing
 						hikeButton.gameObject.SetActive (true);
-						currentSelectedTrail = resultText;
+						showSearchMap = !showSearchMap;
 					}
 				}
 			}
@@ -147,10 +151,14 @@ public class UIManager : MonoBehaviour {
 						SearchMap searchMap = GameObject.FindGameObjectWithTag ("SearchMapObject").GetComponent<SearchMap> ();
 						searchMap.searchForLocation (searchLoc);
 
-						cameraHandler.enableSearchMap (); //show search map if not currently showing
+						cameraHandler.toggleSearchMap (showSearchMap); //show search map if not currently showing
 						hikeButton.gameObject.SetActive (true);
+<<<<<<< HEAD
 						currentSelectedTrail = resultText;
 						searchInput.text = "";
+=======
+						showSearchMap = !showSearchMap;
+>>>>>>> parent of 3edef45... Merge branch 'master' of https://github.com/dartmouth-cs98/18w-hikar-frontend
 					}
 				}
 			}
@@ -171,6 +179,7 @@ public class UIManager : MonoBehaviour {
 
 	public void onClickSearch()
 	{
+		// Retrieve the camera object
 		if(cameraObject != null) {
 			cameraHandler = (CameraHandler) cameraObject.gameObject.GetComponent(typeof(CameraHandler));
 		}
@@ -187,7 +196,10 @@ public class UIManager : MonoBehaviour {
 		showForm = false;
 	}
 		
+
+	// Use this for initialization
 	private void sendAnnotation (string text) {
+		//get reference to WWWHandler and get server data and parse it
 		wwwScript = (WWWHandler) wwwHandler.gameObject.GetComponent(typeof(WWWHandler));
 		string type = "Billboard";
 		float lat = Input.location.lastData.latitude;
@@ -205,11 +217,6 @@ public class UIManager : MonoBehaviour {
 		billboard.transform.position = cam.forward * 10;
 		//Vector3 lookAt = new Vector3(cam.transform.position.x, 1, cam.transform.position.z);
 		//billboard.transform.LookAt(lookAt);
-	}
-
-	public void onHike()
-	{
-		//retrieve user trail data from backend
 	}
 
 	public void disable2D()
@@ -235,16 +242,7 @@ public class UIManager : MonoBehaviour {
 	public void enablePlaces()
 	{
 		topTrailsPanel.gameObject.SetActive (true);
-	}
-
-	public void enableExplore()
-	{
-		//UI elements for explore
-	}
-
-	public void enableSettings()
-	{
-		//UI elements for settings
+		cameraHandler.enablePlaces ();
 	}
 		
 	public void resetUI()
@@ -284,7 +282,10 @@ public class UIManager : MonoBehaviour {
 					} else if (hit == "Logout") {
 						Debug.Log ("Logout");
 					}
+<<<<<<< HEAD
 					menuHandler.CloseMenu ();
+=======
+>>>>>>> parent of 3edef45... Merge branch 'master' of https://github.com/dartmouth-cs98/18w-hikar-frontend
 				}
 			}
 		}
@@ -299,6 +300,7 @@ public class UIManager : MonoBehaviour {
 				cameraHandler.resetCams();
 				resetUI ();
 				string hit = hits [0].gameObject.GetComponent<Text> ().text;
+<<<<<<< HEAD
 				if (hit != null) {
 					if (hit == "Map") {
 						enable2D (true);
@@ -314,6 +316,24 @@ public class UIManager : MonoBehaviour {
 					} else if (hit == "Logout") {
 						Debug.Log ("Logout");
 					}
+=======
+				if (hit == "Map") {
+					enable2D (true);
+				}
+				else if (hit == "Explore") {
+					//get player location in lat long
+					float plusMinus = radius/69f;
+//					enableExplore (true);
+				} else if (hit == "Your Places") {
+					enablePlaces ();
+				} else if (hit == "Settings") {
+					Debug.Log ("Settings");
+
+				} else if (hit == "Logout") {
+					Debug.Log ("Logout");
+				}
+				if (hit != null)
+>>>>>>> parent of 3edef45... Merge branch 'master' of https://github.com/dartmouth-cs98/18w-hikar-frontend
 					menuHandler.CloseMenu ();
 				}
 					

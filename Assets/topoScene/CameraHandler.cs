@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,6 +11,7 @@ public class CameraHandler : MonoBehaviour {
 	public Camera SearchCam;
 //	public Camera ExploreCam;
 <<<<<<< HEAD
+<<<<<<< HEAD
 	public Camera LoginCam;
 	public Camera DayCam;
 	public Camera EveningCam;
@@ -19,6 +19,11 @@ public class CameraHandler : MonoBehaviour {
 =======
 	public Camera PlacesCam;
 >>>>>>> parent of f7eb8fd... Part of login/sign up
+=======
+	public Camera PlacesCam;
+	public Camera LoginCam;
+
+>>>>>>> parent of 3edef45... Merge branch 'master' of https://github.com/dartmouth-cs98/18w-hikar-frontend
 
 
 	//Touch Capture
@@ -67,8 +72,9 @@ public class CameraHandler : MonoBehaviour {
 		}
 	}
 
-	public void enableSearchMap(){
-		SearchCam.depth = 3; //highest depth in scene
+	public void toggleSearchMap(bool showSearchMap){
+		if(showSearchMap == false)
+			SearchCam.depth = 3; //highest depth in scene
 	}
 
 //	public void enableExplore()
@@ -76,24 +82,16 @@ public class CameraHandler : MonoBehaviour {
 //		ExploreCam.depth = 3;
 //	}
 
-	public void enableBackgroundTime()
+	public void enablePlaces()
 	{
-		int time = (int)DateTime.Now.Hour;
-		if (time > 6 && time < 16)
-			DayCam.depth = 3;
-		else if (time > 16 && time < 20)
-			EveningCam.depth = 3;
-		else if ((time > 20 && time < 24) || (time > 0 && time < 6))
-			NightCam.depth = 3;
+		PlacesCam.depth = 3;
 	}
 
 	public void resetCams()
 	{
 //		ExploreCam.depth = -1;
-		SearchCam.depth = -1;
-		DayCam.depth = -1;
-		EveningCam.depth = -1;
-		NightCam.depth = -1;
+//		SearchCam.depth = -1;
+		PlacesCam.depth = -1;
 		HUDCam.depth = -1;
 		Cam2D.depth = -1;
 		ARCam.depth = -1;
