@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -71,6 +71,14 @@ public class SearchMap : MonoBehaviour {
 		yield return nodeData.coroutine;
 		var parsedNode = SimpleJSON.JSON.Parse (nodeData.result.ToString ());
 
+<<<<<<< HEAD
+
+		//used to set bounding box for new map
+		double south = double.MaxValue;
+		double north = double.MinValue;
+		double west = double.MaxValue;
+		double east = double.MinValue;
+=======
 		double south = double.MinValue;
 		double north = double.MaxValue;
 		double west = double.MinValue;
@@ -80,6 +88,7 @@ public class SearchMap : MonoBehaviour {
 
 		//Mapbox.Utils.Vector2dBounds bounds = new Mapbox.Utils.Vector2dBounds
 
+>>>>>>> b5e14fbf162ac03eb8bc22336a050a3355f19c0f
 
 		for(int i = 0; i < parsedNode["geometry"]["coordinates"].Count; i++) {
 
@@ -90,11 +99,29 @@ public class SearchMap : MonoBehaviour {
 
 			waypointList.Add(vec2d);
 
+<<<<<<< HEAD
+			if(lat < south){
+				south = lat;
+			}
+
+			if(lat > north){
+				north = lat;
+			}
+
+			if(lon < west){
+				west = lon;
+			}
+
+			if(lon > east){
+				east = lon;
+			}
+=======
 			//set map center to first 
 			if(i == 0){ 
 				searchForLocation(vec2d);
 			}
 
+>>>>>>> b5e14fbf162ac03eb8bc22336a050a3355f19c0f
 		}
 
 		Mapbox.Utils.Vector2d ne = new Mapbox.Utils.Vector2d(north, east);
