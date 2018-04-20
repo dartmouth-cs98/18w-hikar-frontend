@@ -52,6 +52,10 @@ public class UIManager : MonoBehaviour {
 	public GameObject menuObject;
 	private MenuScript menuHandler;
 
+	//annotationHandler
+	public GameObject annotationObject;
+	private AnnotationHandler annotationHandler;
+
 	void Start () {
 		result = new GameObject ();
 		resultList = new List<GameObject> ();
@@ -97,6 +101,9 @@ public class UIManager : MonoBehaviour {
 		}
 		if(wwwHandler != null) {
 			wwwScript = (WWWHandler)wwwHandler.gameObject.GetComponent(typeof(WWWHandler)); 
+    }
+		if (annotationObject != null) {
+			annotationHandler = (AnnotationHandler)annotationObject.gameObject.GetComponent (typeof(AnnotationHandler));
 		}
 	}
 		
@@ -109,7 +116,7 @@ public class UIManager : MonoBehaviour {
 				List<RaycastResult> hits = new List<RaycastResult>();
 				EventSystem.current.RaycastAll(pointerData, hits);
 				if (hits.Count > 0 && hits [0].gameObject.GetComponent<Text> ().text != null) {
-					string resultText = hits[0].gameObject.GetComponent<Text>().text;
+					string resultText = hits [0].gameObject.GetComponent<Text> ().text;
 					if (resultText != "Submit") { 
 						scrollView.gameObject.SetActive (false);
 
@@ -128,10 +135,11 @@ public class UIManager : MonoBehaviour {
 							Debug.Log (searchLoc.ToString ());
 							searchMap.searchForLocation (searchLoc);
 						}
-
+            
 						cameraHandler.enableSearchMap (); //show search map if not currently showing
 						hikeButton.gameObject.SetActive (true);
 						currentSelectedTrail = resultText;
+						searchInput.text = "";
 					}
 				}
 			}
@@ -184,42 +192,25 @@ public class UIManager : MonoBehaviour {
 		}
 	}
 
+	public void onAnnotationSubmit()
+	{
+		if (annotationInput.text != "") {
+			//TODO: Add switches between types of annotations
+			//if billboard:
+			annotationHandler.addBillboard (annotationInput.text);
+
+			annotationHandler.sendAnnotation(annotationInput.text);
+		}
+		annotationInput.gameObject.SetActive (false);
+		showForm = false;	
+	}
+
 	public void onClickSearch()
 	{
 		if(cameraObject != null) {
 			cameraHandler = (CameraHandler) cameraObject.gameObject.GetComponent(typeof(CameraHandler));
 		}
 		enable2D (false);
-	}
-
-	public void onAnnotationSubmit()
-	{
-		if (annotationInput.text != "") {
-			createAnnotation (annotationInput.text);
-			sendAnnotation (annotationInput.text);
-		}
-		annotationInput.gameObject.SetActive (false);
-		showForm = false;
-	}
-		
-	private void sendAnnotation (string text) {
-		wwwScript = (WWWHandler) wwwHandler.gameObject.GetComponent(typeof(WWWHandler));
-		string type = "Billboard";
-		float lat = Input.location.lastData.latitude;
-		float lon = Input.location.lastData.longitude;
-		wwwScript.PostAnnotation (type, text, lat, lon);
-	}
-
-
-	public void createAnnotation(string text){
-
-		Transform cam = UnityEngine.Camera.main.transform;
-
-		GameObject billboard = Instantiate(GameObject.FindGameObjectWithTag("billboardObject"));
-		billboard.GetComponentInChildren<TextMesh>().text = text;
-		billboard.transform.position = cam.forward * 10;
-		//Vector3 lookAt = new Vector3(cam.transform.position.x, 1, cam.transform.position.z);
-		//billboard.transform.LookAt(lookAt);
 	}
 
 	public void onHike()
@@ -279,12 +270,12 @@ public class UIManager : MonoBehaviour {
 			pointerData.position = Input.GetTouch (0).position;
 			List<RaycastResult> hits = new List<RaycastResult> ();
 			EventSystem.current.RaycastAll (pointerData, hits);
-			if (hits.Count > 0 && hits [0].gameObject.GetComponent<Text> ().text != null) {
-				//Reset all cams
-				cameraHandler.resetCams();
-				resetUI ();
+			if (hits.Count > 0 && hits [0].gameObject.GetComponent<Text> () != null) {
 				string hit = hits [0].gameObject.GetComponent<Text> ().text;
-				if (hit != null) {
+				if (hit != null && hit != "_________") {
+					//Reset all cams
+					cameraHandler.resetCams();
+					resetUI ();
 					if (hit == "Map") {
 						enable2D (true);
 					} else if (hit == "Explore") {
@@ -310,11 +301,10 @@ public class UIManager : MonoBehaviour {
 			List<RaycastResult> hits = new List<RaycastResult>();
 			EventSystem.current.RaycastAll(pointerData, hits);
 			if (hits.Count > 0 && hits [0].gameObject.GetComponent<Text> () != null) {
-				//Reset all cams
-				cameraHandler.resetCams();
-				resetUI ();
 				string hit = hits [0].gameObject.GetComponent<Text> ().text;
-				if (hit != null) {
+				if (hit != null && hit != "_________") {
+					cameraHandler.resetCams();
+					resetUI ();
 					if (hit == "Map") {
 						enable2D (true);
 					} else if (hit == "Explore") {
@@ -331,7 +321,6 @@ public class UIManager : MonoBehaviour {
 					}
 					menuHandler.CloseMenu ();
 				}
-					
 			}
 		}
 	}
