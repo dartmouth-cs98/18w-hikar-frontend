@@ -36,6 +36,30 @@ public class SearchMap : MonoBehaviour {
 		map.Initialize(location, 16);
 	}
 
+	public void loadMapWithBounds(Mapbox.Utils.Vector2dBounds bounds){
+		Debug.Log("Bounding Map at: " + bounds);
+		camera.transform.position = cameraPosition;
+		map.Initialize(bounds.Center, 16);
+
+
+		/* //trying to get a tilecover given a bounds
+		HashSet<Mapbox.Map.UnwrappedTileId> tiles = Mapbox.Map.TileCover.GetWithWebMerc(bounds, 16);
+
+		IReadOnlyList<Mapbox.Map.UnwrappedTileId> tileList = tiles.ToReadOnlyList();
+
+		Debug.Log(tileList.ToString());
+
+		for(int i = 0; i < tileList.Count; i++){
+			Mapbox.Map.UnwrappedTileId tile = tileList[i];
+			Debug.Log(tile.ToString());
+			map.MapVisualizer.LoadTile(tile);
+		}
+		*/
+
+
+
+	}
+
 
 	public IEnumerator getTrailForLocation(WWWHandler www, string trailName){
 
@@ -47,9 +71,12 @@ public class SearchMap : MonoBehaviour {
 		yield return nodeData.coroutine;
 		var parsedNode = SimpleJSON.JSON.Parse (nodeData.result.ToString ());
 
-		Debug.Log("trail node count: " + parsedNode["geometry"]["coordinates"].Count);
 
-		Debug.Log(parsedNode.ToString());
+		//used to set bounding box for new map
+		double south = double.MaxValue;
+		double north = double.MinValue;
+		double west = double.MaxValue;
+		double east = double.MinValue;
 
 		for(int i = 0; i < parsedNode["geometry"]["coordinates"].Count; i++) {
 
@@ -58,13 +85,29 @@ public class SearchMap : MonoBehaviour {
 
 			Mapbox.Utils.Vector2d vec2d = new Mapbox.Utils.Vector2d(lat, lon);
 
-			if(i == 0){
-				searchForLocation(vec2d);
-			}
-
 			waypointList.Add(vec2d);
 
+			if(lat < south){
+				south = lat;
+			}
+
+			if(lat > north){
+				north = lat;
+			}
+
+			if(lon < west){
+				west = lon;
+			}
+
+			if(lon > east){
+				east = lon;
+			}
 		}
+
+		Mapbox.Utils.Vector2d ne = new Mapbox.Utils.Vector2d(north, east);
+		Mapbox.Utils.Vector2d sw = new Mapbox.Utils.Vector2d(south, west);
+		Mapbox.Utils.Vector2dBounds bounds = new Mapbox.Utils.Vector2dBounds(sw, ne);
+		loadMapWithBounds(bounds);
 
 		directions.getDirectionsFromLatLngs(waypointList);
 

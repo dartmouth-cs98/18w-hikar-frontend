@@ -137,8 +137,8 @@ public class DirectionsHandler : MonoBehaviour {
 
 	public void getDirectionsFromLatLngs(List<Mapbox.Utils.Vector2d> waypointsList){
 
-		waypoints = new Mapbox.Utils.Vector2d[waypointList.Count]; //1:1 trail 
-		waypoints = waypointList.ToArray();
+		waypoints = new Mapbox.Utils.Vector2d[waypointsList.Count]; //1:1 trail 
+		waypoints = waypointsList.ToArray();
 
 		startDirections();
 
@@ -281,10 +281,10 @@ public class DirectionsHandler : MonoBehaviour {
 		}
 		else{
 			Debug.Log("RayCast hit failed: " + hit.distance + " at location: " + rayOrigin);
-			height = rayOrigin.y;
-
+			height = rayOrigin.y - map.transform.position.y;
 		}
-		return height;
+
+		return height + 0.1f; //buffer
 	}
 	
 	// Update is called once per frame
