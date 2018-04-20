@@ -71,15 +71,11 @@ public class SearchMap : MonoBehaviour {
 		yield return nodeData.coroutine;
 		var parsedNode = SimpleJSON.JSON.Parse (nodeData.result.ToString ());
 
-		double south = double.MinValue;
-		double north = double.MaxValue;
-		double west = double.MinValue;
-		double east = double.MaxValue;
-
-
-
-		//Mapbox.Utils.Vector2dBounds bounds = new Mapbox.Utils.Vector2dBounds
-
+		//used to calculate the bounds for the trail
+		double south = double.MaxValue;
+		double north = double.MinValue;
+		double west = double.MaxValue;
+		double east = double.MinValue;
 
 		for(int i = 0; i < parsedNode["geometry"]["coordinates"].Count; i++) {
 
@@ -90,10 +86,16 @@ public class SearchMap : MonoBehaviour {
 
 			waypointList.Add(vec2d);
 
-			//set map center to first 
-			if(i == 0){ 
-				searchForLocation(vec2d);
-			}
+
+			//find the ne,sw bounds
+			if(lat < south)
+				south = lat;
+			if(lat > north)
+				north = lat;
+			if(lon < west)
+				west = lon;
+			if(lon > east)
+				east = lon;
 
 		}
 
