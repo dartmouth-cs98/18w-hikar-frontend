@@ -29,6 +29,11 @@ public class UIManager : MonoBehaviour {
 	private List<string[]> topTrails;
 	public GameObject topTrailsPanel;
 
+	//Settings UI
+	public GameObject settingsPanel;
+	public Slider radiusSlider;
+	public Text radiusText;
+	public Toggle annotationsToggle;
 
 	//Annotation UI
 	public Button createAnnotationButton;
@@ -101,10 +106,12 @@ public class UIManager : MonoBehaviour {
 		}
 		if(wwwHandler != null) {
 			wwwScript = (WWWHandler)wwwHandler.gameObject.GetComponent(typeof(WWWHandler)); 
-    }
+   		}
 		if (annotationObject != null) {
 			annotationHandler = (AnnotationHandler)annotationObject.gameObject.GetComponent (typeof(AnnotationHandler));
 		}
+		radiusSlider.minValue = 5;
+		radiusSlider.maxValue = 20;
 	}
 		
 	void Update()
@@ -251,7 +258,7 @@ public class UIManager : MonoBehaviour {
 
 	public void enableSettings()
 	{
-		//UI elements for settings
+		settingsPanel.gameObject.SetActive (true);
 	}
 		
 	public void resetUI()
@@ -259,9 +266,10 @@ public class UIManager : MonoBehaviour {
 		annotationInput.gameObject.SetActive (false);
 		createAnnotationButton.gameObject.SetActive (false);
 		toggleARButton.gameObject.SetActive (false);
-		topTrailsPanel.gameObject.SetActive (false);
 		searchInput.gameObject.SetActive (false);
 		exploreTrailsPanel.gameObject.SetActive (false);
+		topTrailsPanel.gameObject.SetActive (false);
+		settingsPanel.gameObject.SetActive (false);
 	}
 
 	public void userSelection()
@@ -286,8 +294,8 @@ public class UIManager : MonoBehaviour {
 						enablePlaces ();
 						cameraHandler.enableBackgroundTime ();
 					} else if (hit == "Settings") {
-						Debug.Log ("Settings");
-
+						enableSettings ();
+						cameraHandler.enableBackgroundTime ();
 					} else if (hit == "Logout") {
 						Debug.Log ("Logout");
 					}
@@ -315,8 +323,8 @@ public class UIManager : MonoBehaviour {
 						enablePlaces ();
 						cameraHandler.enableBackgroundTime ();
 					} else if (hit == "Settings") {
-						Debug.Log ("Settings");
-
+						enableSettings ();
+						cameraHandler.enableBackgroundTime ();
 					} else if (hit == "Logout") {
 						Debug.Log ("Logout");
 					}
@@ -391,5 +399,13 @@ public class UIManager : MonoBehaviour {
 			text.text = System.String.Format("{0,-10} {1,10}", nearbyTrails [i] [0], (System.Math.Truncate(100* double.Parse(nearbyTrails [i] [1]))/100d).ToString() + " mi");
 			resultList.Add (tempResult);
 		}
+	}
+
+	public void setRadius(){
+		radiusText.text = System.Math.Round (radiusSlider.value).ToString();
+	}
+
+	public void toggleAnnotations(){
+		annotationHandler.enableAnnotations (annotationsToggle.isOn);
 	}
 }
