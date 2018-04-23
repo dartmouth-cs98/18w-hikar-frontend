@@ -187,7 +187,8 @@ public class UIManager : MonoBehaviour {
 			annotationHandler.sendAnnotation(annotationInput.text);
 		}
 		annotationInput.gameObject.SetActive (false);
-		showForm = false;	
+		annotationInput.text = "";
+		showForm = false;
 	}
 
 	public void onClickSearch()

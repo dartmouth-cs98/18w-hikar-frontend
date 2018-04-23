@@ -86,7 +86,6 @@ public class WWWHandler : MonoBehaviour {
 			}
 			else
 			{
-				Debug.Log (w);
 				yield return "Annotation successfully posted";
 			}
 		}
@@ -132,7 +131,8 @@ public class WWWHandler : MonoBehaviour {
 	public IEnumerator UpdateUserTrail(string trailName)
 	{
 		//Post with the unique ID given by mLab (can't find update function)
-		using (WWW www = new WWW (updateUserTrail)) {
+		using (WWW www = new WWW (updateUserTrail))
+		{
 			yield return www;
 			if(www.error != null)
 				yield return www.error + ". Get unsuccessful";

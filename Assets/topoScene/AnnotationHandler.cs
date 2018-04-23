@@ -12,10 +12,6 @@ public class AnnotationHandler : MonoBehaviour
 	public GameObject billboardAnnotation;
 	private ArrayList billboards;
 
-	//uiHandler
-	public GameObject uiObject;
-	private UIManager uiHandler;
-
 	//wwwHandler
 	public GameObject wwwHandler;
 	private WWWHandler wwwScript;
@@ -30,9 +26,6 @@ public class AnnotationHandler : MonoBehaviour
 		billboards = new ArrayList ();
 		if (wwwHandler != null) {
 			wwwScript = (WWWHandler)wwwHandler.gameObject.GetComponent (typeof(WWWHandler));
-		}
-		if (uiObject != null) {
-			uiHandler = (UIManager)uiObject.GetComponent (typeof(UIManager));
 		}
 	}
 	public IEnumerator SetupMap() 
@@ -113,11 +106,10 @@ public class AnnotationHandler : MonoBehaviour
 	}
 
 	public void sendAnnotation (string text) {
-		wwwScript = (WWWHandler) wwwHandler.gameObject.GetComponent(typeof(WWWHandler));
 		string type = "Billboard";
 		float lat = Input.location.lastData.latitude;
 		float lon = Input.location.lastData.longitude;
-		wwwScript.PostAnnotation (type, text, lat, lon);
+		var id = StartCoroutine(wwwScript.PostAnnotation (type, text, lat, lon));
 	}
 
 	public void addBillboard(string text){
@@ -127,6 +119,7 @@ public class AnnotationHandler : MonoBehaviour
 		billboard.transform.position = cam.forward * 10;
 		//Vector3 lookAt = new Vector3(cam.transform.position.x, 1, cam.transform.position.z);
 		//billboard.transform.LookAt(lookAt);
+
 	}
 	
 	// Update is called once per frame
