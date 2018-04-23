@@ -315,7 +315,7 @@ MonoBehaviour:
   wwwHandler: {fileID: 1225752238}
   cameraObject: {fileID: 1778709995}
   menuObject: {fileID: 14276369}
-  annotationObject: {fileID: 0}
+  annotationObject: {fileID: 564501454}
 --- !u!4 &92795636
 Transform:
   m_ObjectHideFlags: 0
@@ -2008,8 +2008,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Camera: {fileID: 1366135902}
   billboardAnnotation: {fileID: 1611328790}
-  uiObject: {fileID: 0}
-  wwwHandler: {fileID: 0}
+  uiObject: {fileID: 92795634}
+  wwwHandler: {fileID: 1225752238}
 --- !u!1 &571381924
 GameObject:
   m_ObjectHideFlags: 0
