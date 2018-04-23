@@ -41,8 +41,8 @@ public class WWWHandler : MonoBehaviour {
 	const string getUserTrail = "https://hikar.herokuapp.com/getUserTrail";
 
 	const string getTestTrailUrl = "https://hikar.herokuapp.com/getTest";
-	const string getTrailUrl = "https://hikar.herokuapp.com/getTrail/";
-	const string getTrailsUrl = "https://hikar.herokuapp.com/queryTrail/"; //   latitude/longitude/radius
+	const string getTrailUrl = "https://hikar.herokuapp.com/api/trails/";  //leaving blank gets all trails
+	const string getTrailsUrl = "https://hikar.herokuapp.com/api/query/"; //   latitude/longitude/radius
 
 	string getFeaturesUrl = "https://api.mapbox.com/v4/mapbox.mapbox-terrain-v2/tilequery/";
 
@@ -154,19 +154,25 @@ public class WWWHandler : MonoBehaviour {
 
 	public IEnumerator GetTrail(string name){
 
-		StringBuilder query = new StringBuilder(getTrailUrl);
-		query.Append(name);
+		if(name == ""){
+			//exit because empty would return all trails
+		}
+		else{
+			//string isn't null, try to query
+			StringBuilder query = new StringBuilder(getTrailUrl);
+			query.Append(name);
 
-		String prequery = query.ToString();
-		prequery.Replace(' ', '-');
+			String prequery = query.ToString();
+			prequery.Replace(' ', '-');
 
-		using (WWW www = new WWW (prequery))
-		{
-			yield return www;
-			if(www.error != null)
-				yield return www.error + ". Get unsuccessful";
-			else 
-				yield return www.text;
+			using (WWW www = new WWW (prequery))
+			{
+				yield return www;
+				if(www.error != null)
+					yield return www.error + ". Get unsuccessful";
+				else 
+					yield return www.text;
+			}
 		}
 	}
 
