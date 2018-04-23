@@ -121,6 +121,18 @@ public class AnnotationHandler : MonoBehaviour
 		//billboard.transform.LookAt(lookAt);
 
 	}
+
+	public void enableAnnotations(bool toggle){
+		foreach (GameObject billboard in billboards) {
+			if (!toggle) {
+				Debug.Log ("Disabling annotations");
+				billboard.gameObject.SetActive (false);
+			} else {
+				Debug.Log ("Enabling annotations");
+				billboard.gameObject.SetActive (true);
+			}
+		}
+	}
 	
 	// Update is called once per frame
 	void Update () {
