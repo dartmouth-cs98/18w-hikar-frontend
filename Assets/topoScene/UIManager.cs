@@ -124,7 +124,7 @@ public class UIManager : MonoBehaviour {
 				EventSystem.current.RaycastAll(pointerData, hits);
 				if (hits.Count > 0 && hits [0].gameObject.GetComponent<Text> ().text != null) {
 					string resultText = hits [0].gameObject.GetComponent<Text> ().text;
-					if (resultText != "Submit") { 
+					if (resultText != "Submit" && resultText != "_________") { 
 						scrollView.gameObject.SetActive (false);
 
 						SearchMap searchMap = GameObject.FindGameObjectWithTag ("SearchMapObject").GetComponent<SearchMap> ();
@@ -158,7 +158,7 @@ public class UIManager : MonoBehaviour {
 				EventSystem.current.RaycastAll(pointerData, hits);
 				if (hits.Count > 0 && hits [0].gameObject.GetComponent<Text> ().text != null) {
 					string resultText = hits [0].gameObject.GetComponent<Text> ().text;
-					if (resultText != "Submit") { 
+					if (resultText != "Submit" && resultText != "_________") { 
 						scrollView.gameObject.SetActive (false);
 
 						SearchMap searchMap = GameObject.FindGameObjectWithTag ("SearchMapObject").GetComponent<SearchMap> ();
