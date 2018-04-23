@@ -40,6 +40,8 @@ public class UIManager : MonoBehaviour {
 	public Button createAnnotationButton;
 	public Button submitAnnotationButton;
 	public InputField annotationInput;
+	public Dropdown styleDropdown;
+	public Dropdown colorDropdown;
 
 	//2D UI
 	public InputField searchInput;
@@ -121,6 +123,7 @@ public class UIManager : MonoBehaviour {
 		radiusSlider.minValue = 1;
 		radiusSlider.maxValue = 100;
 		radiusSlider.value = 50;
+		createAnnotationButton.onClick.AddListener (onClickAnnotation);
 	}
 		
 	void Update()
@@ -424,5 +427,33 @@ public class UIManager : MonoBehaviour {
 
 	public void toggleAnnotations(){
 		annotationHandler.enableAnnotations (annotationsToggle.isOn);
+	}
+
+	public void changeAnnotationFont(){
+		Text annotation = annotationInput.GetComponentInChildren<Text> ();
+		if (annotation.text != "") {
+			if (styleDropdown.value == 0)
+				annotation.fontStyle = FontStyle.Normal;
+			else if (styleDropdown.value == 1)
+				annotation.fontStyle = FontStyle.Bold;
+			else if (styleDropdown.value == 2)
+				annotation.fontStyle = FontStyle.Italic;
+			else if (styleDropdown.value == 3)
+				annotation.fontStyle = FontStyle.BoldAndItalic;
+		}
+	}
+
+	public void changeAnnotationColor(){
+		Text annotation = annotationInput.GetComponentInChildren<Text> ();
+		if (annotation.text != "") {
+			if (colorDropdown.value == 0)
+				annotation.color = Color.black;
+			else if (colorDropdown.value == 1)
+				annotation.color = Color.red;
+			else if (colorDropdown.value == 2)
+				annotation.color = Color.blue;
+			else if (colorDropdown.value == 3)
+				annotation.color = Color.green;
+		}
 	}
 }
