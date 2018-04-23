@@ -13,6 +13,7 @@ public class UIManager : MonoBehaviour {
 	private bool showForm = false;
 	private List<GameObject> resultList;
 	private GameObject result;
+	public Text errorText;
 
 	//Trail UI + Setup
 	private List<string> trails;
@@ -48,6 +49,10 @@ public class UIManager : MonoBehaviour {
 	//wwwHandler
 	public GameObject wwwHandler;
 	private WWWHandler wwwScript;
+
+	//sceneHandler
+	public GameObject sceneObject;
+	private SceneManager sceneManager;
 
 	//cameraHandler
 	public GameObject cameraObject;
@@ -110,8 +115,12 @@ public class UIManager : MonoBehaviour {
 		if (annotationObject != null) {
 			annotationHandler = (AnnotationHandler)annotationObject.gameObject.GetComponent (typeof(AnnotationHandler));
 		}
-		radiusSlider.minValue = 5;
-		radiusSlider.maxValue = 20;
+		if (sceneObject != null) {
+			sceneManager = (SceneManager)sceneObject.gameObject.GetComponent (typeof(SceneManager));
+		}
+		radiusSlider.minValue = 1;
+		radiusSlider.maxValue = 100;
+		radiusSlider.value = 50;
 	}
 		
 	void Update()
@@ -270,6 +279,7 @@ public class UIManager : MonoBehaviour {
 		exploreTrailsPanel.gameObject.SetActive (false);
 		topTrailsPanel.gameObject.SetActive (false);
 		settingsPanel.gameObject.SetActive (false);
+		errorText.gameObject.SetActive (false);
 	}
 
 	public void userSelection()
@@ -378,31 +388,38 @@ public class UIManager : MonoBehaviour {
 	public void populateExplore(){
 		clearResults ();
 		exploreTrailsPanel.gameObject.SetActive (true);
-		nearbyTrails.Sort ((t1, t2) => float.Parse(t1 [1]).CompareTo (float.Parse(t2 [1])));
-		for (int i = 0; i < nearbyTrails.Count; i++) {
-			if (!trailNames.Contains (nearbyTrails [i] [0]))
-				trailNames.Add (nearbyTrails [i] [0]);
-			else
-				nearbyTrails.RemoveAt (i);
-		}
-		trailNames.Clear ();
-		for (int i = 0; i < 10; i++) {
-			GameObject tempResult = (GameObject)Instantiate (result, exploreTrailsPanel.transform);
-			Text text = tempResult.AddComponent<Text> ();
-			text.font = Resources.GetBuiltinResource (typeof(Font), "Arial.ttf") as Font;
-			text.fontSize = 25;
-			RectTransform tempTransform = text.GetComponent<RectTransform> ();
-			tempTransform.sizeDelta = new Vector2 (400f, 100f);
-			text.transform.position = new Vector3 (400f, 100f);
-			text.transform.localScale = new Vector3 (0.25f, 3f, 1f);
-			text.color = Color.black;
-			text.text = System.String.Format("{0,-10} {1,10}", nearbyTrails [i] [0], (System.Math.Truncate(100* double.Parse(nearbyTrails [i] [1]))/100d).ToString() + " mi");
-			resultList.Add (tempResult);
+		try{
+			nearbyTrails.Sort ((t1, t2) => float.Parse(t1 [1]).CompareTo (float.Parse(t2 [1])));
+			for (int i = 0; i < nearbyTrails.Count; i++) {
+				if (!trailNames.Contains (nearbyTrails [i] [0]))
+					trailNames.Add (nearbyTrails [i] [0]);
+				else
+					nearbyTrails.RemoveAt (i);
+			}
+			trailNames.Clear ();
+			for (int i = 0; i < 10; i++) {
+				GameObject tempResult = (GameObject)Instantiate (result, exploreTrailsPanel.transform);
+				Text text = tempResult.AddComponent<Text> ();
+				text.font = Resources.GetBuiltinResource (typeof(Font), "Arial.ttf") as Font;
+				text.fontSize = 25;
+				RectTransform tempTransform = text.GetComponent<RectTransform> ();
+				tempTransform.sizeDelta = new Vector2 (400f, 100f);
+				text.transform.position = new Vector3 (400f, 100f);
+				text.transform.localScale = new Vector3 (0.25f, 3f, 1f);
+				text.color = Color.black;
+				text.text = System.String.Format("{0,-10} {1,10}", nearbyTrails [i] [0], (System.Math.Truncate(100* double.Parse(nearbyTrails [i] [1]))/100d).ToString() + " mi");
+				resultList.Add (tempResult);
+			}
+		} catch {
+			errorText.gameObject.SetActive (true);
+			errorText.color = Color.red;
+			errorText.text = "Error: Our servers are down for maintenance";
 		}
 	}
 
 	public void setRadius(){
 		radiusText.text = System.Math.Round (radiusSlider.value).ToString();
+//		sceneManager.updateNearby((int)System.Math.Round (radiusSlider.value));
 	}
 
 	public void toggleAnnotations(){

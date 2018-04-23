@@ -51,6 +51,7 @@ public class SceneManager : MonoBehaviour {
 	//private Vector2 testLocaiton = new Vector2((float)43.7021, (float)72.2890); //test location
 
 	public int zoomFactor = 16; //handles the zoom level on the map (hardcode for now)
+	public int radius = 50;
 
 	void Start () {
 
@@ -117,8 +118,7 @@ public class SceneManager : MonoBehaviour {
 		if(isInitialLocation == true){
 			Debug.Log("Initial location set: " + location.LatitudeLongitude.ToString() + " with heading: " + location.Heading);
 			setMapOrientation(location.Heading);
-			StartCoroutine(getTrailsForLocation(location, 50)); //50 miles
-			//getDirectionsFromLocation(location);
+			StartCoroutine(getTrailsForLocation(location, 50));
 			StartCoroutine (annotationHandler.SetupMap ());
 			distanceText.GetComponent<UnityEngine.UI.Text> ().text = "Initialized";
 		}
@@ -267,19 +267,17 @@ public class SceneManager : MonoBehaviour {
 	}
 
 
-	public IEnumerator getTrailsForLocation(Location location, int radius){
+	public IEnumerator getTrailsForLocation(Location location, int rad){
 
 		Debug.Log("getting trails at location: " + location.LatitudeLongitude.ToString());
 
-		CoroutineWithData nearbyData = new CoroutineWithData(this, wwwScript.GetTrails(location.LatitudeLongitude.x, location.LatitudeLongitude.y, radius));
+		CoroutineWithData nearbyData = new CoroutineWithData(this, wwwScript.GetTrails(location.LatitudeLongitude.x, location.LatitudeLongitude.y, rad));
 		yield return nearbyData.coroutine;
 
 		var parsedNearby = SimpleJSON.JSON.Parse (nearbyData.result.ToString());
 
 		Debug.Log("parsedNearby count: " + parsedNearby.Count);
-//		if (uiObject != null) {
-//			uiHandler = (UIManager)uiObject.GetComponent (typeof(UIManager));
-//		}
+
 		for(int i = 0; i < parsedNearby.Count; i++){
 			uiHandler.populateNearby(parsedNearby[i][0].ToString(), parsedNearby[i][1].ToString());
 		}
@@ -290,4 +288,9 @@ public class SceneManager : MonoBehaviour {
 		getTrailByName(trail, location);
 			
 	}
+
+	public void updateNearby(int rad){
+		StartCoroutine(getTrailsForLocation(currentLoc, rad));
+	}
+
 }
