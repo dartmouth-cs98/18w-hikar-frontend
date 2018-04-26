@@ -14,7 +14,7 @@ public class SceneManager : MonoBehaviour {
 
 	//mapBox
 	public GameObject mapObject;
-	private Mapbox.Unity.Map.MapAtWorldScale map;
+	private Mapbox.Unity.Map.AbstractMap map;
 
 	//annotationHandler
 	public GameObject annotationObject;
@@ -68,7 +68,7 @@ public class SceneManager : MonoBehaviour {
 
 		//get reference to map handler script
 		if(mapObject != null) {
-			map = (Mapbox.Unity.Map.MapAtWorldScale) mapObject.GetComponent((typeof(Mapbox.Unity.Map.MapAtWorldScale)));
+			map = (Mapbox.Unity.Map.AbstractMap) mapObject.GetComponent((typeof(Mapbox.Unity.Map.AbstractMap)));
 		}
 			
 		if(directionsObject != null) {
@@ -119,6 +119,7 @@ public class SceneManager : MonoBehaviour {
 			Debug.Log("Initial location set: " + location.LatitudeLongitude.ToString() + " with heading: " + location.Heading);
 			setMapOrientation(location.Heading);
 			StartCoroutine(getTrailsForLocation(location, 50));
+			//getTestDirectionsFromLocation(location);
 			StartCoroutine (annotationHandler.SetupMap ());
 			distanceText.GetComponent<UnityEngine.UI.Text> ().text = "Initialized";
 		}
@@ -133,7 +134,7 @@ public class SceneManager : MonoBehaviour {
 
 		if(isLatLngUpdated){
 			locationText.GetComponent<UnityEngine.UI.Text>().text = "" + location.LatitudeLongitude.x + ", " + location.LatitudeLongitude.y;
-			map = (Mapbox.Unity.Map.MapAtWorldScale) mapObject.GetComponent((typeof(Mapbox.Unity.Map.MapAtWorldScale)));
+			map = (Mapbox.Unity.Map.AbstractMap) mapObject.GetComponent((typeof(Mapbox.Unity.Map.AbstractMap)));
 			playerObject.transform.MoveToGeocoordinate(location.LatitudeLongitude, map.CenterMercator, map.WorldRelativeScale);
 			distanceText.GetComponent<UnityEngine.UI.Text> ().text = "World Position: " + playerObject.transform.position.ToString();
 		}
@@ -228,7 +229,7 @@ public class SceneManager : MonoBehaviour {
 		Debug.Log("root transform: " + root.transform);
 	}
 
-	void getDirectionsFromLocation(Location location){
+	void getTestDirectionsFromLocation(Location location){
 
 		if(true){
 			if(directionsObject == null){
@@ -242,7 +243,7 @@ public class SceneManager : MonoBehaviour {
 				wwwScript = (WWWHandler)wwwHandler.GetComponent(typeof(WWWHandler));
 			}
 
-			directionHandler.StartCoroutine(directionHandler.getDirectionsFromJSON(wwwScript, location));
+			directionHandler.StartCoroutine(directionHandler.getTestDirectionsFromJSON(wwwScript, location));
 		}
 
 	}
