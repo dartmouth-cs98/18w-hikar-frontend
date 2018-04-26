@@ -11,7 +11,6 @@ public class UIManager : MonoBehaviour {
 	//Setup
 	private Mapbox.Utils.Vector2d[] trailHeads;
 	private Hashtable trailTable;
-	private bool showForm = false;
 	private List<GameObject> resultList;
 	private GameObject result;
 	public Text errorText;
@@ -129,17 +128,17 @@ public class UIManager : MonoBehaviour {
 		radiusSlider.maxValue = 100;
 		radiusSlider.value = 50;
 		createAnnotationButton.onClick.AddListener (onClickAnnotation);
+		submitAnnotationButton.onClick.AddListener (onAnnotationSubmit);
 	}
 		
-	void Update()
-	{
+	void Update(){
 		if (scrollView.gameObject.activeSelf && scrollView.content.childCount > 0 || exploreTrailsPanel.gameObject.activeSelf) {
 			if (Input.touchSupported && Application.platform != RuntimePlatform.WebGLPlayer && Input.touchCount > 0) {
 				PointerEventData pointerData = new PointerEventData(EventSystem.current);
 				pointerData.position = Input.GetTouch(0).position;
 				List<RaycastResult> hits = new List<RaycastResult>();
 				EventSystem.current.RaycastAll(pointerData, hits);
-				if (hits.Count > 0 && hits [0].gameObject.GetComponent<Text> ().text != null) {
+				if (hits.Count > 0 && hits [0].gameObject.GetComponent<Text> () != null) {
 					string resultText = hits [0].gameObject.GetComponent<Text> ().text;
 					if (resultText != "Submit" && resultText != "_________" && resultText != "Explore") { 
 						scrollView.gameObject.SetActive (false);
@@ -180,13 +179,12 @@ public class UIManager : MonoBehaviour {
 					}
 				}
 			}
-			if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
-			{
+			if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)){
 				PointerEventData pointerData = new PointerEventData(EventSystem.current);
 				pointerData.position = Input.mousePosition;
 				List<RaycastResult> hits = new List<RaycastResult>();
 				EventSystem.current.RaycastAll(pointerData, hits);
-				if (hits.Count > 0 && hits [0].gameObject.GetComponent<Text> ().text != null) {
+				if (hits.Count > 0 && hits [0].gameObject.GetComponent<Text> () != null) {
 					string resultText = hits [0].gameObject.GetComponent<Text> ().text;
 					if (resultText != "Submit" && resultText != "_________" && resultText != "Explore") { 
 						scrollView.gameObject.SetActive (false);
@@ -241,51 +239,38 @@ public class UIManager : MonoBehaviour {
 	}
 
 	// When annotation button is clicked
-	public void onClickAnnotation()
-	{
-		if (!showForm) {
-			annotationInput.gameObject.SetActive (true);
-			showForm = true;
-		} else if (showForm) {
-			annotationInput.gameObject.SetActive (false);
-			showForm = false;
-		}
+	public void onClickAnnotation() {
+		annotationInput.gameObject.SetActive (!annotationInput.gameObject.activeSelf);
 	}
 
-	public void onAnnotationSubmit()
-	{
+	public void onAnnotationSubmit() {
 		if (annotationInput.text != "") {
 			//TODO: Add switches between types of annotations
 			//if billboard:
-			annotationHandler.addBillboard (annotationInput.text);
 
+			annotationHandler.addBillboard (annotationInput.text);
 			annotationHandler.sendAnnotation(annotationInput.text);
 		}
-		annotationInput.gameObject.SetActive (false);
 		annotationInput.text = "";
-		showForm = false;
+		annotationInput.gameObject.SetActive (!annotationInput.gameObject.activeSelf);
 	}
 
-	public void onClickSearch()
-	{
+	public void onClickSearch() {
 		if(cameraObject != null) {
 			cameraHandler = (CameraHandler) cameraObject.gameObject.GetComponent(typeof(CameraHandler));
 		}
 		enable2D (false);
 	}
 
-	public void onHike()
-	{
+	public void onHike() {
 		//retrieve user trail data from backend
 	}
 
-	public void disable2D()
-	{
+	public void disable2D() {
 		enable2D (false);
 	}
 		
-	public void enable2D(bool enabled)
-	{
+	public void enable2D(bool enabled) {
 		if (enabled) {
 			annotationInput.gameObject.SetActive (false);
 			createAnnotationButton.gameObject.SetActive (false);
@@ -299,13 +284,11 @@ public class UIManager : MonoBehaviour {
 		cameraHandler.expand2D (enabled);
 	}
 
-	public void enablePlaces()
-	{
+	public void enablePlaces() {
 		topTrailsPanel.gameObject.SetActive (true);
 	}
 
-	public void enableExplore()
-	{
+	public void enableExplore() {
 		clearResults ();
 		exploreTrailsPanel.gameObject.SetActive (true);
 		try{
@@ -343,13 +326,11 @@ public class UIManager : MonoBehaviour {
 		}
 	}
 
-	public void enableSettings()
-	{
+	public void enableSettings() {
 		settingsPanel.gameObject.SetActive (true);
 	}
 		
-	public void resetUI()
-	{
+	public void resetUI() {
 		annotationInput.gameObject.SetActive (false);
 		createAnnotationButton.gameObject.SetActive (false);
 		toggleARButton.gameObject.SetActive (false);
