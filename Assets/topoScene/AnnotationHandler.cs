@@ -113,17 +113,20 @@ public class AnnotationHandler : MonoBehaviour
 	}
 
 	public void addBillboard(string text){
-		Transform cam = m_Camera.transform;
+		Debug.Log ("ADDED");
 		GameObject billboard = Instantiate(GameObject.FindGameObjectWithTag("billboardObject"));
 		billboard.GetComponentInChildren<TextMesh>().text = text;
-		billboard.transform.position = cam.forward * 10;
-		//Vector3 lookAt = new Vector3(cam.transform.position.x, 1, cam.transform.position.z);
-		//billboard.transform.LookAt(lookAt);
-
+		//Place the billboard in world-forward position
+		billboard.transform.position = Vector3.forward * 10;
+		billboards.Add (billboard);
 	}
 
 	public void enableAnnotations(bool toggle){
+		Debug.Log ("here1");
+
 		foreach (GameObject billboard in billboards) {
+			Debug.Log ("here3");
+
 			if (!toggle) {
 				Debug.Log ("Disabling annotations");
 				billboard.gameObject.SetActive (false);
