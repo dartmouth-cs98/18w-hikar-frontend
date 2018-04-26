@@ -18,7 +18,7 @@ public class LoadingScript : MonoBehaviour {
 		isLoading = false;
 		dots = ".";
 		loadText = "LOADING HIKAR";
-		InvokeRepeating ("Loading", 0f, 0.1f);
+		InvokeRepeating ("Loading", 0f, 0.05f);
 	}
 
 	void Update () {
