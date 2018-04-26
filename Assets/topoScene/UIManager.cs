@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -14,6 +15,7 @@ public class UIManager : MonoBehaviour {
 	private List<GameObject> resultList;
 	private GameObject result;
 	public Text errorText;
+	public Canvas loadingCanvas;
 
 	//Trail UI + Setup
 	private List<string> trails;
@@ -82,6 +84,7 @@ public class UIManager : MonoBehaviour {
 		trails.Add("West Lebanon Trail");
 		trails.Add("Etna Trail");
 		trails.Add("The Goat Path");
+		trails.Add ("Wheelock Trail");
 
 		//make 4 coordinates in the region
 		//vec2ds
@@ -89,10 +92,11 @@ public class UIManager : MonoBehaviour {
 		Mapbox.Utils.Vector2d loc2 = new Mapbox.Utils.Vector2d(43.641690, -72.250757); //lebanon
 		Mapbox.Utils.Vector2d loc3 = new Mapbox.Utils.Vector2d(43.642187, -72.309465); //west lebanon
 		Mapbox.Utils.Vector2d loc4 = new Mapbox.Utils.Vector2d(43.691168, -72.220568); //etna
+		Mapbox.Utils.Vector2d loc5 = new Mapbox.Utils.Vector2d(43.691168, -72.220568); //test
 
 
 		//add vec2ds
-		trailHeads = new Mapbox.Utils.Vector2d[]{loc1, loc2, loc3, loc4};
+		trailHeads = new Mapbox.Utils.Vector2d[]{loc1, loc2, loc3, loc4, loc5};
 
 		//add trail name and vec2d
 		trailTable = new Hashtable();
@@ -100,6 +104,7 @@ public class UIManager : MonoBehaviour {
 		trailTable.Add("Lebanon Trail", loc2);
 		trailTable.Add("West Lebanon Trail", loc3);
 		trailTable.Add("Etna Trail", loc4);
+		trailTable.Add("Wheelock Trail", loc5);
 		trailTable.Add("The Goat Path", 0);
 
 
@@ -128,7 +133,7 @@ public class UIManager : MonoBehaviour {
 		
 	void Update()
 	{
-		if (scrollView.gameObject.activeSelf && scrollView.content.childCount > 0) {
+		if (scrollView.gameObject.activeSelf && scrollView.content.childCount > 0 || exploreTrailsPanel.gameObject.activeSelf) {
 			if (Input.touchSupported && Application.platform != RuntimePlatform.WebGLPlayer && Input.touchCount > 0) {
 				PointerEventData pointerData = new PointerEventData(EventSystem.current);
 				pointerData.position = Input.GetTouch(0).position;
@@ -136,29 +141,42 @@ public class UIManager : MonoBehaviour {
 				EventSystem.current.RaycastAll(pointerData, hits);
 				if (hits.Count > 0 && hits [0].gameObject.GetComponent<Text> ().text != null) {
 					string resultText = hits [0].gameObject.GetComponent<Text> ().text;
-					if (resultText != "Submit" && resultText != "_________") { 
+					if (resultText != "Submit" && resultText != "_________" && resultText != "Explore") { 
 						scrollView.gameObject.SetActive (false);
-
 						SearchMap searchMap = GameObject.FindGameObjectWithTag ("SearchMapObject").GetComponent<SearchMap> ();
+						if (exploreTrailsPanel.gameObject.activeSelf) {
+							string[] trailNameOnly = resultText.Split (new char[0]);
+							StringBuilder trailName = new StringBuilder ();
+							for (int i = 0; i < trailNameOnly.Length - 2; i++) {
+								if (i == 0)
+									trailName.Append (trailNameOnly [i]);
+								else
+									trailName.Append (" " + trailNameOnly [i]);
+							}
+							resultText = trailName.ToString ().Trim ();
+						}
 
 						//search database for trail name
 						//get trail head node location
 						//reload search map with trail head location
 						//change camera to search map
-
-						if(resultText == "The Goat Path"){
+						if (resultText == "The Goat Path") {
 							//this is what we will use to get search trail from UI
-							StartCoroutine(searchMap.getTrailForLocation(wwwScript, resultText));
+							StartCoroutine (searchMap.getTrailForLocation (wwwScript, resultText));
 						} else {
-							Mapbox.Utils.Vector2d searchLoc = (Mapbox.Utils.Vector2d)trailTable [resultText];
-							Debug.Log (searchLoc.ToString ());
-							searchMap.searchForLocation (searchLoc);
+							try {
+								Mapbox.Utils.Vector2d searchLoc = (Mapbox.Utils.Vector2d)trailTable [resultText];
+								Debug.Log (searchLoc.ToString ());
+								searchMap.searchForLocation (searchLoc);
+								cameraHandler.enableSearchMap (); //show search map if not currently showing
+								hikeButton.gameObject.SetActive (true);
+								currentSelectedTrail = resultText;
+								searchInput.text = "";
+								exploreTrailsPanel.gameObject.SetActive (false);
+							} catch {
+								Debug.Log ("Cannot find " + resultText);
+							} 
 						}
-            
-						cameraHandler.enableSearchMap (); //show search map if not currently showing
-						hikeButton.gameObject.SetActive (true);
-						currentSelectedTrail = resultText;
-						searchInput.text = "";
 					}
 				}
 			}
@@ -170,32 +188,55 @@ public class UIManager : MonoBehaviour {
 				EventSystem.current.RaycastAll(pointerData, hits);
 				if (hits.Count > 0 && hits [0].gameObject.GetComponent<Text> ().text != null) {
 					string resultText = hits [0].gameObject.GetComponent<Text> ().text;
-					if (resultText != "Submit" && resultText != "_________") { 
+					if (resultText != "Submit" && resultText != "_________" && resultText != "Explore") { 
 						scrollView.gameObject.SetActive (false);
-
 						SearchMap searchMap = GameObject.FindGameObjectWithTag ("SearchMapObject").GetComponent<SearchMap> ();
-
+						if (exploreTrailsPanel.gameObject.activeSelf) {
+							string[] trailNameOnly = resultText.Split(new char[0]);
+							StringBuilder trailName = new StringBuilder();
+							for (int i = 0; i < trailNameOnly.Length-2; i++) {
+								if(i == 0)
+									trailName.Append(trailNameOnly[i]);
+								else
+									trailName.Append(" " + trailNameOnly[i]);
+							}
+							resultText = trailName.ToString().Trim();
+						}
+							
 						//search database for trail name
 						//get trail head node location
 						//reload search map with trail head location
 						//change camera to search map
-
 						if(resultText == "The Goat Path"){
 							//this is what we will use to get search trail from UI
 							StartCoroutine(searchMap.getTrailForLocation(wwwScript, resultText));
 						} else {
-							Mapbox.Utils.Vector2d searchLoc = (Mapbox.Utils.Vector2d)trailTable [resultText];
-							Debug.Log (searchLoc.ToString ());
-							searchMap.searchForLocation (searchLoc);
+							try{
+								Mapbox.Utils.Vector2d searchLoc = (Mapbox.Utils.Vector2d)trailTable [resultText];
+								Debug.Log (searchLoc.ToString ());
+								searchMap.searchForLocation (searchLoc);
+								cameraHandler.enableSearchMap (); //show search map if not currently showing
+								hikeButton.gameObject.SetActive (true);
+								currentSelectedTrail = resultText;
+								searchInput.text = "";
+								exploreTrailsPanel.gameObject.SetActive(false);
+							}	catch{
+								Debug.Log ("Cannot find " + resultText);
+							} 
 						}
 
-						cameraHandler.enableSearchMap (); //show search map if not currently showing
-						hikeButton.gameObject.SetActive (true);
-						currentSelectedTrail = resultText;
-						searchInput.text = "";
+
 					}
 				}
 			}
+		}
+	}
+
+	public void isLoading(bool enabled){
+		if(enabled){
+			loadingCanvas.gameObject.SetActive (true);
+		} else {
+			loadingCanvas.gameObject.SetActive(false);
 		}
 	}
 
@@ -245,7 +286,6 @@ public class UIManager : MonoBehaviour {
 		
 	public void enable2D(bool enabled)
 	{
-		//Disable all other UI elements except search bar
 		if (enabled) {
 			annotationInput.gameObject.SetActive (false);
 			createAnnotationButton.gameObject.SetActive (false);
@@ -254,6 +294,7 @@ public class UIManager : MonoBehaviour {
 		} else {
 			createAnnotationButton.gameObject.SetActive (true);
 			toggleARButton.gameObject.SetActive (false);
+			searchInput.gameObject.SetActive (false);
 		}	
 		cameraHandler.expand2D (enabled);
 	}
@@ -265,7 +306,41 @@ public class UIManager : MonoBehaviour {
 
 	public void enableExplore()
 	{
-		//UI elements for explore
+		clearResults ();
+		exploreTrailsPanel.gameObject.SetActive (true);
+		try{
+			nearbyTrails.Sort ((t1, t2) => float.Parse(t1 [1]).CompareTo (float.Parse(t2 [1])));
+			int i = 0;
+			while (trailNames.Count < 10 && i < nearbyTrails.Count) {
+				if (!trailNames.Contains (nearbyTrails [i] [0])){
+					trailNames.Add (nearbyTrails [i] [0]);
+				} else {
+					nearbyTrails.RemoveAt (i);
+					i--;
+				}
+				i++;
+			}
+			trailNames.Clear ();
+			i = 0;
+			while (i < 10 && i < nearbyTrails.Count) {
+				GameObject tempResult = (GameObject)Instantiate (result, exploreTrailsPanel.transform);
+				Text text = tempResult.AddComponent<Text> ();
+				text.font = Resources.GetBuiltinResource (typeof(Font), "Arial.ttf") as Font;
+				text.fontSize = 25;
+				RectTransform tempTransform = text.GetComponent<RectTransform> ();
+				tempTransform.sizeDelta = new Vector2 (400f, 100f);
+				text.transform.position = new Vector3 (400f, 100f);
+				text.transform.localScale = new Vector3 (0.25f, 3f, 1f);
+				text.color = Color.black;
+				text.text = System.String.Format("{0,-10} {1,10}", nearbyTrails [i] [0], (System.Math.Truncate(100* double.Parse(nearbyTrails [i] [1]))/100d).ToString() + " mi");
+				resultList.Add (tempResult);
+				i++;
+			}
+		} catch {
+			errorText.gameObject.SetActive (true);
+			errorText.color = Color.red;
+			errorText.text = "Error: Our servers are down for maintenance";
+		}
 	}
 
 	public void enableSettings()
@@ -283,6 +358,7 @@ public class UIManager : MonoBehaviour {
 		topTrailsPanel.gameObject.SetActive (false);
 		settingsPanel.gameObject.SetActive (false);
 		errorText.gameObject.SetActive (false);
+		hikeButton.gameObject.SetActive (false);
 	}
 
 	public void userSelection()
@@ -295,13 +371,12 @@ public class UIManager : MonoBehaviour {
 			if (hits.Count > 0 && hits [0].gameObject.GetComponent<Text> () != null) {
 				string hit = hits [0].gameObject.GetComponent<Text> ().text;
 				if (hit != null && hit != "_________") {
-					//Reset all cams
 					cameraHandler.resetCams();
 					resetUI ();
 					if (hit == "Map") {
 						enable2D (true);
 					} else if (hit == "Explore") {
-						populateExplore ();
+						enableExplore ();
 						cameraHandler.enableBackgroundTime ();
 					} else if (hit == "Your Places") {
 						enablePlaces ();
@@ -330,7 +405,7 @@ public class UIManager : MonoBehaviour {
 					if (hit == "Map") {
 						enable2D (true);
 					} else if (hit == "Explore") {
-						populateExplore ();
+						enableExplore ();
 						cameraHandler.enableBackgroundTime ();
 					} else if (hit == "Your Places") {
 						enablePlaces ();
@@ -347,8 +422,7 @@ public class UIManager : MonoBehaviour {
 		}
 	}
 
-	public void clearResults()
-	{
+	public void clearResults() {
 		//Clear the list
 		for(int i = 0; i < resultList.Count; i++)
 		{
@@ -356,10 +430,13 @@ public class UIManager : MonoBehaviour {
 		}
 		resultList.Clear ();
 	}
+
+	public void clearNearby() {
+		nearbyTrails.Clear ();
+	}
 		
 
-	public void onValueChangedSearch()
-	{
+	public void onValueChangedSearch() {
 		clearResults ();
 		scrollView.gameObject.SetActive (true);
 		GameObject results = GameObject.FindGameObjectWithTag ("results");
@@ -388,41 +465,9 @@ public class UIManager : MonoBehaviour {
 		nearbyTrails.Add (trail);
 	}
 
-	public void populateExplore(){
-		clearResults ();
-		exploreTrailsPanel.gameObject.SetActive (true);
-		try{
-			nearbyTrails.Sort ((t1, t2) => float.Parse(t1 [1]).CompareTo (float.Parse(t2 [1])));
-			for (int i = 0; i < nearbyTrails.Count; i++) {
-				if (!trailNames.Contains (nearbyTrails [i] [0]))
-					trailNames.Add (nearbyTrails [i] [0]);
-				else
-					nearbyTrails.RemoveAt (i);
-			}
-			trailNames.Clear ();
-			for (int i = 0; i < 10; i++) {
-				GameObject tempResult = (GameObject)Instantiate (result, exploreTrailsPanel.transform);
-				Text text = tempResult.AddComponent<Text> ();
-				text.font = Resources.GetBuiltinResource (typeof(Font), "Arial.ttf") as Font;
-				text.fontSize = 25;
-				RectTransform tempTransform = text.GetComponent<RectTransform> ();
-				tempTransform.sizeDelta = new Vector2 (400f, 100f);
-				text.transform.position = new Vector3 (400f, 100f);
-				text.transform.localScale = new Vector3 (0.25f, 3f, 1f);
-				text.color = Color.black;
-				text.text = System.String.Format("{0,-10} {1,10}", nearbyTrails [i] [0], (System.Math.Truncate(100* double.Parse(nearbyTrails [i] [1]))/100d).ToString() + " mi");
-				resultList.Add (tempResult);
-			}
-		} catch {
-			errorText.gameObject.SetActive (true);
-			errorText.color = Color.red;
-			errorText.text = "Error: Our servers are down for maintenance";
-		}
-	}
-
 	public void setRadius(){
 		radiusText.text = System.Math.Round (radiusSlider.value).ToString();
-//		sceneManager.updateNearby((int)System.Math.Round (radiusSlider.value));
+		sceneManager.updateNearby((int)System.Math.Round (radiusSlider.value));
 	}
 
 	public void toggleAnnotations(){

@@ -17,6 +17,7 @@ namespace Mapbox.Examples
 
 		void Awake()
 		{
+			Debug.Log ("heY");
 			var map = FindObjectOfType<AbstractMap>();
 			var visualizer = map.MapVisualizer;
 			_text.text = "LOADING";
