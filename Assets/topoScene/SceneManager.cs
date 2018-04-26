@@ -9,6 +9,7 @@ using SimpleJSON;
 using Vuforia;
 
 public class SceneManager : MonoBehaviour {
+
 	//camera Object
 	public GameObject cameraObject;
 
@@ -54,9 +55,8 @@ public class SceneManager : MonoBehaviour {
 	public int radius = 50;
 
 	void Start () {
-
+		
 		//object that updates camera position based on player position
-
 		cameraPosition = GameObject.FindGameObjectWithTag("cameraPosition");
 
 		StartCoroutine(setPositionOnVuforiaEnabled());
@@ -88,6 +88,7 @@ public class SceneManager : MonoBehaviour {
 		}
 		setCompassDirection ();
 	}
+		
 
 	public void setCompassDirection ()
 	{
@@ -270,14 +271,16 @@ public class SceneManager : MonoBehaviour {
 	public IEnumerator getTrailsForLocation(Location location, int rad){
 
 		Debug.Log("getting trails at location: " + location.LatitudeLongitude.ToString());
-
+		if(wwwScript == null && wwwHandler != null){
+			wwwScript = (WWWHandler)wwwHandler.GetComponent(typeof(WWWHandler));
+		}
 		CoroutineWithData nearbyData = new CoroutineWithData(this, wwwScript.GetTrails(location.LatitudeLongitude.x, location.LatitudeLongitude.y, rad));
 		yield return nearbyData.coroutine;
 
 		var parsedNearby = SimpleJSON.JSON.Parse (nearbyData.result.ToString());
 
 		Debug.Log("parsedNearby count: " + parsedNearby.Count);
-
+		uiHandler.clearNearby ();
 		for(int i = 0; i < parsedNearby.Count; i++){
 			uiHandler.populateNearby(parsedNearby[i][0].ToString(), parsedNearby[i][1].ToString());
 		}
