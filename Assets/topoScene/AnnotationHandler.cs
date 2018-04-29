@@ -32,11 +32,7 @@ public class AnnotationHandler : MonoBehaviour
 	{
 		CoroutineWithData annotationData = new CoroutineWithData(this, wwwScript.GetAnnotation());
 		yield return annotationData.coroutine;
-		CoroutineWithData nodeData = new CoroutineWithData(this, wwwScript.GetNode());
-		yield return nodeData.coroutine;
-		//		print("result is " + annotationData.result.ToString());
-		var parsedAnnotation = SimpleJSON.JSON.Parse (annotationData.result.ToString());
-		var parsedNode = SimpleJSON.JSON.Parse (nodeData.result.ToString ());
+		var parsedAnnotation = JSON.Parse (annotationData.result.ToString());
 
 		//Instantiate all annotations here
 		for (int i = 0; i < parsedAnnotation.Count; i++)
@@ -79,13 +75,6 @@ public class AnnotationHandler : MonoBehaviour
 				annotation.alignment = TextAlignment.Center;
 			}
 		}
-		//Instantiate all nodes here
-//		for (int i = 0; i < parsedNode.Count; i++) {
-//			if (inRange (parsedNode [i] ["lat"], parsedNode [i] ["long"])) 
-//			{
-//				print ("hi");
-//			}
-//		}
 	}
 
 	private bool inRange(float x, float y)

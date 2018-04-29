@@ -32,11 +32,8 @@ public class WWWHandler : MonoBehaviour {
 
 //	string debugPostNodeUrl = "http://localhost:9090/postNode";
 
- 	const string baseUrl = "https://hikar.herokuapp.com";
-	const string getNodeUrl = "https://hikar.herokuapp.com/getNode";
-	const string postNodeUrl = "https://hikar.herokuapp.com/postNode";
-	const string getAnnotationUrl = "https://hikar.herokuapp.com/getAnnotation";
-	const string postAnnotationUrl = "https://hikar.herokuapp.com/postAnnotation";
+	const string getAnnotationUrl = "https://hikar.herokuapp.com/api/annotation";
+	const string postAnnotationUrl = "https://hikar.herokuapp.com/api/annotation/postAnnotation";
 	const string updateUserTrail = "https://hikar.herokuapp.com/updateUserTrail";
 	const string getUserTrail = "https://hikar.herokuapp.com/getUserTrail";
 
@@ -50,25 +47,6 @@ public class WWWHandler : MonoBehaviour {
 
 	const string accesKeyMapBox = ".json?radius=5000&access_token=pk.eyJ1IjoiamN0d2FrZSIsImEiOiJjamQ1NHN2MGEweDJkMndxcmI3eHRuczRlIn0.if6fE47kjlJQbrKmRMMpZg";
 
-	// Use this for initialization
-	public IEnumerator PostNode(double lat, double lon)
-	{
-		WWWForm form = new WWWForm();
-		form.AddField("lat", lat.ToString());
-		form.AddField ("long", lon.ToString());
-		using (var w = UnityWebRequest.Post (postNodeUrl, form))
-		{
-			yield return w.SendWebRequest();
-			if (w.isNetworkError || w.isHttpError) 
-			{
-				yield return w.error + ". Post unsuccessful";
-			}
-			else
-			{
-				yield return "Annotation successfully posted";
-			}
-		}
-	}
 
 	public IEnumerator PostAnnotation(string signType, string text, float lat, float lon)
 	{
@@ -88,31 +66,6 @@ public class WWWHandler : MonoBehaviour {
 			{
 				yield return "Annotation successfully posted";
 			}
-		}
-	}
-
-	public IEnumerator GetNode()
-	{
-		using (WWW www = new WWW (getNodeUrl))
-		{
-			yield return www;
-			if(www.error != null)
-				yield return www.error + ". Get unsuccessful";
-			else
-				yield return www.text;
-		}
-	}
-
-	//query by radius
-	public IEnumerator GetNode(int radius)
-	{
-		using (WWW www = new WWW (getNodeUrl))
-		{
-			yield return www;
-			if(www.error != null)
-				yield return www.error + ". Get unsuccessful";
-			else
-				yield return www.text;
 		}
 	}
 
@@ -154,17 +107,11 @@ public class WWWHandler : MonoBehaviour {
 
 	public IEnumerator GetTrail(string name){
 
-		if(name == ""){
-			//exit because empty would return all trails
-		}
-		else{
+		if(name != ""){
 			//string isn't null, try to query
 			StringBuilder query = new StringBuilder(getTrailUrl);
-			query.Append(name);
-
-			String prequery = query.ToString();
-			prequery.Replace(' ', '-');
-
+			query.Append(name.Replace (' ', '-'));
+			string prequery = query.ToString();
 			using (WWW www = new WWW (prequery))
 			{
 				yield return www;
