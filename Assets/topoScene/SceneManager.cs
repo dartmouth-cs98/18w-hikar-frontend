@@ -94,7 +94,7 @@ public class SceneManager : MonoBehaviour {
 	{
 		compassText = GameObject.FindGameObjectWithTag ("compassText");
 		cameraObject.transform.eulerAngles = new Vector3 (0, currentLoc.Heading, 0);
-		compassText.GetComponent<UnityEngine.UI.Text> ().text = "Compass: " +  Input.compass.trueHeading.ToString();;
+//		compassText.GetComponent<UnityEngine.UI.Text> ().text = "Compass: " +  Input.compass.trueHeading.ToString();;
 		mapObject.transform.Rotate(Vector3.up, -Input.compass.trueHeading);
 	}
 
@@ -113,7 +113,7 @@ public class SceneManager : MonoBehaviour {
 		currentLoc = location;
 
 		locationText = GameObject.FindGameObjectWithTag("locationText");
-		locationText.GetComponent<UnityEngine.UI.Text>().text = "" + location.LatitudeLongitude.x + ", " + location.LatitudeLongitude.y;
+//		locationText.GetComponent<UnityEngine.UI.Text>().text = "" + location.LatitudeLongitude.x + ", " + location.LatitudeLongitude.y;
 		distanceText = GameObject.FindGameObjectWithTag("distanceText");
 
 		if(isInitialLocation == true){
@@ -121,16 +121,16 @@ public class SceneManager : MonoBehaviour {
 			setMapOrientation(location.Heading);
 			StartCoroutine(getTrailsForLocation(location, 50));
 			StartCoroutine (annotationHandler.SetupMap ());
-			distanceText.GetComponent<UnityEngine.UI.Text> ().text = "Initialized";
+//			distanceText.GetComponent<UnityEngine.UI.Text> ().text = "Initialized";
 		}
 
 
-		if(isHeadingUpdated){
-			if(compassText == null){
-				compassText = GameObject.FindGameObjectWithTag ("compassText");
-			}
-			compassText.GetComponent<UnityEngine.UI.Text> ().text = "Compass: " +  location.Heading;
-		}
+//		if(isHeadingUpdated){
+//			if(compassText == null){
+//				compassText = GameObject.FindGameObjectWithTag ("compassText");
+//			}
+//			compassText.GetComponent<UnityEngine.UI.Text> ().text = "Compass: " +  location.Heading;
+//		}
 
 		if(isLatLngUpdated){
 			locationText.GetComponent<UnityEngine.UI.Text>().text = "" + location.LatitudeLongitude.x + ", " + location.LatitudeLongitude.y;
@@ -284,6 +284,7 @@ public class SceneManager : MonoBehaviour {
 		for(int i = 0; i < parsedNearby.Count; i++){
 			uiHandler.populateNearby(parsedNearby[i][0].ToString(), parsedNearby[i][1].ToString());
 		}
+		uiHandler.clearDuplicateTrails ();
 
 
 		//test first trail in renderer
