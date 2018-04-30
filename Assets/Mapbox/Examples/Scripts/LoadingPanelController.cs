@@ -18,13 +18,16 @@ namespace Mapbox.Examples
 		AbstractMap _map;
 		void Awake()
 		{
+
 			_map = FindObjectOfType<AbstractMap>();
 			_map.OnInitialized += _map_OnInitialized;
 		}
 
 		void _map_OnInitialized()
 		{
-			var visualizer = _map.MapVisualizer;
+			Debug.Log ("heY");
+			var map = FindObjectOfType<AbstractMap>();
+			var visualizer = map.MapVisualizer;
 			_text.text = "LOADING";
 			visualizer.OnMapVisualizerStateChanged += (s) =>
 			{

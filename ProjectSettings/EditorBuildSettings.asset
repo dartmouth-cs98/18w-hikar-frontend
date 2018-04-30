@@ -6,5 +6,8 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/loadingScene.unity
+    guid: f19e559d2998c4610bce0f7440028472
+  - enabled: 1
     path: Assets/topoScene/topoScene.unity
     guid: 13b2bf3fc369e439d8201de72b59a529

@@ -9,6 +9,7 @@ using SimpleJSON;
 using Vuforia;
 
 public class SceneManager : MonoBehaviour {
+
 	//camera Object
 	public GameObject cameraObject;
 
@@ -54,9 +55,8 @@ public class SceneManager : MonoBehaviour {
 	public int radius = 50;
 
 	void Start () {
-
+		
 		//object that updates camera position based on player position
-
 		cameraPosition = GameObject.FindGameObjectWithTag("cameraPosition");
 
 		StartCoroutine(setPositionOnVuforiaEnabled());
@@ -88,12 +88,13 @@ public class SceneManager : MonoBehaviour {
 		}
 		setCompassDirection ();
 	}
+		
 
 	public void setCompassDirection ()
 	{
 		compassText = GameObject.FindGameObjectWithTag ("compassText");
 		cameraObject.transform.eulerAngles = new Vector3 (0, currentLoc.Heading, 0);
-		compassText.GetComponent<UnityEngine.UI.Text> ().text = "Compass: " +  Input.compass.trueHeading.ToString();;
+//		compassText.GetComponent<UnityEngine.UI.Text> ().text = "Compass: " +  Input.compass.trueHeading.ToString();;
 		mapObject.transform.Rotate(Vector3.up, -Input.compass.trueHeading);
 	}
 
@@ -112,7 +113,7 @@ public class SceneManager : MonoBehaviour {
 		currentLoc = location;
 
 		locationText = GameObject.FindGameObjectWithTag("locationText");
-		locationText.GetComponent<UnityEngine.UI.Text>().text = "" + location.LatitudeLongitude.x + ", " + location.LatitudeLongitude.y;
+//		locationText.GetComponent<UnityEngine.UI.Text>().text = "" + location.LatitudeLongitude.x + ", " + location.LatitudeLongitude.y;
 		distanceText = GameObject.FindGameObjectWithTag("distanceText");
 
 		if(isInitialLocation == true){
@@ -121,16 +122,16 @@ public class SceneManager : MonoBehaviour {
 			StartCoroutine(getTrailsForLocation(location, 50));
 			//getTestDirectionsFromLocation(location);
 			StartCoroutine (annotationHandler.SetupMap ());
-			distanceText.GetComponent<UnityEngine.UI.Text> ().text = "Initialized";
+//			distanceText.GetComponent<UnityEngine.UI.Text> ().text = "Initialized";
 		}
 
 
-		if(isHeadingUpdated){
-			if(compassText == null){
-				compassText = GameObject.FindGameObjectWithTag ("compassText");
-			}
-			compassText.GetComponent<UnityEngine.UI.Text> ().text = "Compass: " +  location.Heading;
-		}
+//		if(isHeadingUpdated){
+//			if(compassText == null){
+//				compassText = GameObject.FindGameObjectWithTag ("compassText");
+//			}
+//			compassText.GetComponent<UnityEngine.UI.Text> ().text = "Compass: " +  location.Heading;
+//		}
 
 		if(isLatLngUpdated){
 			locationText.GetComponent<UnityEngine.UI.Text>().text = "" + location.LatitudeLongitude.x + ", " + location.LatitudeLongitude.y;
@@ -271,17 +272,20 @@ public class SceneManager : MonoBehaviour {
 	public IEnumerator getTrailsForLocation(Location location, int rad){
 
 		Debug.Log("getting trails at location: " + location.LatitudeLongitude.ToString());
-
+		if(wwwScript == null && wwwHandler != null){
+			wwwScript = (WWWHandler)wwwHandler.GetComponent(typeof(WWWHandler));
+		}
 		CoroutineWithData nearbyData = new CoroutineWithData(this, wwwScript.GetTrails(location.LatitudeLongitude.x, location.LatitudeLongitude.y, rad));
 		yield return nearbyData.coroutine;
 
 		var parsedNearby = SimpleJSON.JSON.Parse (nearbyData.result.ToString());
 
 		Debug.Log("parsedNearby count: " + parsedNearby.Count);
-
+		uiHandler.clearNearby ();
 		for(int i = 0; i < parsedNearby.Count; i++){
 			uiHandler.populateNearby(parsedNearby[i][0].ToString(), parsedNearby[i][1].ToString());
 		}
+		uiHandler.clearDuplicateTrails ();
 
 
 		//test first trail in renderer
