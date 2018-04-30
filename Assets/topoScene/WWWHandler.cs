@@ -33,7 +33,7 @@ public class WWWHandler : MonoBehaviour {
 //	string debugPostNodeUrl = "http://localhost:9090/postNode";
 
 	const string getAnnotationUrl = "https://hikar.herokuapp.com/api/annotation";
-	const string postAnnotationUrl = "https://hikar.herokuapp.com/api/annotation/postAnnotation";
+	const string postAnnotationUrl = "https://hikar.herokuapp.com/api/annotation";
 	const string updateUserTrail = "https://hikar.herokuapp.com/updateUserTrail";
 	const string getUserTrail = "https://hikar.herokuapp.com/getUserTrail";
 
