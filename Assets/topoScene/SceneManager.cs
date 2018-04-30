@@ -249,6 +249,7 @@ public class SceneManager : MonoBehaviour {
 
 	}
 
+	// Pass trail name and user location to start getting directions for the trail
 	void getTrailByName(string trailName, Location userLoc){
 
 
@@ -285,13 +286,7 @@ public class SceneManager : MonoBehaviour {
 		for(int i = 0; i < parsedNearby.Count; i++){
 			uiHandler.populateNearby(parsedNearby[i][0].ToString(), parsedNearby[i][1].ToString());
 		}
-		uiHandler.clearDuplicateTrails ();
-
-
-		//test first trail in renderer
-		string trail = parsedNearby[1][0];
-		getTrailByName(trail, location);
-			
+		uiHandler.clearDuplicateTrails ();			
 	}
 
 	public void updateNearby(int rad){

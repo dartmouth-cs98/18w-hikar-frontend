@@ -75,8 +75,6 @@ public class DirectionsHandler : MonoBehaviour {
 		yield return nodeData.coroutine;
 		var parsedNode = SimpleJSON.JSON.Parse (nodeData.result.ToString ());
 
-//		Debug.Log(parsedNode.Count);
-
 		for(int i = 0; i < parsedNode.Count; i++) {
 
 			double lat = parsedNode[i] ["Latitude"].AsDouble;
@@ -91,14 +89,11 @@ public class DirectionsHandler : MonoBehaviour {
 		//waypoints = new Mapbox.Utils.Vector2d[(waypointList.Count * 2) - 1]; //minus one because you can't calculate midpoint at end
 		waypoints = new Mapbox.Utils.Vector2d[waypointList.Count]; //1:1 trail 
 		waypoints = waypointList.ToArray();
-
-
 		startDirections();
-
 	}
 
 
-	//**THIS FUNCTION QUERIES FOR THE TRAIL NAME**//
+	//**THIS FUNCTION QUERIES FOR THE TRAIL NAME AND CREATES THE ACTUAL TRAIL RENDERER LINE**//
 
 	public IEnumerator getDirectionsFromTrailName(WWWHandler www, string trailName, Mapbox.Unity.Location.Location location){
 
@@ -115,9 +110,9 @@ public class DirectionsHandler : MonoBehaviour {
 		initialLocation = new Vector3(initLoc.x, initLoc.z);
 
 		//store all waypoints as Vec2ds
-		CoroutineWithData nodeData = new CoroutineWithData(this, wwwScript.GetTrail(trailName));
-		yield return nodeData.coroutine;
-		var parsedNode = SimpleJSON.JSON.Parse (nodeData.result.ToString ());
+		CoroutineWithData trailData = new CoroutineWithData(this, wwwScript.GetTrail(trailName));
+		yield return trailData.coroutine;
+		var parsedNode = SimpleJSON.JSON.Parse (trailData.result.ToString ());
 
 		Debug.Log("trail node count: " + parsedNode["geometry"]["coordinates"].Count);
 

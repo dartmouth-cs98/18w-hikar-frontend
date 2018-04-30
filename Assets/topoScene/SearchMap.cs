@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Mapbox.Unity.Map;
+using SimpleJSON;
 
 public class SearchMap : MonoBehaviour {
 
@@ -18,10 +19,6 @@ public class SearchMap : MonoBehaviour {
 
 
 	Vector3 cameraPosition;
-
-
-
-
 
 	void Awake () {
 
@@ -60,7 +57,7 @@ public class SearchMap : MonoBehaviour {
 
 	}
 
-
+	// This instantiates the map for the trail location for search camera
 	public IEnumerator getTrailForLocation(WWWHandler www, string trailName){
 
 		//store all waypoints as Vec2ds
@@ -111,13 +108,11 @@ public class SearchMap : MonoBehaviour {
 	public IEnumerator getTrailData(WWWHandler www, string trailName){
 		CoroutineWithData trailData = new CoroutineWithData(this, www.GetTrail(trailName));
 		yield return trailData.coroutine;
-		var parsedTrail = SimpleJSON.JSON.Parse (trailData.result.ToString());
+		var parsedTrail = JSON.Parse (trailData.result.ToString());
 		//TODO: get a trailhead lat/lon
-
 		double lat = parsedTrail["geometry"]["coordinates"][0][1].AsDouble;
 		double lon = parsedTrail["geometry"]["coordinates"][0][0].AsDouble;
 		Mapbox.Utils.Vector2d searchLoc = new Mapbox.Utils.Vector2d (lat, lon);
 		searchForLocation (searchLoc);
 	}
-
 }
