@@ -17,6 +17,10 @@ public class UIManager : MonoBehaviour {
 	public Text errorText;
 	public Canvas loadingCanvas;
 
+	// Log in and Sign up
+	public InputField usernameValue;
+	public InputField PasswordValue;
+
 	//Trail UI + Setup
 	private string currentSelectedTrail;
 	public Button hikeButton;
@@ -70,6 +74,11 @@ public class UIManager : MonoBehaviour {
 	public GameObject annotationObject;
 	private AnnotationHandler annotationHandler;
 
+	//LoginHandler
+//	public GameObject loginObject;
+//	private LoginHandler loginHandler;
+	public Button loginButton;
+
 	void Start () {
 		result = new GameObject ();
 		resultList = new List<GameObject> ();
@@ -90,6 +99,12 @@ public class UIManager : MonoBehaviour {
 		if (annotationObject != null) {
 			annotationHandler = (AnnotationHandler)annotationObject.gameObject.GetComponent (typeof(AnnotationHandler));
 		}
+		if (annotationObject != null) {
+			annotationHandler = (AnnotationHandler)annotationObject.gameObject.GetComponent (typeof(AnnotationHandler));
+		}
+//		if (loginObject != null) {
+//			loginHandler = (LoginHandler)loginObject.gameObject.GetComponent (typeof(LoginHandler));
+//		}
 		if (sceneObject != null) {
 			sceneManager = (SceneManager)sceneObject.gameObject.GetComponent (typeof(SceneManager));
 		}
@@ -99,6 +114,7 @@ public class UIManager : MonoBehaviour {
 		createAnnotationButton.onClick.AddListener (onClickAnnotation);
 		submitAnnotationButton.onClick.AddListener (onAnnotationSubmit);
 		exitSelectionButton.onClick.AddListener (disable2D);
+		loginButton.onClick.AddListener (signInSubmit);
 	}
 
 	void Update(){
@@ -210,6 +226,9 @@ public class UIManager : MonoBehaviour {
 		}
 		annotationInput.text = "";
 		annotationInput.gameObject.SetActive (!annotationInput.gameObject.activeSelf);
+	}
+	public void signInSubmit(){
+		wwwScript.PostSignIn (usernameValue.text, PasswordValue.text);
 	}
 
 	public void onHike(SearchMap searchMap) {
@@ -354,6 +373,7 @@ public class UIManager : MonoBehaviour {
 					} else if (hit == "Logout") {
 						Debug.Log ("Logout");
 					}
+
 					menuHandler.CloseMenu ();
 				}
 			}
@@ -394,6 +414,11 @@ public class UIManager : MonoBehaviour {
 				resultList.Add (tempResult);
 			}
 		}
+	}
+	public void usernameEnter() {
+
+
+
 	}
 
 	public void populateNearby(string trailName, string trailDist){

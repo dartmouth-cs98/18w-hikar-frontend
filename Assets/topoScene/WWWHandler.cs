@@ -36,6 +36,8 @@ public class WWWHandler : MonoBehaviour {
 	const string postAnnotationUrl = "https://hikar.herokuapp.com/api/annotation/postAnnotation";
 	const string updateUserTrail = "https://hikar.herokuapp.com/updateUserTrail";
 	const string getUserTrail = "https://hikar.herokuapp.com/getUserTrail";
+	const string signIn = "https://hikar.herokuapp.com/signin";
+	const string signUp = "https://hikar.herokuapp.com/signup";
 
 	const string getTestTrailUrl = "https://hikar.herokuapp.com/getTest";
 	const string getTrailUrl = "https://hikar.herokuapp.com/api/trails/";  //leaving blank gets all trails
@@ -68,7 +70,42 @@ public class WWWHandler : MonoBehaviour {
 			}
 		}
 	}
-
+	public IEnumerator PostSignIn(string username, string password)
+	{
+		WWWForm form = new WWWForm();
+		form.AddField("username", username);
+		form.AddField("password", password);
+		using (var w = UnityWebRequest.Post (signIn, form))
+		{
+			yield return w.SendWebRequest();
+			if (w.isNetworkError || w.isHttpError) 
+			{
+				yield return w.error + ". Post unsuccessful";
+			}
+			else
+			{
+				yield return "Annotation successfully posted";
+			}
+		}
+	}
+	public IEnumerator PostSignUp(string username, string password)
+	{
+		WWWForm form = new WWWForm();
+		form.AddField("username", username);
+		form.AddField("password", password);
+		using (var w = UnityWebRequest.Post (signUp, form))
+		{
+			yield return w.SendWebRequest();
+			if (w.isNetworkError || w.isHttpError) 
+			{
+				yield return w.error + ". Post unsuccessful";
+			}
+			else
+			{
+				yield return "Annotation successfully posted";
+			}
+		}
+	}
 	public IEnumerator GetUserTrail()
 	{
 		using (WWW www = new WWW (getUserTrail))
