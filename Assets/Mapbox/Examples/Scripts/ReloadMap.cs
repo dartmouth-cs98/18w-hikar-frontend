@@ -11,15 +11,13 @@
 	{
 		Camera _camera;
 		Vector3 _cameraStartPos;
-
-		[SerializeField]
 		AbstractMap _map;
 
 		[SerializeField]
 		ForwardGeocodeUserInput _forwardGeocoder;
 
-		//[SerializeField]
-		//Slider _zoomSlider;
+		[SerializeField]
+		Slider _zoomSlider;
 
 		Coroutine _reloadRoutine;
 
@@ -29,18 +27,22 @@
 		{
 			_camera = Camera.main;
 			_cameraStartPos = _camera.transform.position;
-			//_map = FindObjectOfType<AbstractMap>();
-//			_forwardGeocoder.OnGeocoderResponse += ForwardGeocoder_OnGeocoderResponse;
-			//_zoomSlider.onValueChanged.AddListener(Reload);
+			_map = FindObjectOfType<AbstractMap>();
+			_forwardGeocoder.OnGeocoderResponse += ForwardGeocoder_OnGeocoderResponse;
+			_zoomSlider.onValueChanged.AddListener(Reload);
 			_wait = new WaitForSeconds(.3f);
 		}
 
 		void ForwardGeocoder_OnGeocoderResponse(ForwardGeocodeResponse response)
 		{
+			if(response == null)
+			{
+				return;
+			}
 			_camera.transform.position = _cameraStartPos;
 			if (null != response.Features && response.Features.Count > 0)
 			{
-				_map.Initialize(response.Features[0].Center, 16);
+				_map.UpdateMap(response.Features[0].Center, (int)_zoomSlider.value);
 			}
 		}
 
@@ -58,8 +60,8 @@
 		{
 			yield return _wait;
 			_camera.transform.position = _cameraStartPos;
-			_map.Initialize(_map.CenterLatitudeLongitude, zoom);
+			_map.UpdateMap(_map.CenterLatitudeLongitude, zoom);
 			_reloadRoutine = null;
 		}
-}
+	}
 }

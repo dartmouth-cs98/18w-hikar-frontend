@@ -50,7 +50,7 @@ public class DirectionsHandler : MonoBehaviour {
 
 
 	//** THIS IS FOR THE TEST TRAIL **//
-	public IEnumerator getDirectionsFromJSON (WWWHandler www, Mapbox.Unity.Location.Location location) {
+	public IEnumerator getTestDirectionsFromJSON (WWWHandler www, Mapbox.Unity.Location.Location location) {
 
 		Debug.Log("Converting JSON to vec2d");
 
@@ -197,7 +197,7 @@ public class DirectionsHandler : MonoBehaviour {
 			//calculate height at player position for offset
 			Vector3 playerRayOrigin = new Vector3(initialLocation.x, rayCastObject.transform.position.y, initialLocation.y);
 			playerOffset = castRaycastDownAtPosition(playerRayOrigin) - mapOffset; //mapOffset skews it
-		} else {
+		} else if(overlayPathOnMap == true) {
 			mapOffset = 0; //fix it onto the map
 		}
 
@@ -239,7 +239,7 @@ public class DirectionsHandler : MonoBehaviour {
 
 		//GameObject mapObject = GameObject.FindGameObjectWithTag("MapObject");
 
-		Mapbox.Unity.Map.MapAtWorldScale _map = (Mapbox.Unity.Map.MapAtWorldScale)map.GetComponent(typeof(Mapbox.Unity.Map.MapAtWorldScale));
+		Mapbox.Unity.Map.AbstractMap _map = (Mapbox.Unity.Map.AbstractMap)map.GetComponent(typeof(Mapbox.Unity.Map.AbstractMap));
 
 		//Mapbox.Utils.Vector2d worldPositionVec2d = Mapbox.Unity.Utilities.Conversions.GeoToWorldPosition(vec2d, _map.CenterMercator, _map.WorldRelativeScale);
 
@@ -281,7 +281,7 @@ public class DirectionsHandler : MonoBehaviour {
 		}
 		else{
 			Debug.Log("RayCast hit failed: " + hit.distance + " at location: " + rayOrigin);
-			height = rayOrigin.y - map.transform.position.y;
+			height = 0; //rayOrigin.y - map.transform.position.y;
 		}
 
 		return height + 0.1f; //buffer

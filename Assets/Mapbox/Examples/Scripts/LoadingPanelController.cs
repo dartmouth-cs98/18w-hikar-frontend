@@ -15,7 +15,15 @@ namespace Mapbox.Examples
 		[SerializeField]
 		AnimationCurve _curve;
 
+		AbstractMap _map;
 		void Awake()
+		{
+
+			_map = FindObjectOfType<AbstractMap>();
+			_map.OnInitialized += _map_OnInitialized;
+		}
+
+		void _map_OnInitialized()
 		{
 			Debug.Log ("heY");
 			var map = FindObjectOfType<AbstractMap>();
@@ -23,6 +31,7 @@ namespace Mapbox.Examples
 			_text.text = "LOADING";
 			visualizer.OnMapVisualizerStateChanged += (s) =>
 			{
+
 				if (this == null)
 					return;
 
@@ -32,6 +41,7 @@ namespace Mapbox.Examples
 				}
 				else if (s == ModuleState.Working)
 				{
+
 					// Uncommment me if you want the loading screen to show again
 					// when loading new tiles.
 					//Content.SetActive(true);

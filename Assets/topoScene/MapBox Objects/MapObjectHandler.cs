@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MapObjectHandler : MonoBehaviour {
 
-	private Mapbox.Unity.Map.BasicMap basicMap;
+	private Mapbox.Unity.Map.AbstractMap basicMap;
 
 	public void initiliazeMap(Vector2 latLong, int zoomFactor) {
 
@@ -13,7 +13,7 @@ public class MapObjectHandler : MonoBehaviour {
 		Debug.Log(MBLatLong);
 
 		//initialize map at location
-		basicMap = (Mapbox.Unity.Map.BasicMap)GetComponent(typeof(Mapbox.Unity.Map.BasicMap));
+		basicMap = (Mapbox.Unity.Map.AbstractMap)GetComponent(typeof(Mapbox.Unity.Map.AbstractMap));
 		basicMap.Initialize(MBLatLong, zoomFactor);
 	}
 
