@@ -128,7 +128,7 @@ public class UIManager : MonoBehaviour {
 					string resultText = hits [0].gameObject.GetComponent<Text> ().text;
 					if (resultText != "Submit" && resultText != "_________" && resultText != "Explore") { 
 						scrollView.gameObject.SetActive (false);
-						SearchMap searchMap = GameObject.FindGameObjectWithTag ("SearchMapObject").GetComponent<SearchMap> ();
+						SearchMap searchMap = (SearchMap) GameObject.FindGameObjectWithTag ("SearchMap").GetComponent<SearchMap> ();
 						if (exploreTrailsPanel.gameObject.activeSelf) {
 							string[] trailNameOnly = resultText.Split (new char[0]);
 							StringBuilder trailName = new StringBuilder ();
@@ -168,7 +168,7 @@ public class UIManager : MonoBehaviour {
 					string resultText = hits [0].gameObject.GetComponent<Text> ().text;
 					if (resultText != "Submit" && resultText != "_________" && resultText != "Explore") { 
 						scrollView.gameObject.SetActive (false);
-						SearchMap searchMap = GameObject.FindGameObjectWithTag ("SearchMapObject").GetComponent<SearchMap> ();
+						SearchMap searchMap = (SearchMap) GameObject.FindGameObjectWithTag ("SearchMap").GetComponent<SearchMap> ();
 						if (exploreTrailsPanel.gameObject.activeSelf) {
 							string[] trailNameOnly = resultText.Split(new char[0]);
 							StringBuilder trailName = new StringBuilder();

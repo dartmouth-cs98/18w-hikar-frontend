@@ -33,6 +33,8 @@ public class DirectionsHandler : MonoBehaviour {
 
 	public bool overlayPathOnMap = false;
 
+	Mapbox.Unity.Map.AbstractMap _map;
+
 
 	// Use this for initialization
 
@@ -46,6 +48,10 @@ public class DirectionsHandler : MonoBehaviour {
 
 		//this.StartCoroutine(this.getDirectionsFromJSON);
 
+	}
+
+	void Start(){
+		_map =  (Mapbox.Unity.Map.AbstractMap)map.GetComponent(typeof(Mapbox.Unity.Map.AbstractMap));
 	}
 
 
@@ -69,8 +75,6 @@ public class DirectionsHandler : MonoBehaviour {
 		yield return nodeData.coroutine;
 		var parsedNode = SimpleJSON.JSON.Parse (nodeData.result.ToString ());
 
-//		Debug.Log(parsedNode.Count);
-
 		for(int i = 0; i < parsedNode.Count; i++) {
 
 			double lat = parsedNode[i] ["Latitude"].AsDouble;
@@ -85,14 +89,11 @@ public class DirectionsHandler : MonoBehaviour {
 		//waypoints = new Mapbox.Utils.Vector2d[(waypointList.Count * 2) - 1]; //minus one because you can't calculate midpoint at end
 		waypoints = new Mapbox.Utils.Vector2d[waypointList.Count]; //1:1 trail 
 		waypoints = waypointList.ToArray();
-
-
 		startDirections();
-
 	}
 
 
-	//**THIS FUNCTION QUERIES FOR THE TRAIL NAME**//
+	//**THIS FUNCTION QUERIES FOR THE TRAIL NAME AND CREATES THE ACTUAL TRAIL RENDERER LINE**//
 
 	public IEnumerator getDirectionsFromTrailName(WWWHandler www, string trailName, Mapbox.Unity.Location.Location location){
 
@@ -109,9 +110,9 @@ public class DirectionsHandler : MonoBehaviour {
 		initialLocation = new Vector3(initLoc.x, initLoc.z);
 
 		//store all waypoints as Vec2ds
-		CoroutineWithData nodeData = new CoroutineWithData(this, wwwScript.GetTrail(trailName));
-		yield return nodeData.coroutine;
-		var parsedNode = SimpleJSON.JSON.Parse (nodeData.result.ToString ());
+		CoroutineWithData trailData = new CoroutineWithData(this, wwwScript.GetTrail(trailName));
+		yield return trailData.coroutine;
+		var parsedNode = SimpleJSON.JSON.Parse (trailData.result.ToString ());
 
 		Debug.Log("trail node count: " + parsedNode["geometry"]["coordinates"].Count);
 
@@ -231,26 +232,15 @@ public class DirectionsHandler : MonoBehaviour {
 		drawLine();
 
 	}
-
-
+		
 	public Vector3 UnityVectorFromVec2d(Mapbox.Utils.Vector2d vec2d, Vector2 refLoc, float radius) {
-
-		//Mapbox.Utils.Vector2d refVec2d = new Mapbox.Utils.Vector2d(refLoc.x, refLoc.y);
-
-		//GameObject mapObject = GameObject.FindGameObjectWithTag("MapObject");
-
-		Mapbox.Unity.Map.AbstractMap _map = (Mapbox.Unity.Map.AbstractMap)map.GetComponent(typeof(Mapbox.Unity.Map.AbstractMap));
-
-		//Mapbox.Utils.Vector2d worldPositionVec2d = Mapbox.Unity.Utilities.Conversions.GeoToWorldPosition(vec2d, _map.CenterMercator, _map.WorldRelativeScale);
-
-		//Vector3 unityPosition = (Vector3)Mapbox.Unity.Utilities.Conversions.GeoToWorldGlobePosition(worldPositionVec2d, _map.WorldRelativeScale);
-
 		Vector3 unityPosition = (Vector3)_map.GeoToWorldPosition(vec2d);
-
-		//print("position 1: " + unityPosition.ToString() + "    position 2: " + testPosition.ToString());
-
 		return unityPosition;
-
+	}
+		
+	public Mapbox.Utils.Vector2d Vec2dFromUnityVector(Vector3 unityVector){
+		Mapbox.Utils.Vector2d vector2d = _map.WorldToGeoPosition (unityVector);
+		return vector2d;
 	}
 
 	void drawLine(){

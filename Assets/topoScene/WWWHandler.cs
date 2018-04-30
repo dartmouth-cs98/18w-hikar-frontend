@@ -33,7 +33,7 @@ public class WWWHandler : MonoBehaviour {
 //	string debugPostNodeUrl = "http://localhost:9090/postNode";
 
 	const string getAnnotationUrl = "https://hikar.herokuapp.com/api/annotation";
-	const string postAnnotationUrl = "https://hikar.herokuapp.com/api/annotation/postAnnotation";
+	const string postAnnotationUrl = "https://hikar.herokuapp.com/api/annotation";
 	const string updateUserTrail = "https://hikar.herokuapp.com/updateUserTrail";
 	const string getUserTrail = "https://hikar.herokuapp.com/getUserTrail";
 	const string signIn = "https://hikar.herokuapp.com/signin";
@@ -144,19 +144,20 @@ public class WWWHandler : MonoBehaviour {
 
 	public IEnumerator GetTrail(string name){
 
-		if(name != ""){
+		if (!String.IsNullOrEmpty (name)) {
 			//string isn't null, try to query
-			StringBuilder query = new StringBuilder(getTrailUrl);
-			query.Append(name.Replace (' ', '-'));
-			string prequery = query.ToString();
-			using (WWW www = new WWW (prequery))
-			{
+			StringBuilder query = new StringBuilder (getTrailUrl);
+			query.Append (name.Replace (' ', '-'));
+			string prequery = query.ToString ();
+			using (WWW www = new WWW (prequery)) {
 				yield return www;
-				if(www.error != null)
+				if (www.error != null)
 					yield return www.error + ". Get unsuccessful";
-				else 
+				else
 					yield return www.text;
 			}
+		} else {
+			Debug.Log ("Empty search query");
 		}
 	}
 

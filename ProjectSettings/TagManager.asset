@@ -19,11 +19,11 @@ TagManager:
   - uicanvas
   - loadingText
   - sceneManager
-  - SearchMapObject
   - results
   - SearchCamera
   - explorePanel
   - rayCastObject
+  - SearchMap
   layers:
   - Default
   - TransparentFX
