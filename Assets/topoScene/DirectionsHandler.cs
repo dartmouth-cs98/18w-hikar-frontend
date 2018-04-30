@@ -33,6 +33,8 @@ public class DirectionsHandler : MonoBehaviour {
 
 	public bool overlayPathOnMap = false;
 
+	Mapbox.Unity.Map.AbstractMap _map;
+
 
 	// Use this for initialization
 
@@ -46,6 +48,10 @@ public class DirectionsHandler : MonoBehaviour {
 
 		//this.StartCoroutine(this.getDirectionsFromJSON);
 
+	}
+
+	void Start(){
+		_map =  (Mapbox.Unity.Map.AbstractMap)map.GetComponent(typeof(Mapbox.Unity.Map.AbstractMap));
 	}
 
 
@@ -231,26 +237,15 @@ public class DirectionsHandler : MonoBehaviour {
 		drawLine();
 
 	}
-
-
+		
 	public Vector3 UnityVectorFromVec2d(Mapbox.Utils.Vector2d vec2d, Vector2 refLoc, float radius) {
-
-		//Mapbox.Utils.Vector2d refVec2d = new Mapbox.Utils.Vector2d(refLoc.x, refLoc.y);
-
-		//GameObject mapObject = GameObject.FindGameObjectWithTag("MapObject");
-
-		Mapbox.Unity.Map.AbstractMap _map = (Mapbox.Unity.Map.AbstractMap)map.GetComponent(typeof(Mapbox.Unity.Map.AbstractMap));
-
-		//Mapbox.Utils.Vector2d worldPositionVec2d = Mapbox.Unity.Utilities.Conversions.GeoToWorldPosition(vec2d, _map.CenterMercator, _map.WorldRelativeScale);
-
-		//Vector3 unityPosition = (Vector3)Mapbox.Unity.Utilities.Conversions.GeoToWorldGlobePosition(worldPositionVec2d, _map.WorldRelativeScale);
-
 		Vector3 unityPosition = (Vector3)_map.GeoToWorldPosition(vec2d);
-
-		//print("position 1: " + unityPosition.ToString() + "    position 2: " + testPosition.ToString());
-
 		return unityPosition;
-
+	}
+		
+	public Mapbox.Utils.Vector2d Vec2dFromUnityVector(Vector3 unityVector){
+		Mapbox.Utils.Vector2d vector2d = _map.WorldToGeoPosition (unityVector);
+		return vector2d;
 	}
 
 	void drawLine(){
