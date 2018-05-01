@@ -152,7 +152,7 @@ public class UIManager : MonoBehaviour {
 					string resultText = hits [0].gameObject.GetComponent<Text> ().text;
 					if (resultText != "Submit" && resultText != "_________" && resultText != "Explore") { 
 						scrollView.gameObject.SetActive (false);
-						SearchMap searchMap = GameObject.FindGameObjectWithTag ("SearchMapObject").GetComponent<SearchMap> ();
+						SearchMap searchMap = GameObject.FindGameObjectWithTag ("SearchMap").GetComponent<SearchMap> ();
 						if (exploreTrailsPanel.gameObject.activeSelf) {
 							string[] trailNameOnly = resultText.Split(new char[0]);
 							StringBuilder trailName = new StringBuilder();
@@ -206,7 +206,7 @@ public class UIManager : MonoBehaviour {
 			//if billboard:
 
 			annotationHandler.addBillboard (annotationInput.text);
-			annotationHandler.sendAnnotation(annotationInput.text);
+			annotationHandler.sendAnnotation("Billboard", annotationInput.text, sceneManager.currentLoc);
 		}
 		annotationInput.text = "";
 		annotationInput.gameObject.SetActive (!annotationInput.gameObject.activeSelf);
@@ -405,6 +405,7 @@ public class UIManager : MonoBehaviour {
 
 	public void setRadius(){
 		radiusText.text = System.Math.Round (radiusSlider.value).ToString();
+		sceneManager.updateRadius ((int)System.Math.Round (radiusSlider.value));
 		sceneManager.updateNearby((int)System.Math.Round (radiusSlider.value));
 	}
 

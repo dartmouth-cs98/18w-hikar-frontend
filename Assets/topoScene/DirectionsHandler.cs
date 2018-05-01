@@ -35,6 +35,8 @@ public class DirectionsHandler : MonoBehaviour {
 
 	Mapbox.Unity.Map.AbstractMap _map;
 
+	public float totalOffset;
+
 
 	// Use this for initialization
 
@@ -117,28 +119,30 @@ public class DirectionsHandler : MonoBehaviour {
 		//store all waypoints as Vec2ds
 		CoroutineWithData nodeData = new CoroutineWithData(this, wwwScript.GetTrail(trailName));
 		yield return nodeData.coroutine;
-		var parsedNode = SimpleJSON.JSON.Parse (nodeData.result.ToString ());
+		try{
+			var parsedNode = SimpleJSON.JSON.Parse (nodeData.result.ToString ());
 
-		Debug.Log("trail node count: " + parsedNode["geometry"]["coordinates"].Count);
+			Debug.Log("trail node count: " + parsedNode["geometry"]["coordinates"].Count);
 
-		Debug.Log(parsedNode.ToString());
+			Debug.Log(parsedNode.ToString());
 
-		for(int i = 0; i < parsedNode["geometry"]["coordinates"].Count; i++) {
+			for(int i = 0; i < parsedNode["geometry"]["coordinates"].Count; i++) {
 
-			double lat = parsedNode["geometry"]["coordinates"][i][1].AsDouble;
-			double lon = parsedNode["geometry"]["coordinates"][i][0].AsDouble;
+				double lat = parsedNode["geometry"]["coordinates"][i][1].AsDouble;
+				double lon = parsedNode["geometry"]["coordinates"][i][0].AsDouble;
 
-			Mapbox.Utils.Vector2d vec2d = new Mapbox.Utils.Vector2d(lat, lon);
+				Mapbox.Utils.Vector2d vec2d = new Mapbox.Utils.Vector2d(lat, lon);
 
-			waypointList.Add(vec2d);
+				waypointList.Add(vec2d);
 
-		}
+			}
 
-		//waypoints = new Mapbox.Utils.Vector2d[(waypointList.Count * 2) - 1]; //minus one because you can't calculate midpoint at end
-		waypoints = new Mapbox.Utils.Vector2d[waypointList.Count]; //1:1 trail 
-		waypoints = waypointList.ToArray();
+			//waypoints = new Mapbox.Utils.Vector2d[(waypointList.Count * 2) - 1]; //minus one because you can't calculate midpoint at end
+			waypoints = new Mapbox.Utils.Vector2d[waypointList.Count]; //1:1 trail 
+			waypoints = waypointList.ToArray();
 
-		startDirections();
+			startDirections();
+		} catch {}
 	}
 
 	public void getDirectionsFromLatLngs(List<Mapbox.Utils.Vector2d> waypointsList){
@@ -183,16 +187,10 @@ public class DirectionsHandler : MonoBehaviour {
 
 	}
 
-	void calculateHeights(){
-
-		//RAYCASTOBJECT HEIGHT IS 1100
-		//MAP BASE HEIGHT IS 1000
-		//mapOffset should be 100
-
+	public void setTotalOffset(){
 		if(rayCastObject == null){
 			rayCastObject = GameObject.FindGameObjectWithTag("rayCastObject");
 		}
-
 		//calculate distance to map from rayOrigin
 		float mapOffset = rayCastObject.transform.position.y - map.transform.position.y;
 		float playerOffset = 0;
@@ -206,16 +204,17 @@ public class DirectionsHandler : MonoBehaviour {
 		} else if(overlayPathOnMap == true) {
 			mapOffset = 0; //fix it onto the map
 		}
-
-
-
 		//calculate total path offset
-		float totalOffset = mapOffset + playerOffset;
-
+		totalOffset = mapOffset + playerOffset;
 		Debug.Log("Height: " + playerOffset + " at player (x,z): (" + initialLocation.x + ", " + initialLocation.y + ")");
 
 		Debug.Log("Map Offset: " + mapOffset + "  playerOffset: " + playerOffset + "  totalOffset: " + totalOffset);
 
+	}
+
+	void calculateHeights(){
+		
+		setTotalOffset ();
 
 		for(int i = 0; i < positions.Length; i++){
 			Vector3 rayOrigin = new Vector3(positions[i].x, rayCastObject.transform.position.y, positions[i].z);
@@ -251,9 +250,9 @@ public class DirectionsHandler : MonoBehaviour {
 	void drawLine(){
 		
 		//set lineRenderer positions to draw
-		lineRenderer = GetComponent<LineRenderer>();
+		lineRenderer = GetComponent<LineRenderer> ();
 		lineRenderer.positionCount = positions.Length;
-		lineRenderer.SetPositions(positions);
+		lineRenderer.SetPositions (positions);
 
 		Color startColor = Color.green;
 		Color endColor = Color.red;
@@ -261,9 +260,12 @@ public class DirectionsHandler : MonoBehaviour {
 		lineRenderer.endColor = endColor;
 
 		lineRenderer.numCapVertices = 90; //adjust this value for smoother lines (90 MAX)
+
+		//Reset the offset
+		totalOffset = 0;
 	}
 
-	public float castRaycastDownAtPosition(Vector3 rayOrigin){
+		public float castRaycastDownAtPosition(Vector3 rayOrigin){
 
 		rayCastObject.transform.position = rayOrigin;
 		Vector3 down = -Vector3.up;

@@ -3,29 +3,42 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using SimpleJSON;
+using Mapbox.Unity.Location;
 
 public class AnnotationHandler : MonoBehaviour 
 {
 
-	public Camera m_Camera;
+	public Camera arCam;
 	// Annotation assets
 	public GameObject billboardAnnotation;
+	public GameObject rayCastObject;
+
 	private ArrayList billboards;
 
 	//wwwHandler
 	public GameObject wwwHandler;
 	private WWWHandler wwwScript;
 
-	private Vector2 currentLocation;
+	//directionsHandler
+	public GameObject directionsObject;
+	private DirectionsHandler directionsHandler;
 
+	//sceneHandler
+	public GameObject sceneObject;
+	private SceneManager sceneHandler;
 
-	//hardcoded radius
-	private int radius = 5;
+	const float mileToLatLon = 1/69;
 
 	void Start(){
 		billboards = new ArrayList ();
 		if (wwwHandler != null) {
 			wwwScript = (WWWHandler)wwwHandler.gameObject.GetComponent (typeof(WWWHandler));
+		}
+		if (directionsObject != null) {
+			directionsHandler = (DirectionsHandler)directionsObject.GetComponent (typeof(DirectionsHandler));
+		}
+		if (sceneObject != null) {
+			sceneHandler = (SceneManager)sceneObject.GetComponent (typeof(SceneManager));
 		}
 	}
 	public IEnumerator SetupMap() 
@@ -79,9 +92,14 @@ public class AnnotationHandler : MonoBehaviour
 
 	private bool inRange(float x, float y)
 	{
-		if (x <= (currentLocation.x + radius) && x >= (currentLocation.x - radius)) 
+		if (sceneObject != null) {
+			sceneHandler = (SceneManager)sceneObject.GetComponent (typeof(SceneManager));
+		}
+		if (x <= (sceneHandler.currentLoc.LatitudeLongitude.x + (sceneHandler.radius * mileToLatLon)) 
+			&& x >= (sceneHandler.currentLoc.LatitudeLongitude.x - (sceneHandler.radius * mileToLatLon))) 
 		{
-			if (y <= (currentLocation.y + radius) && y >= (currentLocation.y - radius))
+			if (y <= (sceneHandler.currentLoc.LatitudeLongitude.y + (sceneHandler.radius * mileToLatLon))
+				&& y >= (sceneHandler.currentLoc.LatitudeLongitude.y - (sceneHandler.radius * mileToLatLon)))
 			{
 				return true;
 			}
@@ -89,33 +107,31 @@ public class AnnotationHandler : MonoBehaviour
 		return false;
 	}
 
-	public void updateLoc(Vector2 currentVec)
-	{
-		currentLocation = currentVec;
-	}
-
-	public void sendAnnotation (string text) {
-		string type = "Billboard";
-		float lat = Input.location.lastData.latitude;
-		float lon = Input.location.lastData.longitude;
-		var id = StartCoroutine(wwwScript.PostAnnotation (type, text, lat, lon));
+	public void sendAnnotation (string type, string text, Location userLoc) {
+		StartCoroutine(wwwScript.PostAnnotation (type, text, userLoc.LatitudeLongitude.x, userLoc.LatitudeLongitude.y));
 	}
 
 	public void addBillboard(string text){
-		Debug.Log ("ADDED");
 		GameObject billboard = Instantiate(GameObject.FindGameObjectWithTag("billboardObject"));
 		billboard.GetComponentInChildren<TextMesh>().text = text;
-		//Place the billboard in world-forward position
-		billboard.transform.position = Vector3.forward * 10;
+
+		//Place the billboard tapered to the 
+		float rayCastZ = arCam.gameObject.transform.position.z + 10;
+		float rayCastX = arCam.gameObject.transform.position.x;
+
+		Vector3 billboardRayOrigin = new Vector3 (rayCastX, rayCastObject.gameObject.transform.position.y, rayCastZ);
+
+		float height = directionsHandler.castRaycastDownAtPosition (billboardRayOrigin);
+		if (height != billboardRayOrigin.y) {
+			directionsHandler.setTotalOffset();
+			height -= directionsHandler.totalOffset;
+		}
+		billboard.transform.position = new Vector3 (rayCastX, height, rayCastZ);
 		billboards.Add (billboard);
 	}
 
 	public void enableAnnotations(bool toggle){
-		Debug.Log ("here1");
-
 		foreach (GameObject billboard in billboards) {
-			Debug.Log ("here3");
-
 			if (!toggle) {
 				Debug.Log ("Disabling annotations");
 				billboard.gameObject.SetActive (false);
@@ -126,15 +142,14 @@ public class AnnotationHandler : MonoBehaviour
 		}
 	}
 	
-	// Update is called once per frame
 	void Update () {
 		// Billboard the billboards
 		if (billboards.Count != 0) {
 			foreach (GameObject billboard in billboards) {
-				if(m_Camera.transform.position.z > billboard.transform.position.z)
-					billboard.transform.eulerAngles = new Vector3 (0, Mathf.Atan((m_Camera.transform.position.x-billboard.transform.position.x)/(m_Camera.transform.position.z - billboard.transform.position.z)) * (180/Mathf.PI) + 180, 90);
+				if(arCam.transform.position.z > billboard.transform.position.z)
+					billboard.transform.eulerAngles = new Vector3 (0, Mathf.Atan((arCam.transform.position.x-billboard.transform.position.x)/(arCam.transform.position.z - billboard.transform.position.z)) * (180/Mathf.PI) + 180, 90);
 				else
-					billboard.transform.eulerAngles = new Vector3 (0, Mathf.Atan((m_Camera.transform.position.x-billboard.transform.position.x)/(m_Camera.transform.position.z - billboard.transform.position.z)) * (180/Mathf.PI), 90);
+					billboard.transform.eulerAngles = new Vector3 (0, Mathf.Atan((arCam.transform.position.x-billboard.transform.position.x)/(arCam.transform.position.z - billboard.transform.position.z)) * (180/Mathf.PI), 90);
 			}
 		}
 	}

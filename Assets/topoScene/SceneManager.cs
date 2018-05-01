@@ -44,7 +44,7 @@ public class SceneManager : MonoBehaviour {
 	private Vector2 currentLocation; //where user is on latest location update with test = new Vector2((float)-4, 0);
 	private Vector2 lastLocation;
 
-	private Location currentLoc;
+	public Location currentLoc;
 	private Location lastLoc;
 
 	private bool isRootTransformSet = false;
@@ -296,6 +296,10 @@ public class SceneManager : MonoBehaviour {
 
 	public void updateNearby(int rad){
 		StartCoroutine(getTrailsForLocation(currentLoc, rad));
+	}
+
+	public void updateRadius(int rad){
+		radius = rad;
 	}
 
 }
