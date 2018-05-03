@@ -21,6 +21,9 @@ public class SearchMap : MonoBehaviour {
 
 	Vector3 cameraPosition;
 
+	//first waypoint aka trailhead
+	Mapbox.Utils.Vector2d trailhead;
+
 	void Awake () {
 
 		//camera = GameObject.FindGameObjectWithTag("SearchCamera");
@@ -28,10 +31,15 @@ public class SearchMap : MonoBehaviour {
 	}
 	
 
-	public void searchForLocation(Mapbox.Utils.Vector2d location){
+	public void searchForLocation(Mapbox.Utils.Vector2d location, bool displayTrail){
 		Debug.Log("Searching for Map at: " + location);
 		camera.transform.position = cameraPosition;
 		map.UpdateMap(location, 16);
+
+		if(displayTrail == true){
+			directions.getDirectionsFromLatLngs(waypointList);
+		}
+
 	}
 
 	public void loadMapWithBounds(Mapbox.Utils.Vector2dBounds bounds){
@@ -79,6 +87,8 @@ public class SearchMap : MonoBehaviour {
 		double west = double.MaxValue;
 		double east = double.MinValue;
 
+		bool isTrailHead = true;
+
 		for(int i = 0; i < parsedNode["geometry"]["coordinates"].Count; i++) {
 
 			double lat = parsedNode["geometry"]["coordinates"][i][1].AsDouble;
@@ -87,7 +97,6 @@ public class SearchMap : MonoBehaviour {
 			Mapbox.Utils.Vector2d vec2d = new Mapbox.Utils.Vector2d(lat, lon);
 
 			waypointList.Add(vec2d);
-
 
 			//find the ne,sw bounds
 			if(lat < south)
@@ -99,12 +108,19 @@ public class SearchMap : MonoBehaviour {
 			if(lon > east)
 				east = lon;
 
+			if(isTrailHead == true){
+				trailhead = vec2d;
+				isTrailHead = false;
+			}
+
 		}
 
 		Mapbox.Utils.Vector2d ne = new Mapbox.Utils.Vector2d(north, east);
 		Mapbox.Utils.Vector2d sw = new Mapbox.Utils.Vector2d(south, west);
 		Mapbox.Utils.Vector2dBounds bounds = new Mapbox.Utils.Vector2dBounds(sw, ne);
-		loadMapWithBounds(bounds);
+		//loadMapWithBounds(bounds);
+
+		searchForLocation(trailhead, true);
 	}
 
 	public IEnumerator getTrailData(WWWHandler www, string trailName){
@@ -115,6 +131,6 @@ public class SearchMap : MonoBehaviour {
 		double lat = parsedTrail["geometry"]["coordinates"][0][1].AsDouble;
 		double lon = parsedTrail["geometry"]["coordinates"][0][0].AsDouble;
 		Mapbox.Utils.Vector2d searchLoc = new Mapbox.Utils.Vector2d (lat, lon);
-		searchForLocation (searchLoc);
+		searchForLocation (searchLoc, false);
 	}
 }
