@@ -36,6 +36,8 @@ public class WWWHandler : MonoBehaviour {
 	const string postAnnotationUrl = "https://hikar.herokuapp.com/api/annotation";
 	const string updateUserTrail = "https://hikar.herokuapp.com/updateUserTrail";
 	const string getUserTrail = "https://hikar.herokuapp.com/getUserTrail";
+	const string signIn = "https://hikar.herokuapp.com/signin";
+	const string signUp = "https://hikar.herokuapp.com/signup";
 
 	const string getTestTrailUrl = "https://hikar.herokuapp.com/getTest";
 	const string getTrailUrl = "https://hikar.herokuapp.com/api/trails/";  //leaving blank gets all trails
@@ -48,7 +50,7 @@ public class WWWHandler : MonoBehaviour {
 	const string accesKeyMapBox = ".json?radius=5000&access_token=pk.eyJ1IjoiamN0d2FrZSIsImEiOiJjamQ1NHN2MGEweDJkMndxcmI3eHRuczRlIn0.if6fE47kjlJQbrKmRMMpZg";
 
 
-	public IEnumerator PostAnnotation(string signType, string text, float lat, float lon)
+	public IEnumerator PostAnnotation(string signType, string text, double lat, double lon)
 	{
 		WWWForm form = new WWWForm();
 		form.AddField("type", signType);
@@ -68,7 +70,42 @@ public class WWWHandler : MonoBehaviour {
 			}
 		}
 	}
-
+	public IEnumerator PostSignIn(string username, string password)
+	{
+		WWWForm form = new WWWForm();
+		form.AddField("username", username);
+		form.AddField("password", password);
+		using (var w = UnityWebRequest.Post (signIn, form))
+		{
+			yield return w.SendWebRequest();
+			if (w.isNetworkError || w.isHttpError) 
+			{
+				yield return w.error + ". Post unsuccessful";
+			}
+			else
+			{
+				yield return "Annotation successfully posted";
+			}
+		}
+	}
+	public IEnumerator PostSignUp(string username, string password)
+	{
+		WWWForm form = new WWWForm();
+		form.AddField("username", username);
+		form.AddField("password", password);
+		using (var w = UnityWebRequest.Post (signUp, form))
+		{
+			yield return w.SendWebRequest();
+			if (w.isNetworkError || w.isHttpError) 
+			{
+				yield return w.error + ". Post unsuccessful";
+			}
+			else
+			{
+				yield return "Annotation successfully posted";
+			}
+		}
+	}
 	public IEnumerator GetUserTrail()
 	{
 		using (WWW www = new WWW (getUserTrail))
@@ -106,7 +143,6 @@ public class WWWHandler : MonoBehaviour {
 	}
 
 	public IEnumerator GetTrail(string name){
-
 		if (!String.IsNullOrEmpty (name)) {
 			//string isn't null, try to query
 			StringBuilder query = new StringBuilder (getTrailUrl);

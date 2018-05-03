@@ -286,11 +286,19 @@ public class SceneManager : MonoBehaviour {
 		for(int i = 0; i < parsedNearby.Count; i++){
 			uiHandler.populateNearby(parsedNearby[i][0].ToString(), parsedNearby[i][1].ToString());
 		}
-		uiHandler.clearDuplicateTrails ();			
+		uiHandler.clearDuplicateTrails ();
+		//test first trail in renderer
+		string trail = parsedNearby[1][0];
+		getTrailByName(trail, location);
+
 	}
 
 	public void updateNearby(int rad){
 		StartCoroutine(getTrailsForLocation(currentLoc, rad));
+	}
+
+	public void updateRadius(int rad){
+		radius = rad;
 	}
 
 }
