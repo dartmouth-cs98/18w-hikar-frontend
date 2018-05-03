@@ -10,7 +10,6 @@ public class CameraHandler : MonoBehaviour {
 	public Camera HUDCam;
 	public Camera Cam2D;
 	public Camera SearchCam;
-//	public Camera ExploreCam;
 	public Camera LoginCam;
 	public Camera DayCam;
 	public Camera EveningCam;
@@ -78,8 +77,7 @@ public class CameraHandler : MonoBehaviour {
 			NightCam.depth = 3;
 	}
 
-	public void enableLogin()
-	{
+	public void enableLogin() {
 		LoginCam.depth = 5;
 	}
 
