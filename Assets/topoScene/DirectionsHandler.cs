@@ -195,7 +195,8 @@ public class DirectionsHandler : MonoBehaviour {
 
 			//calculate height at player position for offset
 			Vector3 playerRayOrigin = new Vector3(initialLocation.x, rayCastObject.transform.position.y, initialLocation.y);
-			playerOffset = castRaycastDownAtPosition(playerRayOrigin) - mapOffset; //mapOffset skews it
+			playerOffset = castRaycastDownAtPosition(playerRayOrigin);
+			playerOffset -= mapOffset; //mapOffset skews it
 		} else if(overlayPathOnMap == true) {
 			mapOffset = 0; //fix it onto the map
 		}
@@ -208,7 +209,7 @@ public class DirectionsHandler : MonoBehaviour {
 	}
 
 	void calculateHeights(){
-		
+
 		setTotalOffset ();
 
 		for(int i = 0; i < positions.Length; i++){
@@ -231,19 +232,19 @@ public class DirectionsHandler : MonoBehaviour {
 		drawLine();
 
 	}
-		
+
 	public Vector3 UnityVectorFromVec2d(Mapbox.Utils.Vector2d vec2d, Vector2 refLoc, float radius) {
 		Vector3 unityPosition = (Vector3)_map.GeoToWorldPosition(vec2d);
 		return unityPosition;
 	}
-		
+
 	public Mapbox.Utils.Vector2d Vec2dFromUnityVector(Vector3 unityVector){
 		Mapbox.Utils.Vector2d vector2d = _map.WorldToGeoPosition (unityVector);
 		return vector2d;
 	}
 
 	void drawLine(){
-		
+
 		//set lineRenderer positions to draw
 		lineRenderer = GetComponent<LineRenderer> ();
 		lineRenderer.positionCount = positions.Length;
@@ -260,7 +261,7 @@ public class DirectionsHandler : MonoBehaviour {
 		totalOffset = 0;
 	}
 
-		public float castRaycastDownAtPosition(Vector3 rayOrigin){
+	public float castRaycastDownAtPosition(Vector3 rayOrigin){
 
 		rayCastObject.transform.position = rayOrigin;
 		Vector3 down = -Vector3.up;
@@ -273,14 +274,14 @@ public class DirectionsHandler : MonoBehaviour {
 		}
 		else{
 			Debug.Log("RayCast hit failed: " + hit.distance + " at location: " + rayOrigin);
-			height = 0; //rayOrigin.y - map.transform.position.y;
+			height = rayOrigin.y - map.transform.position.y;
 		}
 
 		return height + 0.1f; //buffer
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
-		
+
 	}
 }

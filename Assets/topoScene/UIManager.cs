@@ -75,8 +75,8 @@ public class UIManager : MonoBehaviour {
 	private AnnotationHandler annotationHandler;
 
 	//LoginHandler
-//	public GameObject loginObject;
-//	private LoginHandler loginHandler;
+	//	public GameObject loginObject;
+	//	private LoginHandler loginHandler;
 	public Button loginButton;
 
 	void Start () {
@@ -95,16 +95,16 @@ public class UIManager : MonoBehaviour {
 		}
 		if(wwwHandler != null) {
 			wwwScript = (WWWHandler)wwwHandler.gameObject.GetComponent(typeof(WWWHandler)); 
-   		}
-		if (annotationObject != null) {
-			annotationHandler = (AnnotationHandler)annotationObject.gameObject.GetComponent (typeof(AnnotationHandler));
 		}
 		if (annotationObject != null) {
 			annotationHandler = (AnnotationHandler)annotationObject.gameObject.GetComponent (typeof(AnnotationHandler));
 		}
-//		if (loginObject != null) {
-//			loginHandler = (LoginHandler)loginObject.gameObject.GetComponent (typeof(LoginHandler));
-//		}
+		if (annotationObject != null) {
+			annotationHandler = (AnnotationHandler)annotationObject.gameObject.GetComponent (typeof(AnnotationHandler));
+		}
+		//		if (loginObject != null) {
+		//			loginHandler = (LoginHandler)loginObject.gameObject.GetComponent (typeof(LoginHandler));
+		//		}
 		if (sceneObject != null) {
 			sceneManager = (SceneManager)sceneObject.gameObject.GetComponent (typeof(SceneManager));
 		}
@@ -201,7 +201,7 @@ public class UIManager : MonoBehaviour {
 							}
 							//Regular search function from search bar
 							else {
-								StartCoroutine (searchMap.getTrailData (wwwScript, resultText));
+								StartCoroutine (searchMap.getTrailForLocation (wwwScript, resultText));
 								searchInput.text = "";
 								scrollView.gameObject.SetActive (false);
 								trailNames.Clear ();
@@ -220,7 +220,7 @@ public class UIManager : MonoBehaviour {
 			}
 		}
 	}
-		
+
 
 	public void isLoading(bool enabled){
 		if(enabled){
@@ -261,7 +261,7 @@ public class UIManager : MonoBehaviour {
 		exitSelectionButton.gameObject.SetActive (false);
 		hikeButton.gameObject.SetActive (false);
 	}
-		
+
 	public void enable2D(bool enabled) {
 		if (enabled) {
 			annotationInput.gameObject.SetActive (false);
@@ -350,7 +350,7 @@ public class UIManager : MonoBehaviour {
 	public void enableSettings() {
 		settingsPanel.gameObject.SetActive (true);
 	}
-		
+
 	public void resetUI() {
 		annotationInput.gameObject.SetActive (false);
 		createAnnotationButton.gameObject.SetActive (false);
