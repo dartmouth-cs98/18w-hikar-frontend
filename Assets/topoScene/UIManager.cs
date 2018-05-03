@@ -110,36 +110,45 @@ public class UIManager : MonoBehaviour {
 				EventSystem.current.RaycastAll(pointerData, hits);
 				if (hits.Count > 0 && hits [0].gameObject.GetComponent<Text> () != null) {
 					string resultText = hits [0].gameObject.GetComponent<Text> ().text;
-					if (resultText != "Submit" && resultText != "_________" && resultText != "Explore") { 
-						scrollView.gameObject.SetActive (false);
-						SearchMap searchMap = GameObject.FindGameObjectWithTag ("SearchMapObject").GetComponent<SearchMap> ();
-						if (exploreTrailsPanel.gameObject.activeSelf) {
-							string[] trailNameOnly = resultText.Split (new char[0]);
-							StringBuilder trailName = new StringBuilder ();
-							for (int i = 0; i < trailNameOnly.Length - 2; i++) {
-								if (i == 0)
-									trailName.Append (trailNameOnly [i]);
-								else
-									trailName.Append (" " + trailNameOnly [i]);
+					if (resultText != "Submit" && resultText != "Explore" && resultText != searchInput.text) {
+						// Cancel search
+						if (resultText != "_________") {
+							Debug.Log (resultText);
+							scrollView.gameObject.SetActive (false);
+							SearchMap searchMap = GameObject.FindGameObjectWithTag ("SearchMap").GetComponent<SearchMap> ();
+							if (exploreTrailsPanel.gameObject.activeSelf) {
+								string[] trailNameOnly = resultText.Split (new char[0]);
+								StringBuilder trailName = new StringBuilder ();
+								for (int i = 0; i < trailNameOnly.Length - 2; i++) {
+									if (i == 0)
+										trailName.Append (trailNameOnly [i]);
+									else
+										trailName.Append (" " + trailNameOnly [i]);
+								}
+								resultText = trailName.ToString ().Trim ();
 							}
-							resultText = trailName.ToString ().Trim ();
-						}
-						//Quick search function from explore page
-						if (exploreTrailsPanel.gameObject.activeSelf) {
-							StartCoroutine (searchMap.getTrailData (wwwScript, resultText));
-							exploreTrailsPanel.gameObject.SetActive (false);
-						}
-						//Regular search function from search bar
-						else {
-							StartCoroutine (searchMap.getTrailData (wwwScript, resultText));
+							//Quick search function from explore page
+							if (exploreTrailsPanel.gameObject.activeSelf) {
+								StartCoroutine (searchMap.getTrailData (wwwScript, resultText));
+								exploreTrailsPanel.gameObject.SetActive (false);
+								searchInput.text = "";
+								searchInput.gameObject.SetActive (true);
+							}
+							//Regular search function from search bar
+							else {
+								StartCoroutine (searchMap.getTrailData (wwwScript, resultText));
+								searchInput.text = "";
+								scrollView.gameObject.SetActive (false);
+							}
+							cameraHandler.enableSearchMap (); //show search map if not currently showing
+							hikeButton.gameObject.SetActive (true);
+							currentSelectedTrail = resultText;
+							createAnnotationButton.gameObject.SetActive (false);
+							exitSelectionButton.gameObject.SetActive (true);
+						} else {
 							searchInput.text = "";
 							scrollView.gameObject.SetActive (false);
 						}
-						cameraHandler.enableSearchMap (); //show search map if not currently showing
-						hikeButton.gameObject.SetActive (true);
-						currentSelectedTrail = resultText;
-						createAnnotationButton.gameObject.SetActive (false);
-						exitSelectionButton.gameObject.SetActive (true);
 					}
 				}
 			}
@@ -150,36 +159,46 @@ public class UIManager : MonoBehaviour {
 				EventSystem.current.RaycastAll(pointerData, hits);
 				if (hits.Count > 0 && hits [0].gameObject.GetComponent<Text> () != null) {
 					string resultText = hits [0].gameObject.GetComponent<Text> ().text;
-					if (resultText != "Submit" && resultText != "_________" && resultText != "Explore") { 
-						scrollView.gameObject.SetActive (false);
-						SearchMap searchMap = GameObject.FindGameObjectWithTag ("SearchMap").GetComponent<SearchMap> ();
-						if (exploreTrailsPanel.gameObject.activeSelf) {
-							string[] trailNameOnly = resultText.Split(new char[0]);
-							StringBuilder trailName = new StringBuilder();
-							for (int i = 0; i < trailNameOnly.Length-2; i++) {
-								if(i == 0)
-									trailName.Append(trailNameOnly[i]);
-								else
-									trailName.Append(" " + trailNameOnly[i]);
+					if (resultText != "Submit" && resultText != "Explore" && resultText != searchInput.text) {
+						// Cancel search
+						if (resultText != "_________") {
+							Debug.Log (resultText);
+							scrollView.gameObject.SetActive (false);
+							SearchMap searchMap = GameObject.FindGameObjectWithTag ("SearchMap").GetComponent<SearchMap> ();
+							if (exploreTrailsPanel.gameObject.activeSelf) {
+								string[] trailNameOnly = resultText.Split (new char[0]);
+								StringBuilder trailName = new StringBuilder ();
+								for (int i = 0; i < trailNameOnly.Length - 2; i++) {
+									if (i == 0)
+										trailName.Append (trailNameOnly [i]);
+									else
+										trailName.Append (" " + trailNameOnly [i]);
+								}
+								resultText = trailName.ToString ().Trim ();
 							}
-							resultText = trailName.ToString().Trim();
-						}
-						//Quick search function from explore page
-						if (exploreTrailsPanel.gameObject.activeSelf) {
-							StartCoroutine (searchMap.getTrailData (wwwScript, resultText));
-							exploreTrailsPanel.gameObject.SetActive (false);
-						}
-						//Regular search function from search bar
-						else {
-							StartCoroutine (searchMap.getTrailData (wwwScript, resultText));
+							//Quick search function from explore page
+							if (exploreTrailsPanel.gameObject.activeSelf) {
+								StartCoroutine (searchMap.getTrailData (wwwScript, resultText));
+								exploreTrailsPanel.gameObject.SetActive (false);
+								searchInput.text = "";
+								searchInput.gameObject.SetActive (true);
+							}
+							//Regular search function from search bar
+							else {
+								StartCoroutine (searchMap.getTrailData (wwwScript, resultText));
+								searchInput.text = "";
+								scrollView.gameObject.SetActive (false);
+								trailNames.Clear ();
+							}
+							cameraHandler.enableSearchMap (); //show search map if not currently showing
+							hikeButton.gameObject.SetActive (true);
+							currentSelectedTrail = resultText;
+							createAnnotationButton.gameObject.SetActive (false);
+							exitSelectionButton.gameObject.SetActive (true);
+						} else {
 							searchInput.text = "";
 							scrollView.gameObject.SetActive (false);
 						}
-						cameraHandler.enableSearchMap (); //show search map if not currently showing
-						hikeButton.gameObject.SetActive (true);
-						currentSelectedTrail = resultText;
-						createAnnotationButton.gameObject.SetActive (false);
-						exitSelectionButton.gameObject.SetActive (true);
 					}
 				}
 			}
@@ -253,6 +272,32 @@ public class UIManager : MonoBehaviour {
 				i--;
 			}
 			i++;
+		}
+	}
+
+	public void onValueChangedSearch() {
+		clearResults ();
+		scrollView.gameObject.SetActive (true);
+		GameObject results = GameObject.FindGameObjectWithTag ("results");
+		trailNames.Clear ();
+		for (int i = 0; i < nearbyTrails.Count; i++) {
+			// checking trails agaist search input 
+			if (nearbyTrails [i][0].ToLower().Contains (searchInput.text.ToLower())) {
+				if (!trailNames.Contains (nearbyTrails [i][0])) {
+					GameObject tempResult = (GameObject)Instantiate (result, results.transform);
+					tempResult.layer = 5;
+					RectTransform tempRect = tempResult.AddComponent<RectTransform> ();
+					tempRect.sizeDelta = new Vector2 (600, 40);
+					//Add text
+					Text text = tempResult.AddComponent<Text> ();
+					text.font = Resources.GetBuiltinResource (typeof(Font), "Arial.ttf") as Font;
+					text.fontSize = 35;
+					text.color = Color.blue;
+					text.text = nearbyTrails [i][0];
+					resultList.Add (tempResult);
+					trailNames.Add (text.text);
+				}
+			}
 		}
 	}
 
@@ -371,29 +416,6 @@ public class UIManager : MonoBehaviour {
 
 	public void clearNearby() {
 		nearbyTrails.Clear ();
-	}
-		
-
-	public void onValueChangedSearch() {
-		clearResults ();
-		scrollView.gameObject.SetActive (true);
-		GameObject results = GameObject.FindGameObjectWithTag ("results");
-		for (int i = 0; i < nearbyTrails.Count; i++) {
-    		// checking trails agaist search input 
-			if (string.IsNullOrEmpty (searchInput.text) || nearbyTrails [i][0].ToLower().Contains (searchInput.text.ToLower())) {
-				GameObject tempResult = (GameObject)Instantiate (result, results.transform);
-				tempResult.layer = 5;
-				RectTransform tempRect = tempResult.AddComponent<RectTransform> ();
-				tempRect.sizeDelta = new Vector2 (600, 40);
-				//Add text
-				Text text = tempResult.AddComponent<Text> ();
-				text.font = Resources.GetBuiltinResource (typeof(Font), "Arial.ttf") as Font;
-				text.fontSize = 35;
-				text.color = Color.blue;
-				text.text = nearbyTrails [i][0];
-				resultList.Add (tempResult);
-			}
-		}
 	}
 
 	public void populateNearby(string trailName, string trailDist){

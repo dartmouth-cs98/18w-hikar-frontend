@@ -2108,6 +2108,7 @@ MonoBehaviour:
   rayCastObject: {fileID: 1941805711}
   wwwHandler: {fileID: 1225752238}
   directionsObject: {fileID: 190707104}
+  sceneObject: {fileID: 1630137530}
 --- !u!1 &476296324
 GameObject:
   m_ObjectHideFlags: 0
