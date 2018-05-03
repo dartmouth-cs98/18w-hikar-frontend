@@ -115,18 +115,19 @@ public class AnnotationHandler : MonoBehaviour
 		GameObject billboard = Instantiate(GameObject.FindGameObjectWithTag("billboardObject"));
 		billboard.GetComponentInChildren<TextMesh>().text = text;
 
-		//Place the billboard tapered to the 
-		float rayCastZ = arCam.gameObject.transform.position.z + 10;
-		float rayCastX = arCam.gameObject.transform.position.x;
+		//Place the billboard aligned to the map
 
-		Vector3 billboardRayOrigin = new Vector3 (rayCastX, rayCastObject.gameObject.transform.position.y, rayCastZ);
+		Vector3 correctPos = Camera.main.ViewportPointToRay (new Vector3 (0.5F, 0.5F, 0)).GetPoint (10);
+		Debug.Log ("X: " + correctPos.x + " Y: " + correctPos.y + " Z: " +correctPos.z);
+
+		Vector3 billboardRayOrigin = new Vector3 (correctPos.x, rayCastObject.gameObject.transform.position.y, correctPos.z);
 
 		float height = directionsHandler.castRaycastDownAtPosition (billboardRayOrigin);
 		if (height != billboardRayOrigin.y) {
 			directionsHandler.setTotalOffset();
 			height -= directionsHandler.totalOffset;
 		}
-		billboard.transform.position = new Vector3 (rayCastX, height, rayCastZ);
+		billboard.transform.position = new Vector3 (correctPos.x, height, correctPos.z);
 		billboards.Add (billboard);
 	}
 

@@ -145,14 +145,14 @@ public class UIManager : MonoBehaviour {
 							}
 							//Quick search function from explore page
 							if (exploreTrailsPanel.gameObject.activeSelf) {
-								StartCoroutine (searchMap.getTrailData (wwwScript, resultText));
+								StartCoroutine (searchMap.getTrailForLocation (wwwScript, resultText));
 								exploreTrailsPanel.gameObject.SetActive (false);
 								searchInput.text = "";
 								searchInput.gameObject.SetActive (true);
 							}
 							//Regular search function from search bar
 							else {
-								StartCoroutine (searchMap.getTrailData (wwwScript, resultText));
+								StartCoroutine (searchMap.getTrailForLocation (wwwScript, resultText));
 								searchInput.text = "";
 								scrollView.gameObject.SetActive (false);
 							}
@@ -194,14 +194,14 @@ public class UIManager : MonoBehaviour {
 							}
 							//Quick search function from explore page
 							if (exploreTrailsPanel.gameObject.activeSelf) {
-								StartCoroutine (searchMap.getTrailData (wwwScript, resultText));
+								StartCoroutine (searchMap.getTrailForLocation (wwwScript, resultText));
 								exploreTrailsPanel.gameObject.SetActive (false);
 								searchInput.text = "";
 								searchInput.gameObject.SetActive (true);
 							}
 							//Regular search function from search bar
 							else {
-								StartCoroutine (searchMap.getTrailData (wwwScript, resultText));
+								StartCoroutine (searchMap.getTrailForLocation (wwwScript, resultText));
 								searchInput.text = "";
 								scrollView.gameObject.SetActive (false);
 								trailNames.Clear ();
