@@ -68,8 +68,7 @@ public class DirectionsHandler : MonoBehaviour {
 
 
 		//initialLocation
-		Vector2 refLoc = new Vector2((float)location.LatitudeLongitude.x, (float)location.LatitudeLongitude.y);
-		Vector3 initLoc = UnityVectorFromVec2d(location.LatitudeLongitude, refLoc, scaleRadius);
+		Vector3 initLoc = UnityVectorFromVec2d(location.LatitudeLongitude);
 		initialLocation = new Vector3(initLoc.x, initLoc.z);
 
 
@@ -107,8 +106,7 @@ public class DirectionsHandler : MonoBehaviour {
 		//set initialLocation (probably as trail head node) as vec2
 
 		//initialLocation
-		Vector2 refLoc = new Vector2((float)location.LatitudeLongitude.x, (float)location.LatitudeLongitude.y);
-		Vector3 initLoc = UnityVectorFromVec2d(location.LatitudeLongitude, refLoc, scaleRadius);
+		Vector3 initLoc = UnityVectorFromVec2d(location.LatitudeLongitude);
 		initialLocation = new Vector3(initLoc.x, initLoc.z);
 
 		//store all waypoints as Vec2ds
@@ -146,7 +144,6 @@ public class DirectionsHandler : MonoBehaviour {
 		waypoints = waypointsList.ToArray();
 
 		startDirections();
-
 	}
 
 
@@ -164,7 +161,7 @@ public class DirectionsHandler : MonoBehaviour {
 		for(int i = 0; i < waypoints.Length; i++) {
 
 			//pass info into helper function
-			Vector3 position = UnityVectorFromVec2d(waypoints[i], initialLocation, scaleRadius);
+			Vector3 position = UnityVectorFromVec2d(waypoints[i]);
 
 			//set direction transform to first location
 			if(i == 0){
@@ -176,13 +173,12 @@ public class DirectionsHandler : MonoBehaviour {
 
 			positions[i] = position;
 		}
-
 		//calculate heights of positions using raycasts
 		calculateHeights();
-
 	}
 
-	public void setTotalOffset(){
+	public void setTotalOffset() {
+		
 		if(rayCastObject == null){
 			rayCastObject = GameObject.FindGameObjectWithTag("rayCastObject");
 		}
@@ -232,7 +228,7 @@ public class DirectionsHandler : MonoBehaviour {
 
 	}
 		
-	public Vector3 UnityVectorFromVec2d(Mapbox.Utils.Vector2d vec2d, Vector2 refLoc, float radius) {
+	public Vector3 UnityVectorFromVec2d(Mapbox.Utils.Vector2d vec2d) {
 		Vector3 unityPosition = (Vector3)_map.GeoToWorldPosition(vec2d);
 		return unityPosition;
 	}
@@ -260,7 +256,7 @@ public class DirectionsHandler : MonoBehaviour {
 		totalOffset = 0;
 	}
 
-		public float castRaycastDownAtPosition(Vector3 rayOrigin){
+	public float castRaycastDownAtPosition(Vector3 rayOrigin){
 
 		rayCastObject.transform.position = rayOrigin;
 		Vector3 down = -Vector3.up;
@@ -277,10 +273,5 @@ public class DirectionsHandler : MonoBehaviour {
 		}
 
 		return height + 0.1f; //buffer
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
 	}
 }

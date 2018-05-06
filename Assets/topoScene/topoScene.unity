@@ -2170,7 +2170,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 945a69a5ddd004e0f8b49afa11ad2308, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  arCam: {fileID: 0}
+  arCam: {fileID: 1137154519}
   billboardAnnotation: {fileID: 1611328790}
   rayCastObject: {fileID: 1941805711}
   wwwHandler: {fileID: 1225752238}
@@ -6583,7 +6583,6 @@ GameObject:
   - component: {fileID: 1177432147}
   - component: {fileID: 1177432146}
   - component: {fileID: 1177432145}
-  - component: {fileID: 1177432144}
   m_Layer: 0
   m_Name: LoginCamera
   m_TagString: Untagged
@@ -6591,13 +6590,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &1177432144
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1177432143}
-  m_Enabled: 0
 --- !u!124 &1177432145
 Behaviour:
   m_ObjectHideFlags: 0
@@ -7594,7 +7586,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd961b1c9541a4cee99686069ecce852, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _initializeOnStart: 0
+  _initializeOnStart: 1
   _options:
     locationOptions:
       latitudeLongitude: 0,0
@@ -8616,7 +8608,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1607375032}
   - component: {fileID: 1607375033}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: sky
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10063,7 +10055,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1910276645}
   - component: {fileID: 1910276646}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: mountain02
   m_TagString: Untagged
   m_Icon: {fileID: 0}

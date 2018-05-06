@@ -30,13 +30,13 @@ public class SearchMap : MonoBehaviour {
 	public void searchForLocation(Mapbox.Utils.Vector2d location){
 		Debug.Log("Searching for Map at: " + location);
 		camera.transform.position = cameraPosition;
-		map.Initialize(location, 16);
+		map.UpdateMap(location, 16);
 	}
 
 	public void loadMapWithBounds(Mapbox.Utils.Vector2dBounds bounds){
 		Debug.Log("Bounding Map at: " + bounds);
 		camera.transform.position = cameraPosition;
-		map.Initialize(bounds.Center, 16);
+		map.UpdateMap(bounds.Center, 16);
 
 
 		/* //trying to get a tilecover given a bounds

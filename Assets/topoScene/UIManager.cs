@@ -241,19 +241,20 @@ public class UIManager : MonoBehaviour {
 			//if billboard:
 
 			annotationHandler.addBillboard (annotationInput.text);
-			annotationHandler.sendAnnotation("Billboard", annotationInput.text, sceneManager.currentLoc);
 		}
 		annotationInput.text = "";
 		annotationInput.gameObject.SetActive (!annotationInput.gameObject.activeSelf);
 	}
 	public void signInSubmit(){
-		wwwScript.PostSignIn (usernameValue.text, PasswordValue.text);
+		Debug.Log ("Got Here");
+		StartCoroutine(wwwScript.PostSignIn (usernameValue.text, PasswordValue.text));
 	}
 
 	public void onHike(SearchMap searchMap) {
 		//this is what we will use to get search trail from UI
 		StartCoroutine(searchMap.getTrailForLocation(wwwScript, currentSelectedTrail));
 	}
+
 
 	public void disable2D() {
 		cameraHandler.resetCams ();

@@ -19,11 +19,11 @@ TagManager:
   - uicanvas
   - loadingText
   - sceneManager
-  - SearchMapObject
   - results
   - SearchCamera
   - explorePanel
   - rayCastObject
+  - SearchMap
   layers:
   - Default
   - TransparentFX
@@ -33,10 +33,10 @@ TagManager:
   - UI
   - 
   - 
-  - ARGameObject
-  - Map
-  - Path
-  - Both
+  - 
+  - 
+  - 
+  - 
   - 
   - 
   - 
