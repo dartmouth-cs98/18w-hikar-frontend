@@ -27,7 +27,7 @@ public class AnnotationHandler : MonoBehaviour
 	public GameObject sceneObject;
 	private SceneManager sceneHandler;
 
-	const float mileToLatLon = 1/69;
+	const float mileToLatLon = 1f/69f;
 
 	void Start(){
 		billboards = new ArrayList ();
@@ -46,18 +46,19 @@ public class AnnotationHandler : MonoBehaviour
 		CoroutineWithData annotationData = new CoroutineWithData(this, wwwScript.GetAnnotation());
 		yield return annotationData.coroutine;
 		var parsedAnnotation = JSON.Parse (annotationData.result.ToString());
-
+		Debug.Log ("Current lat: " + sceneHandler.currentLoc.LatitudeLongitude.x + " Current lon: " + sceneHandler.currentLoc.LatitudeLongitude.y);
 		//Instantiate all annotations here
 		for (int i = 0; i < parsedAnnotation.Count; i++)
 		{
 			//Mapbox Vec2d lat and lon (x and y)
 			float annoLat = parsedAnnotation [i] ["lat"].AsFloat;
 			float annoLon = parsedAnnotation [i] ["lon"].AsFloat;
-			//Convert to unity world coordinates
-			Vector3 annotationUnityVec = directionsHandler.UnityVectorFromVec2d(new Mapbox.Utils.Vector2d (annoLat, annoLon));
 
+			if (inRange (annoLat, annoLon)) {
+				//Convert to unity world coordinates
+				Debug.Log("Found: " + parsedAnnotation[i]["text"]);
+				Vector3 annotationUnityVec = directionsHandler.UnityVectorFromVec2d(new Mapbox.Utils.Vector2d (annoLat, annoLon));
 
-			if (inRange (annotationUnityVec.x, annotationUnityVec.y)) {
 				GameObject tempAnnotation;
 				if (parsedAnnotation [i] ["type"].Value == "billboard") {
 					billboards.Add(Instantiate (billboardAnnotation, new Vector3 (annotationUnityVec.x, 0, annotationUnityVec.y), Quaternion.identity));
@@ -75,11 +76,9 @@ public class AnnotationHandler : MonoBehaviour
 				float rowLimit = 10; //Guess and check to find sweet spot   
 				string text = parsedAnnotation [i] ["text"].Value;
 				string[] parts = text.Split(' ');
-				for (int j = 0; j < parts.Length; j++)
-				{
+				for (int j = 0; j < parts.Length; j++) {
 					annotation.text += parts[j] + " ";
-					if (annotation.text.Length > rowLimit)
-					{
+					if (annotation.text.Length > rowLimit) {
 						builder += annotation.text;
 						builder = builder.TrimEnd() + System.Environment.NewLine;
 						annotation.text = "";
@@ -115,7 +114,7 @@ public class AnnotationHandler : MonoBehaviour
 		billboard.GetComponentInChildren<TextMesh>().text = text;
 
 		//Place the billboard aligned to the map in front of the player
-		Vector3 correctPos = Camera.main.ViewportPointToRay (new Vector3 (0.5F, 0.5F, 0)).GetPoint (10);
+		Vector3 correctPos = Camera.main.ViewportPointToRay (new Vector3 (0.5f, 0.5f, 0)).GetPoint (10);
 		Vector3 billboardRayOrigin = new Vector3 (correctPos.x, rayCastObject.gameObject.transform.position.y, correctPos.z);
 
 		float height = directionsHandler.castRaycastDownAtPosition (billboardRayOrigin);
@@ -125,17 +124,15 @@ public class AnnotationHandler : MonoBehaviour
 		}
 		billboard.transform.position = new Vector3 (correctPos.x, height, correctPos.z);
 		billboards.Add (billboard);
-		Mapbox.Utils.Vector2d billboardVec2d = directionsHandler.Vec2dFromUnityVector (billboard.transform.position);
+		Mapbox.Utils.Vector2d billboardVec2d = directionsHandler.Vec2dFromUnityVector (billboard.transform.localPosition);
 		sendAnnotation ("billboard", text, billboardVec2d.x, billboardVec2d.y);
 	}
 
 	public void enableAnnotations(bool toggle){
 		foreach (GameObject billboard in billboards) {
 			if (!toggle) {
-				Debug.Log ("Disabling annotations");
 				billboard.gameObject.SetActive (false);
 			} else {
-				Debug.Log ("Enabling annotations");
 				billboard.gameObject.SetActive (true);
 			}
 		}
