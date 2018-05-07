@@ -28,6 +28,10 @@ public class SearchMap : MonoBehaviour {
 
 		//camera = GameObject.FindGameObjectWithTag("SearchCamera");
 		cameraPosition = searchCamera.transform.position;
+
+		if(map == null){
+			map = (AbstractMap)GameObject.FindGameObjectWithTag("SearchMapObject").GetComponent(typeof(AbstractMap));
+		}
 	}
 	
 
@@ -37,7 +41,7 @@ public class SearchMap : MonoBehaviour {
 		map.UpdateMap(location, 16);
 
 		if(displayTrail == true){
-			StartCoroutine(directions.getDirectionsFromLatLngs(waypointList));
+			directions.getDirectionsFromLatLngs(waypointList);
 		}
 	}
 
@@ -67,8 +71,7 @@ public class SearchMap : MonoBehaviour {
 
 
 		//load trail
-		StartCoroutine(directions.getDirectionsFromLatLngs(waypointList));
-
+		directions.getDirectionsFromLatLngs(waypointList);
 
 	}
 
@@ -128,11 +131,9 @@ public class SearchMap : MonoBehaviour {
 		Mapbox.Utils.Vector2dBounds bounds = new Mapbox.Utils.Vector2dBounds(sw, ne);
 		loadMapWithBounds(bounds);
 
-		directions.getDirectionsFromLatLngs(waypointList);
-
 		if (latHead != 0 || lonHead != 0) {
 			Mapbox.Utils.Vector2d searchLoc = new Mapbox.Utils.Vector2d (latHead, lonHead);
-			searchForLocation (searchLoc);
+			//searchForLocation (searchLoc, false);
 		}
 	}
 

@@ -24,6 +24,8 @@ TagManager:
   - SearchCamera
   - explorePanel
   - rayCastObject
+  - SearchMap
+  - rayCastObjectSearch
   layers:
   - Default
   - TransparentFX

@@ -60,6 +60,13 @@ public class DirectionsHandler : MonoBehaviour {
 
 	void Start(){
 		_map =  (AbstractMap)map.GetComponent(typeof(AbstractMap));
+
+		if(rayCastObject == null){
+			if(overlayPathOnMap == false)
+				rayCastObject = GameObject.FindGameObjectWithTag("rayCastObject");
+			else
+				rayCastObject = GameObject.FindGameObjectWithTag("rayCastObjectSearch");
+		}
 	}
 
 
@@ -140,20 +147,25 @@ public class DirectionsHandler : MonoBehaviour {
 			waypoints = new Vector2d[waypointList.Count]; //1:1 trail 
 			waypoints = waypointList.ToArray();
 
-			startDirections();
+			//wait for map to load before directions
+			StartCoroutine(this.waitForTime(loadTime));
 		} catch {}
 	}
 
-	public IEnumerator getDirectionsFromLatLngs(List<Mapbox.Utils.Vector2d> waypointsList){
+	public void getDirectionsFromLatLngs(List<Mapbox.Utils.Vector2d> waypointsList){
 
 		waypoints = new Vector2d[waypointsList.Count]; //1:1 trail 
 		waypoints = waypointsList.ToArray();
 
-		yield return new WaitForSeconds(loadTime);
-
-		startDirections();
+		//wait for map to load before directions
+		StartCoroutine(this.waitForTime(loadTime));
 	}
 
+	//waits for a couple seconds before loading trail
+	public IEnumerator waitForTime(float time){
+		yield return new WaitForSeconds(time);
+		startDirections();
+	}
 
 
 	public void startDirections () {
@@ -188,13 +200,11 @@ public class DirectionsHandler : MonoBehaviour {
 //		} else {
 //			queryHeights();
 //		}
+
 	}
 
 	public void setTotalOffset() {
-		
-		if(rayCastObject == null){
-			rayCastObject = GameObject.FindGameObjectWithTag("rayCastObject");
-		}
+
 		//calculate distance to map from rayOrigin
 		float mapOffset = rayCastObject.transform.position.y - map.transform.position.y;
 		float playerOffset = 0;
@@ -230,8 +240,11 @@ public class DirectionsHandler : MonoBehaviour {
 				//adjust path to player level
 				height -= totalOffset;
 			} else {
-				height = map.transform.position.y;
+				height = (rayOrigin.y - map.transform.position.y) - totalOffset;
 			}
+
+			if(overlayPathOnMap == true)
+				height += trailElevationBuffer;
 
 			Debug.Log("height for position: " + i + " is " + height);
 
@@ -257,7 +270,7 @@ public class DirectionsHandler : MonoBehaviour {
 	}
 
 	public Vector3 UnityVectorFromVec2d(Vector2d vec2d) {
-		return Conversions.GeoToWorldPosition(vec2d, _map.CenterMercator, _map.WorldRelativeScale).ToVector3xz();
+		return _map.GeoToWorldPosition(vec2d, true);
 	}
 		
 	public Vector2d Vec2dFromUnityVector(Vector3 unityVector){
@@ -290,12 +303,8 @@ public class DirectionsHandler : MonoBehaviour {
 		}
 		else{
 			Debug.Log("RayCast hit failed: " + hit.distance + " at location: " + rayOrigin);
-			height = rayOrigin.y - map.transform.position.y;
+			height = rayOrigin.y;
 		}
-
-		if(overlayPathOnMap == true)
-			height += trailElevationBuffer;
-		
 
 		return height;
 	}

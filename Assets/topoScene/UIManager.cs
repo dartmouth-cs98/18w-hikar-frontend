@@ -129,7 +129,7 @@ public class UIManager : MonoBehaviour {
 						if (resultText != "_________") {
 							Debug.Log (resultText);
 							scrollView.gameObject.SetActive (false);
-							SearchMap searchMap = GameObject.FindGameObjectWithTag ("SearchMap").GetComponent<SearchMap> ();
+							SearchMap searchMap = GameObject.FindGameObjectWithTag ("SearchMapObject").GetComponent<SearchMap> ();
 							if (exploreTrailsPanel.gameObject.activeSelf) {
 								string[] trailNameOnly = resultText.Split (new char[0]);
 								StringBuilder trailName = new StringBuilder ();
@@ -178,7 +178,7 @@ public class UIManager : MonoBehaviour {
 						if (resultText != "_________") {
 							Debug.Log (resultText);
 							scrollView.gameObject.SetActive (false);
-							SearchMap searchMap = GameObject.FindGameObjectWithTag ("SearchMap").GetComponent<SearchMap> ();
+							SearchMap searchMap = GameObject.FindGameObjectWithTag ("SearchMapObject").GetComponent<SearchMap> ();
 							if (exploreTrailsPanel.gameObject.activeSelf) {
 								string[] trailNameOnly = resultText.Split (new char[0]);
 								StringBuilder trailName = new StringBuilder ();
