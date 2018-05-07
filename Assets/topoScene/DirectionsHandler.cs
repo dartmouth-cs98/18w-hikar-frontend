@@ -39,6 +39,10 @@ public class DirectionsHandler : MonoBehaviour {
 
 	public float totalOffset;
 
+	public float trailElevationBuffer = 0.3f;
+
+	public float loadTime = 1;
+
 
 	// Use this for initialization
 
@@ -140,10 +144,12 @@ public class DirectionsHandler : MonoBehaviour {
 		} catch {}
 	}
 
-	public void getDirectionsFromLatLngs(List<Vector2d> waypointsList){
+	public IEnumerator getDirectionsFromLatLngs(List<Mapbox.Utils.Vector2d> waypointsList){
 
 		waypoints = new Vector2d[waypointsList.Count]; //1:1 trail 
 		waypoints = waypointsList.ToArray();
+
+		yield return new WaitForSeconds(loadTime);
 
 		startDirections();
 	}
@@ -177,6 +183,11 @@ public class DirectionsHandler : MonoBehaviour {
 		}
 		//calculate heights of positions using raycasts
 		calculateHeights();
+//		if(overlayPathOnMap == false){
+//			calculateHeights();
+//		} else {
+//			queryHeights();
+//		}
 	}
 
 	public void setTotalOffset() {
@@ -193,7 +204,8 @@ public class DirectionsHandler : MonoBehaviour {
 
 			//calculate height at player position for offset
 			Vector3 playerRayOrigin = new Vector3(initialLocation.x, rayCastObject.transform.position.y, initialLocation.y);
-			playerOffset = castRaycastDownAtPosition(playerRayOrigin) - mapOffset; //mapOffset skews it
+			playerOffset = castRaycastDownAtPosition(playerRayOrigin);
+			playerOffset -= mapOffset; //mapOffset skews it
 		} else if(overlayPathOnMap == true) {
 			mapOffset = 0; //fix it onto the map
 		}
@@ -205,8 +217,8 @@ public class DirectionsHandler : MonoBehaviour {
 
 	}
 
-	void calculateHeights(){
-		
+	void calculateHeights(){ //calculate heights using raycasting
+
 		setTotalOffset ();
 
 		for(int i = 0; i < positions.Length; i++){
@@ -217,17 +229,31 @@ public class DirectionsHandler : MonoBehaviour {
 			if(height != rayOrigin.y){
 				//adjust path to player level
 				height -= totalOffset;
-
-				Vector3 newPos = new Vector3(positions[i].x, height, positions[i].z);
-				positions[i] = newPos;
-
-				//Debug.Log("height for position: " + i + " is " + height);
+			} else {
+				height = map.transform.position.y;
 			}
+
+			Debug.Log("height for position: " + i + " is " + height);
+
+			//create new vector
+			Vector3 newPos = new Vector3(positions[i].x, height, positions[i].z);
+			positions[i] = newPos;
 		}
 
 		//call render function
 		drawLine();
 
+	}
+
+	void queryHeights() { //calculate heights using mapbox tile query
+		for(int i = 0; i < waypoints.Length; i++){
+			float unityHeight = getHeightForPosition(waypoints[i]);
+			//create new vector
+			Vector3 newPos = new Vector3(positions[i].x, unityHeight, positions[i].z);
+			positions[i] = newPos;
+		}
+		//call render function
+		drawLine();
 	}
 
 	public Vector3 UnityVectorFromVec2d(Vector2d vec2d) {
@@ -239,16 +265,11 @@ public class DirectionsHandler : MonoBehaviour {
 	}
 
 	void drawLine(){
-		
+
 		//set lineRenderer positions to draw
 		lineRenderer = GetComponent<LineRenderer> ();
 		lineRenderer.positionCount = positions.Length;
 		lineRenderer.SetPositions (positions);
-
-		Color startColor = Color.green;
-		Color endColor = Color.red;
-		lineRenderer.startColor = startColor;
-		lineRenderer.endColor = endColor;
 
 		lineRenderer.numCapVertices = 90; //adjust this value for smoother lines (90 MAX)
 
@@ -269,9 +290,18 @@ public class DirectionsHandler : MonoBehaviour {
 		}
 		else{
 			Debug.Log("RayCast hit failed: " + hit.distance + " at location: " + rayOrigin);
-			height = 0; //rayOrigin.y - map.transform.position.y;
+			height = rayOrigin.y - map.transform.position.y;
 		}
 
-		return height + 0.1f; //buffer
+		if(overlayPathOnMap == true)
+			height += trailElevationBuffer;
+		
+
+		return height;
+	}
+
+	public float getHeightForPosition(Mapbox.Utils.Vector2d position){
+		float height = _map.QueryElevationInUnityUnitsAt(position);
+		return height;
 	}
 }

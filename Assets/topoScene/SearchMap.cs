@@ -12,32 +12,44 @@ public class SearchMap : MonoBehaviour {
 	AbstractMap map;
 
 	[SerializeField]
-	Camera camera;
+	Camera searchCamera;
 
 	[SerializeField]
 	DirectionsHandler directions;
 
+	List<Mapbox.Utils.Vector2d> waypointList;
 
 	Vector3 cameraPosition;
+
+	//first waypoint aka trailhead
+	Mapbox.Utils.Vector2d trailhead;
 
 	void Awake () {
 
 		//camera = GameObject.FindGameObjectWithTag("SearchCamera");
-		cameraPosition = camera.transform.position;
+		cameraPosition = searchCamera.transform.position;
 	}
 	
 
-	public void searchForLocation(Mapbox.Utils.Vector2d location){
+	public void searchForLocation(Mapbox.Utils.Vector2d location, bool displayTrail){
 		Debug.Log("Searching for Map at: " + location);
-		camera.transform.position = cameraPosition;
+		searchCamera.transform.position = cameraPosition;
 		map.UpdateMap(location, 16);
+
+		if(displayTrail == true){
+			StartCoroutine(directions.getDirectionsFromLatLngs(waypointList));
+		}
 	}
 
 	public void loadMapWithBounds(Mapbox.Utils.Vector2dBounds bounds){
 		Debug.Log("Bounding Map at: " + bounds);
-		camera.transform.position = cameraPosition;
 		map.UpdateMap(bounds.Center, 16);
 
+		//move camera position to center of trail bounds
+		Vector3 newCameraPosition = map.GeoToWorldPosition(bounds.Center, true);
+		Debug.Log("Vector3 of bounds.center: " + newCameraPosition);
+		newCameraPosition.y = cameraPosition.y;
+		searchCamera.transform.position = newCameraPosition;
 
 		/* //trying to get a tilecover given a bounds
 		HashSet<Mapbox.Map.UnwrappedTileId> tiles = Mapbox.Map.TileCover.GetWithWebMerc(bounds, 16);
@@ -54,6 +66,9 @@ public class SearchMap : MonoBehaviour {
 		*/
 
 
+		//load trail
+		StartCoroutine(directions.getDirectionsFromLatLngs(waypointList));
+
 
 	}
 
@@ -61,7 +76,7 @@ public class SearchMap : MonoBehaviour {
 	public IEnumerator getTrailForLocation(WWWHandler www, string trailName){
 
 		//store all waypoints as Vec2ds
-		List<Mapbox.Utils.Vector2d> waypointList = new List<Mapbox.Utils.Vector2d>();
+		waypointList = new List<Mapbox.Utils.Vector2d>();
 
 		//parse data
 		CoroutineWithData trailData = new CoroutineWithData(this, www.GetTrail(trailName));
@@ -74,6 +89,7 @@ public class SearchMap : MonoBehaviour {
 		double west = double.MaxValue;
 		double east = double.MinValue;
 
+		bool isTrailHead = true;
 		double latHead = 0;
 		double lonHead = 0;
 
@@ -90,7 +106,6 @@ public class SearchMap : MonoBehaviour {
 
 			waypointList.Add(vec2d);
 
-
 			//find the ne,sw bounds
 			if(lat < south)
 				south = lat;
@@ -100,6 +115,11 @@ public class SearchMap : MonoBehaviour {
 				west = lon;
 			if(lon > east)
 				east = lon;
+
+			if(isTrailHead == true){
+				trailhead = vec2d;
+				isTrailHead = false;
+			}
 
 		}
 
@@ -126,6 +146,6 @@ public class SearchMap : MonoBehaviour {
 		double lat = parsedTrail["geometry"]["coordinates"][0][1].AsDouble;
 		double lon = parsedTrail["geometry"]["coordinates"][0][0].AsDouble;
 		Mapbox.Utils.Vector2d searchLoc = new Mapbox.Utils.Vector2d (lat, lon);
-		searchForLocation (searchLoc);
+		searchForLocation (searchLoc, false);
 	}
 }
