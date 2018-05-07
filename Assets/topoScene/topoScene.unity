@@ -721,9 +721,9 @@ MonoBehaviour:
       latitudeLongitude: 0,0
       zoom: 16
     extentOptions:
-      extentType: 1
+      extentType: 0
       cameraBoundsOptions:
-        camera: {fileID: 0}
+        camera: {fileID: 920573821}
         visibleBuffer: 0
         disposeBuffer: 0
         updateInterval: 0
@@ -2409,7 +2409,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 497788755}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5000, y: 0, z: 0}
+  m_LocalPosition: {x: 10000, y: 1000, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2104936456}
@@ -2822,7 +2822,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 2000
-  field of view: 75
+  field of view: 110
   orthographic: 0
   orthographic size: 5
   m_Depth: -2
@@ -2847,7 +2847,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 537359742}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 5000, y: 1200, z: 0}
+  m_LocalPosition: {x: 10000, y: 1300, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2104936456}
@@ -4665,7 +4665,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4711998923348182, guid: ed0b4f7d5e35d485d9c34aa9bf71bed8, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 5000
+      value: 10000
       objectReference: {fileID: 0}
     - target: {fileID: 4711998923348182, guid: ed0b4f7d5e35d485d9c34aa9bf71bed8, type: 2}
       propertyPath: m_LocalPosition.y
@@ -4747,6 +4747,16 @@ Prefab:
     - target: {fileID: 114771742652270610, guid: ed0b4f7d5e35d485d9c34aa9bf71bed8,
         type: 2}
       propertyPath: overlayPathOnMap
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114771742652270610, guid: ed0b4f7d5e35d485d9c34aa9bf71bed8,
+        type: 2}
+      propertyPath: trailElevationBuffer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114771742652270610, guid: ed0b4f7d5e35d485d9c34aa9bf71bed8,
+        type: 2}
+      propertyPath: loadTime
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -5121,7 +5131,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 100
+  field of view: 110
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -6447,7 +6457,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1141425250}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5000, y: 1200, z: 0}
+  m_LocalPosition: {x: 10000, y: 1200, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2104936456}
@@ -7765,24 +7775,24 @@ MonoBehaviour:
       latitudeLongitude: 0,0
       zoom: 16
     extentOptions:
-      extentType: 1
+      extentType: 0
       cameraBoundsOptions:
-        camera: {fileID: 0}
+        camera: {fileID: 537359745}
         visibleBuffer: 0
         disposeBuffer: 0
         updateInterval: 0
       rangeAroundCenterOptions:
-        west: 1
-        north: 1
-        east: 1
-        south: 1
+        west: 2
+        north: 2
+        east: 2
+        south: 2
       rangeAroundTransformOptions:
         targetTransform: {fileID: 0}
         visibleBuffer: 0
         disposeBuffer: 0
     placementOptions:
       placementType: 1
-      snapMapToZero: 0
+      snapMapToZero: 1
     scalingOptions:
       scalingType: 0
       unityTileSize: 100
@@ -7821,7 +7831,7 @@ MonoBehaviour:
         useRelativeHeight: 0
         earthRadius: 1000
       unityLayerOptions:
-        addToLayer: 1
+        addToLayer: 0
         layerId: 0
       sideWallOptions:
         isActive: 0
@@ -7860,7 +7870,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   map: {fileID: 1414637090}
-  camera: {fileID: 537359745}
+  searchCamera: {fileID: 537359745}
   directions: {fileID: 194948342}
 --- !u!114 &1414637092
 MonoBehaviour:
@@ -7887,7 +7897,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1414637089}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5000, y: 1000, z: 0}
+  m_LocalPosition: {x: 10000, y: 1000, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2104936456}

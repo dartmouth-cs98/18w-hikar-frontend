@@ -12,7 +12,7 @@ public class SearchMap : MonoBehaviour {
 	AbstractMap map;
 
 	[SerializeField]
-	Camera camera;
+	Camera searchCamera;
 
 	[SerializeField]
 	DirectionsHandler directions;
@@ -27,26 +27,30 @@ public class SearchMap : MonoBehaviour {
 	void Awake () {
 
 		//camera = GameObject.FindGameObjectWithTag("SearchCamera");
-		cameraPosition = camera.transform.position;
+		cameraPosition = searchCamera.transform.position;
 	}
 	
 
 	public void searchForLocation(Mapbox.Utils.Vector2d location, bool displayTrail){
 		Debug.Log("Searching for Map at: " + location);
-		camera.transform.position = cameraPosition;
+		searchCamera.transform.position = cameraPosition;
 		map.UpdateMap(location, 16);
 
 		if(displayTrail == true){
-			directions.getDirectionsFromLatLngs(waypointList);
+			StartCoroutine(directions.getDirectionsFromLatLngs(waypointList));
 		}
 
 	}
 
 	public void loadMapWithBounds(Mapbox.Utils.Vector2dBounds bounds){
 		Debug.Log("Bounding Map at: " + bounds);
-		camera.transform.position = cameraPosition;
 		map.UpdateMap(bounds.Center, 16);
 
+		//move camera position to center of trail bounds
+		Vector3 newCameraPosition = map.GeoToWorldPosition(bounds.Center, true);
+		Debug.Log("Vector3 of bounds.center: " + newCameraPosition);
+		newCameraPosition.y = cameraPosition.y;
+		searchCamera.transform.position = newCameraPosition;
 
 		/* //trying to get a tilecover given a bounds
 		HashSet<Mapbox.Map.UnwrappedTileId> tiles = Mapbox.Map.TileCover.GetWithWebMerc(bounds, 16);
@@ -64,8 +68,7 @@ public class SearchMap : MonoBehaviour {
 
 
 		//load trail
-
-		directions.getDirectionsFromLatLngs(waypointList);
+		StartCoroutine(directions.getDirectionsFromLatLngs(waypointList));
 
 
 	}
@@ -118,9 +121,9 @@ public class SearchMap : MonoBehaviour {
 		Mapbox.Utils.Vector2d ne = new Mapbox.Utils.Vector2d(north, east);
 		Mapbox.Utils.Vector2d sw = new Mapbox.Utils.Vector2d(south, west);
 		Mapbox.Utils.Vector2dBounds bounds = new Mapbox.Utils.Vector2dBounds(sw, ne);
-		//loadMapWithBounds(bounds);
+		loadMapWithBounds(bounds);
 
-		searchForLocation(trailhead, true);
+		//searchForLocation(trailhead, true);
 	}
 
 	public IEnumerator getTrailData(WWWHandler www, string trailName){
