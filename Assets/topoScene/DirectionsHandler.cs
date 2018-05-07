@@ -181,7 +181,7 @@ public class DirectionsHandler : MonoBehaviour {
 		for(int i = 0; i < waypoints.Length; i++) {
 
 			//pass info into helper function
-			Vector3 position = UnityVectorFromVec2d(waypoints[i]);
+			Vector3 position = UnityVectorFromVec2dMap(waypoints[i]);
 
 			//set direction transform to first location
 			if(i == 0){
@@ -269,8 +269,12 @@ public class DirectionsHandler : MonoBehaviour {
 		drawLine();
 	}
 
-	public Vector3 UnityVectorFromVec2d(Vector2d vec2d) {
+	public Vector3 UnityVectorFromVec2dMap(Vector2d vec2d) {
 		return _map.GeoToWorldPosition(vec2d, true);
+	}
+
+	public Vector3 UnityVectorFromVec2d(Vector2d vec2d) {
+		return Conversions.GeoToWorldPosition(vec2d, _map.CenterMercator, scaleRadius).ToVector3xz();
 	}
 		
 	public Vector2d Vec2dFromUnityVector(Vector3 unityVector){
