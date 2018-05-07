@@ -102,9 +102,6 @@ public class UIManager : MonoBehaviour {
 		if (annotationObject != null) {
 			annotationHandler = (AnnotationHandler)annotationObject.gameObject.GetComponent (typeof(AnnotationHandler));
 		}
-//		if (loginObject != null) {
-//			loginHandler = (LoginHandler)loginObject.gameObject.GetComponent (typeof(LoginHandler));
-//		}
 		if (sceneObject != null) {
 			sceneManager = (SceneManager)sceneObject.gameObject.GetComponent (typeof(SceneManager));
 		}
@@ -362,6 +359,7 @@ public class UIManager : MonoBehaviour {
 		settingsPanel.gameObject.SetActive (false);
 		errorText.gameObject.SetActive (false);
 		hikeButton.gameObject.SetActive (false);
+		exitSelectionButton.gameObject.SetActive (false);
 	}
 
 	public void userSelection()
