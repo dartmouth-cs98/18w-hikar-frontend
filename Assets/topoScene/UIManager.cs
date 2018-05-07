@@ -102,9 +102,7 @@ public class UIManager : MonoBehaviour {
 		if (annotationObject != null) {
 			annotationHandler = (AnnotationHandler)annotationObject.gameObject.GetComponent (typeof(AnnotationHandler));
 		}
-		//		if (loginObject != null) {
-		//			loginHandler = (LoginHandler)loginObject.gameObject.GetComponent (typeof(LoginHandler));
-		//		}
+
 		if (sceneObject != null) {
 			sceneManager = (SceneManager)sceneObject.gameObject.GetComponent (typeof(SceneManager));
 		}
@@ -145,14 +143,14 @@ public class UIManager : MonoBehaviour {
 							}
 							//Quick search function from explore page
 							if (exploreTrailsPanel.gameObject.activeSelf) {
-								StartCoroutine (searchMap.getTrailData (wwwScript, resultText));
+								StartCoroutine (searchMap.getTrailForLocation (wwwScript, resultText));
 								exploreTrailsPanel.gameObject.SetActive (false);
 								searchInput.text = "";
 								searchInput.gameObject.SetActive (true);
 							}
 							//Regular search function from search bar
 							else {
-								StartCoroutine (searchMap.getTrailData (wwwScript, resultText));
+								StartCoroutine (searchMap.getTrailForLocation (wwwScript, resultText));
 								searchInput.text = "";
 								scrollView.gameObject.SetActive (false);
 							}
@@ -194,7 +192,7 @@ public class UIManager : MonoBehaviour {
 							}
 							//Quick search function from explore page
 							if (exploreTrailsPanel.gameObject.activeSelf) {
-								StartCoroutine (searchMap.getTrailData (wwwScript, resultText));
+								StartCoroutine (searchMap.getTrailForLocation (wwwScript, resultText));
 								exploreTrailsPanel.gameObject.SetActive (false);
 								searchInput.text = "";
 								searchInput.gameObject.SetActive (true);
@@ -241,19 +239,20 @@ public class UIManager : MonoBehaviour {
 			//if billboard:
 
 			annotationHandler.addBillboard (annotationInput.text);
-			annotationHandler.sendAnnotation("Billboard", annotationInput.text, sceneManager.currentLoc);
 		}
 		annotationInput.text = "";
 		annotationInput.gameObject.SetActive (!annotationInput.gameObject.activeSelf);
 	}
 	public void signInSubmit(){
-		wwwScript.PostSignIn (usernameValue.text, PasswordValue.text);
+		Debug.Log ("Got Here");
+		StartCoroutine(wwwScript.PostSignIn (usernameValue.text, PasswordValue.text));
 	}
 
 	public void onHike(SearchMap searchMap) {
 		//this is what we will use to get search trail from UI
 		StartCoroutine(searchMap.getTrailForLocation(wwwScript, currentSelectedTrail));
 	}
+
 
 	public void disable2D() {
 		cameraHandler.resetCams ();
@@ -361,6 +360,7 @@ public class UIManager : MonoBehaviour {
 		settingsPanel.gameObject.SetActive (false);
 		errorText.gameObject.SetActive (false);
 		hikeButton.gameObject.SetActive (false);
+		exitSelectionButton.gameObject.SetActive (false);
 	}
 
 	public void userSelection()

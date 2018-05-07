@@ -287,7 +287,8 @@ public class SceneManager : MonoBehaviour {
 			uiHandler.populateNearby(parsedNearby[i][0].ToString(), parsedNearby[i][1].ToString());
 		}
 		uiHandler.clearDuplicateTrails ();
-		//test first trail in renderer
+
+		//DEBUG: GOAT TRAIL test first trail in renderer
 		string trail = parsedNearby[1][0];
 		getTrailByName(trail, location);
 

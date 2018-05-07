@@ -39,7 +39,6 @@ public class SearchMap : MonoBehaviour {
 		if(displayTrail == true){
 			StartCoroutine(directions.getDirectionsFromLatLngs(waypointList));
 		}
-
 	}
 
 	public void loadMapWithBounds(Mapbox.Utils.Vector2dBounds bounds){
@@ -80,9 +79,9 @@ public class SearchMap : MonoBehaviour {
 		waypointList = new List<Mapbox.Utils.Vector2d>();
 
 		//parse data
-		CoroutineWithData nodeData = new CoroutineWithData(this, www.GetTrail(trailName));
-		yield return nodeData.coroutine;
-		var parsedNode = SimpleJSON.JSON.Parse (nodeData.result.ToString ());
+		CoroutineWithData trailData = new CoroutineWithData(this, www.GetTrail(trailName));
+		yield return trailData.coroutine;
+		var parsedTrail = SimpleJSON.JSON.Parse (trailData.result.ToString ());
 
 		//used to calculate the bounds for the trail
 		double south = double.MaxValue;
@@ -91,11 +90,17 @@ public class SearchMap : MonoBehaviour {
 		double east = double.MinValue;
 
 		bool isTrailHead = true;
+		double latHead = 0;
+		double lonHead = 0;
 
-		for(int i = 0; i < parsedNode["geometry"]["coordinates"].Count; i++) {
+		for(int i = 0; i < parsedTrail["geometry"]["coordinates"].Count; i++) {
+			if (i == 0) {
+				latHead = parsedTrail["geometry"]["coordinates"][0][1].AsDouble;
+				lonHead = parsedTrail["geometry"]["coordinates"][0][0].AsDouble;
+			}
 
-			double lat = parsedNode["geometry"]["coordinates"][i][1].AsDouble;
-			double lon = parsedNode["geometry"]["coordinates"][i][0].AsDouble;
+			double lat = parsedTrail["geometry"]["coordinates"][i][1].AsDouble;
+			double lon = parsedTrail["geometry"]["coordinates"][i][0].AsDouble;
 
 			Mapbox.Utils.Vector2d vec2d = new Mapbox.Utils.Vector2d(lat, lon);
 
@@ -123,9 +128,16 @@ public class SearchMap : MonoBehaviour {
 		Mapbox.Utils.Vector2dBounds bounds = new Mapbox.Utils.Vector2dBounds(sw, ne);
 		loadMapWithBounds(bounds);
 
-		//searchForLocation(trailhead, true);
+		directions.getDirectionsFromLatLngs(waypointList);
+
+		if (latHead != 0 || lonHead != 0) {
+			Mapbox.Utils.Vector2d searchLoc = new Mapbox.Utils.Vector2d (latHead, lonHead);
+			searchForLocation (searchLoc);
+		}
 	}
 
+
+	//Simply returns the superficial trailhead data
 	public IEnumerator getTrailData(WWWHandler www, string trailName){
 		CoroutineWithData trailData = new CoroutineWithData(this, www.GetTrail(trailName));
 		yield return trailData.coroutine;

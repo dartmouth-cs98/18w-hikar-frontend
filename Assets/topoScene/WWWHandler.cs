@@ -36,7 +36,7 @@ public class WWWHandler : MonoBehaviour {
 	const string postAnnotationUrl = "https://hikar.herokuapp.com/api/annotation";
 	const string updateUserTrail = "https://hikar.herokuapp.com/updateUserTrail";
 	const string getUserTrail = "https://hikar.herokuapp.com/getUserTrail";
-	const string signIn = "https://hikar.herokuapp.com/signin";
+	const string signIn = "https://hikar.herokuapp.com/api/signin";
 	const string signUp = "https://hikar.herokuapp.com/signup";
 
 	const string getTestTrailUrl = "https://hikar.herokuapp.com/getTest";
@@ -81,10 +81,12 @@ public class WWWHandler : MonoBehaviour {
 			if (w.isNetworkError || w.isHttpError) 
 			{
 				yield return w.error + ". Post unsuccessful";
+				Debug.Log ("Post unsuccessful");
 			}
 			else
 			{
 				yield return "Annotation successfully posted";
+				Debug.Log ("Annotation successfully posted");
 			}
 		}
 	}

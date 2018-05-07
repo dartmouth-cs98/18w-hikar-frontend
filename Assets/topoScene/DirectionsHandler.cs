@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using SimpleJSON;
-using Mapbox.Unity;
+using Mapbox.Utils;
+using Mapbox.Unity.Map;
+using Mapbox.Unity.Utilities;
 
 public class DirectionsHandler : MonoBehaviour {
 
@@ -13,13 +15,13 @@ public class DirectionsHandler : MonoBehaviour {
 	[SerializeField]
 	GameObject rayCastObject;
 
-	private Mapbox.Utils.Vector2d[] waypoints;
+	private Vector2d[] waypoints;
 
-	private List<Mapbox.Utils.Vector2d> waypointList;
+	private List<Vector2d> waypointList;
 
 	private double[] coordinateArray;
 
-	private float scaleRadius = 100f;
+	public float scaleRadius = 100f;
 
 	//public Transform[] transforms;
 
@@ -33,7 +35,7 @@ public class DirectionsHandler : MonoBehaviour {
 
 	public bool overlayPathOnMap = false;
 
-	Mapbox.Unity.Map.AbstractMap _map;
+	AbstractMap _map;
 
 	public float totalOffset;
 
@@ -50,14 +52,14 @@ public class DirectionsHandler : MonoBehaviour {
 
 		initialLocation = initLocation;
 
-		waypointList = new List<Mapbox.Utils.Vector2d>();
+		waypointList = new List<Vector2d>();
 
 		//this.StartCoroutine(this.getDirectionsFromJSON);
 
 	}
 
 	void Start(){
-		_map =  (Mapbox.Unity.Map.AbstractMap)map.GetComponent(typeof(Mapbox.Unity.Map.AbstractMap));
+		_map =  (AbstractMap)map.GetComponent(typeof(AbstractMap));
 	}
 
 
@@ -68,12 +70,11 @@ public class DirectionsHandler : MonoBehaviour {
 
 		wwwScript = www;
 
-		waypointList = new List<Mapbox.Utils.Vector2d>();
+		waypointList = new List<Vector2d>();
 
 
 		//initialLocation
-		Vector2 refLoc = new Vector2((float)location.LatitudeLongitude.x, (float)location.LatitudeLongitude.y);
-		Vector3 initLoc = UnityVectorFromVec2d(location.LatitudeLongitude, refLoc, scaleRadius);
+		Vector3 initLoc = UnityVectorFromVec2d (location.LatitudeLongitude);
 		initialLocation = new Vector3(initLoc.x, initLoc.z);
 
 
@@ -86,14 +87,14 @@ public class DirectionsHandler : MonoBehaviour {
 			double lat = parsedNode[i] ["Latitude"].AsDouble;
 			double lon = parsedNode[i] ["Longitude"].AsDouble;
 
-			Mapbox.Utils.Vector2d vec2d = new Mapbox.Utils.Vector2d(lat, lon);
+			Vector2d vec2d = new Vector2d(lat, lon);
 
 			waypointList.Add(vec2d);
 
 		}
 
 		//waypoints = new Mapbox.Utils.Vector2d[(waypointList.Count * 2) - 1]; //minus one because you can't calculate midpoint at end
-		waypoints = new Mapbox.Utils.Vector2d[waypointList.Count]; //1:1 trail 
+		waypoints = new Vector2d[waypointList.Count]; //1:1 trail 
 		waypoints = waypointList.ToArray();
 		startDirections();
 	}
@@ -106,13 +107,12 @@ public class DirectionsHandler : MonoBehaviour {
 		Debug.Log("Getting trail: " + trailName);
 
 		wwwScript = www;
-		waypointList = new List<Mapbox.Utils.Vector2d>();
+		waypointList = new List<Vector2d>();
 
 		//set initialLocation (probably as trail head node) as vec2
 
 		//initialLocation
-		Vector2 refLoc = new Vector2((float)location.LatitudeLongitude.x, (float)location.LatitudeLongitude.y);
-		Vector3 initLoc = UnityVectorFromVec2d(location.LatitudeLongitude, refLoc, scaleRadius);
+		Vector3 initLoc = UnityVectorFromVec2d(location.LatitudeLongitude);
 		initialLocation = new Vector3(initLoc.x, initLoc.z);
 
 		//store all waypoints as Vec2ds
@@ -130,14 +130,14 @@ public class DirectionsHandler : MonoBehaviour {
 				double lat = parsedNode["geometry"]["coordinates"][i][1].AsDouble;
 				double lon = parsedNode["geometry"]["coordinates"][i][0].AsDouble;
 
-				Mapbox.Utils.Vector2d vec2d = new Mapbox.Utils.Vector2d(lat, lon);
+				Vector2d vec2d = new Vector2d(lat, lon);
 
 				waypointList.Add(vec2d);
 
 			}
 
 			//waypoints = new Mapbox.Utils.Vector2d[(waypointList.Count * 2) - 1]; //minus one because you can't calculate midpoint at end
-			waypoints = new Mapbox.Utils.Vector2d[waypointList.Count]; //1:1 trail 
+			waypoints = new Vector2d[waypointList.Count]; //1:1 trail 
 			waypoints = waypointList.ToArray();
 
 			startDirections();
@@ -146,13 +146,12 @@ public class DirectionsHandler : MonoBehaviour {
 
 	public IEnumerator getDirectionsFromLatLngs(List<Mapbox.Utils.Vector2d> waypointsList){
 
-		waypoints = new Mapbox.Utils.Vector2d[waypointsList.Count]; //1:1 trail 
+		waypoints = new Vector2d[waypointsList.Count]; //1:1 trail 
 		waypoints = waypointsList.ToArray();
 
 		yield return new WaitForSeconds(loadTime);
 
 		startDirections();
-
 	}
 
 
@@ -170,7 +169,7 @@ public class DirectionsHandler : MonoBehaviour {
 		for(int i = 0; i < waypoints.Length; i++) {
 
 			//pass info into helper function
-			Vector3 position = UnityVectorFromVec2d(waypoints[i], initialLocation, scaleRadius);
+			Vector3 position = UnityVectorFromVec2d(waypoints[i]);
 
 			//set direction transform to first location
 			if(i == 0){
@@ -182,7 +181,6 @@ public class DirectionsHandler : MonoBehaviour {
 
 			positions[i] = position;
 		}
-
 		//calculate heights of positions using raycasts
 		calculateHeights();
 //		if(overlayPathOnMap == false){
@@ -192,7 +190,8 @@ public class DirectionsHandler : MonoBehaviour {
 //		}
 	}
 
-	public void setTotalOffset(){
+	public void setTotalOffset() {
+		
 		if(rayCastObject == null){
 			rayCastObject = GameObject.FindGameObjectWithTag("rayCastObject");
 		}
@@ -257,14 +256,12 @@ public class DirectionsHandler : MonoBehaviour {
 		drawLine();
 	}
 
-	public Vector3 UnityVectorFromVec2d(Mapbox.Utils.Vector2d vec2d, Vector2 refLoc, float radius) {
-		Vector3 unityPosition = (Vector3)_map.GeoToWorldPosition(vec2d);
-		return unityPosition;
+	public Vector3 UnityVectorFromVec2d(Vector2d vec2d) {
+		return Conversions.GeoToWorldPosition(vec2d, _map.CenterMercator, _map.WorldRelativeScale).ToVector3xz();
 	}
-
-	public Mapbox.Utils.Vector2d Vec2dFromUnityVector(Vector3 unityVector){
-		Mapbox.Utils.Vector2d vector2d = _map.WorldToGeoPosition (unityVector);
-		return vector2d;
+		
+	public Vector2d Vec2dFromUnityVector(Vector3 unityVector){
+		return _map.WorldToGeoPosition (unityVector);
 	}
 
 	void drawLine(){
@@ -306,10 +303,5 @@ public class DirectionsHandler : MonoBehaviour {
 	public float getHeightForPosition(Mapbox.Utils.Vector2d position){
 		float height = _map.QueryElevationInUnityUnitsAt(position);
 		return height;
-	}
-
-	// Update is called once per frame
-	void Update () {
-
 	}
 }
