@@ -36,9 +36,6 @@ public class SceneManager : MonoBehaviour {
 	public GameObject playerObject;
 
 	private GameObject cameraPosition;
-	private GameObject distanceText;
-	private GameObject locationText;
-	private GameObject compassText;
 
 	private Vector2 initialLocation; //where user is on app start
 	private Vector2 currentLocation; //where user is on latest location update with test = new Vector2((float)-4, 0);
@@ -92,9 +89,7 @@ public class SceneManager : MonoBehaviour {
 
 	public void setCompassDirection ()
 	{
-		compassText = GameObject.FindGameObjectWithTag ("compassText");
 		cameraObject.transform.eulerAngles = new Vector3 (0, currentLoc.Heading, 0);
-//		compassText.GetComponent<UnityEngine.UI.Text> ().text = "Compass: " +  Input.compass.trueHeading.ToString();;
 		mapObject.transform.Rotate(Vector3.up, -Input.compass.trueHeading);
 	}
 
@@ -112,9 +107,7 @@ public class SceneManager : MonoBehaviour {
 
 		currentLoc = location;
 
-		locationText = GameObject.FindGameObjectWithTag("locationText");
 //		locationText.GetComponent<UnityEngine.UI.Text>().text = "" + location.LatitudeLongitude.x + ", " + location.LatitudeLongitude.y;
-		distanceText = GameObject.FindGameObjectWithTag("distanceText");
 
 		if(isInitialLocation == true){
 			Debug.Log("Initial location set: " + location.LatitudeLongitude.ToString() + " with heading: " + location.Heading);
@@ -134,12 +127,11 @@ public class SceneManager : MonoBehaviour {
 //		}
 
 		if(isLatLngUpdated){
-			locationText.GetComponent<UnityEngine.UI.Text>().text = "" + location.LatitudeLongitude.x + ", " + location.LatitudeLongitude.y;
 			map = (Mapbox.Unity.Map.AbstractMap) mapObject.GetComponent((typeof(Mapbox.Unity.Map.AbstractMap)));
 			playerObject.transform.MoveToGeocoordinate(location.LatitudeLongitude, map.CenterMercator, map.WorldRelativeScale);
-			distanceText.GetComponent<UnityEngine.UI.Text> ().text = "World Position: " + playerObject.transform.position.ToString();
 		}
 	}
+
 	//updates camera position if user is touching screen
 //	private void updateCameraPositionAuto(){ 
 //
@@ -287,9 +279,10 @@ public class SceneManager : MonoBehaviour {
 			uiHandler.populateNearby(parsedNearby[i][0].ToString(), parsedNearby[i][1].ToString());
 		}
 		uiHandler.clearDuplicateTrails ();
-		//test first trail in renderer
-		string trail = parsedNearby[1][0];
-		getTrailByName(trail, location);
+
+		//DEBUG: GOAT TRAIL test first trail in renderer
+//		string trail = parsedNearby[1][0];
+//		getTrailByName(trail, location);
 
 	}
 
