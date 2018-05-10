@@ -115,6 +115,7 @@ public class SceneManager : MonoBehaviour {
 			StartCoroutine(getTrailsForLocation(location, 50));
 			//getTestDirectionsFromLocation(location);
 			StartCoroutine (annotationHandler.SetupMap ());
+
 //			distanceText.GetComponent<UnityEngine.UI.Text> ().text = "Initialized";
 		}
 
@@ -126,10 +127,10 @@ public class SceneManager : MonoBehaviour {
 //			compassText.GetComponent<UnityEngine.UI.Text> ().text = "Compass: " +  location.Heading;
 //		}
 
-		if(isLatLngUpdated){
-			map = (Mapbox.Unity.Map.AbstractMap) mapObject.GetComponent((typeof(Mapbox.Unity.Map.AbstractMap)));
-			playerObject.transform.MoveToGeocoordinate(location.LatitudeLongitude, map.CenterMercator, map.WorldRelativeScale);
-		}
+//		if(isLatLngUpdated){
+//			map = (Mapbox.Unity.Map.AbstractMap) mapObject.GetComponent((typeof(Mapbox.Unity.Map.AbstractMap)));
+//			playerObject.transform.MoveToGeocoordinate(location.LatitudeLongitude, map.CenterMercator, map.WorldRelativeScale);
+//		}
 	}
 
 	//updates camera position if user is touching screen

@@ -84,7 +84,7 @@
 				// Perhaps more drift, but also more stable?
 				if (_currentArVector.magnitude < MinimumDeltaDistance || _currentAbsoluteGpsVector.magnitude < MinimumDeltaDistance)
 				{
-					Unity.Utilities.Console.Instance.Log("Minimum movement not yet met (arDelta: " + _currentArVector.magnitude + ", gpsDelta: " + _currentAbsoluteGpsVector.magnitude + ")", "red");
+//					Unity.Utilities.Console.Instance.Log("Minimum movement not yet met (arDelta: " + _currentArVector.magnitude + ", gpsDelta: " + _currentAbsoluteGpsVector.magnitude + ")", "red");
 					return;
 				}
 
@@ -148,16 +148,16 @@
 				, _position
 			);
 #endif
-			Unity.Utilities.Console.Instance.Log(
-				string.Format(
-					"Offset: {0},\tHeading: {1},\tDisance: {2},\tBias: {3}"
-					, _position
-					, _rotation
-					, deltaDistance
-					, bias
-				)
-				, "orange"
-			);
+//			Unity.Utilities.Console.Instance.Log(
+//				string.Format(
+//					"Offset: {0},\tHeading: {1},\tDisance: {2},\tBias: {3}"
+//					, _position
+//					, _rotation
+//					, deltaDistance
+//					, bias
+//				)
+//				, "orange"
+//			);
 
 			var alignment = new Alignment();
 			alignment.Rotation = _rotation;

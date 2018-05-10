@@ -57,7 +57,7 @@ public class AnnotationHandler : MonoBehaviour
 			if (inRange (annoLat, annoLon)) {
 				//Convert to unity world coordinates
 				Debug.Log("Found: " + parsedAnnotation[i]["text"]);
-				Vector3 annotationUnityVec = directionsHandler.UnityVectorFromVec2d(new Mapbox.Utils.Vector2d (annoLat, annoLon));
+				Vector3 annotationUnityVec = directionsHandler.UnityVectorFromVec2dMap(new Mapbox.Utils.Vector2d (annoLat, annoLon));
 
 				GameObject tempAnnotation;
 				if (parsedAnnotation [i] ["type"].Value == "billboard") {
