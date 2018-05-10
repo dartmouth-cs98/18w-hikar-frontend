@@ -191,9 +191,6 @@ public class SceneManager : MonoBehaviour {
 		//hudCamera.transform.forward = UnityEngine.Camera.main.transform.forward;
 
 		//hudCamera.transform.Rotate(
-
-		// Let annotationHandler know the current location. Will need to change this to every 20 or so seconds
-		//annotationHandler.updateLoc (currentLocation);
 	}
 
 	private IEnumerator setPositionOnVuforiaEnabled() {
@@ -260,7 +257,6 @@ public class SceneManager : MonoBehaviour {
 		//gets features at location
 		wwwScript.GetFeaturesAtLocation(latLong);
 	}
-
 
 	public IEnumerator getTrailsForLocation(Location location, int rad){
 
