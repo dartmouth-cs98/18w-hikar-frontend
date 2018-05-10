@@ -109,9 +109,11 @@ public class AnnotationHandler : MonoBehaviour
 		StartCoroutine(wwwScript.PostAnnotation (type, text, lat, lon));
 	}
 
-	public void addBillboard(string text){
+	public void addBillboard(string text, int color, int style){
 		GameObject billboard = Instantiate(GameObject.FindGameObjectWithTag("billboardObject"));
-		billboard.GetComponentInChildren<TextMesh>().text = text;
+		TextMesh billboardText = billboard.GetComponentInChildren<TextMesh> ();
+		setFontAndColor (billboardText, color, style);
+		billboardText.text = text;
 
 		//Place the billboard aligned to the map in front of the player
 		Vector3 correctPos = Camera.main.ViewportPointToRay (new Vector3 (0.5f, 0.5f, 0)).GetPoint (10);
@@ -126,6 +128,27 @@ public class AnnotationHandler : MonoBehaviour
 		billboards.Add (billboard);
 		Mapbox.Utils.Vector2d billboardVec2d = directionsHandler.Vec2dFromUnityVector (billboard.transform.localPosition);
 		sendAnnotation ("billboard", text, billboardVec2d.x, billboardVec2d.y);
+	}
+
+	public void setFontAndColor(TextMesh textMesh, int color, int style){
+		
+		if (style == 0)
+			textMesh.fontStyle = FontStyle.Normal;
+		else if (style == 1)
+			textMesh.fontStyle = FontStyle.Bold;
+		else if (style == 2)
+			textMesh.fontStyle = FontStyle.Italic;
+		else if (style == 3)
+			textMesh.fontStyle = FontStyle.BoldAndItalic;
+
+		if (color == 0)
+			textMesh.color = Color.black;
+		else if (color == 1)
+			textMesh.color = Color.red;
+		else if (color == 2)
+			textMesh.color = Color.blue;
+		else if (color == 3)
+			textMesh.color = Color.green;
 	}
 
 	public void enableAnnotations(bool toggle){

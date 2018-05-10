@@ -28,11 +28,10 @@ public class UIManager : MonoBehaviour {
 	//Explore UI
 	private List<string[]> nearbyTrails;
 	private List<string> trailNames;
-	private bool explore = false;
 	public GameObject exploreTrailsPanel;
 
 	//Your Places UI
-	private List<string[]> topTrails;
+	private string[] topTrails;
 	public GameObject topTrailsPanel;
 
 	//Settings UI
@@ -83,7 +82,6 @@ public class UIManager : MonoBehaviour {
 		result = new GameObject ();
 		resultList = new List<GameObject> ();
 		nearbyTrails = new List<string[]> ();
-		topTrails = new List<string[]> ();
 		trailNames = new List<string> ();
 		scrollView.gameObject.SetActive (false);
 		annotationInput.gameObject.SetActive (false);		
@@ -113,6 +111,7 @@ public class UIManager : MonoBehaviour {
 		submitAnnotationButton.onClick.AddListener (onAnnotationSubmit);
 		exitSelectionButton.onClick.AddListener (disable2D);
 		loginButton.onClick.AddListener (signInSubmit);
+		hikeButton.onClick.AddListener (onHike);
 	}
 
 	void Update(){
@@ -238,8 +237,10 @@ public class UIManager : MonoBehaviour {
 			//TODO: Add switches between types of annotations
 			//if billboard:
 
-			annotationHandler.addBillboard (annotationInput.text);
+			annotationHandler.addBillboard (annotationInput.text, colorDropdown.value, styleDropdown.value);
 		}
+		styleDropdown.value = 0;
+		colorDropdown.value = 0;
 		annotationInput.text = "";
 		annotationInput.gameObject.SetActive (!annotationInput.gameObject.activeSelf);
 	}
@@ -248,9 +249,10 @@ public class UIManager : MonoBehaviour {
 		StartCoroutine(wwwScript.PostSignIn (usernameValue.text, PasswordValue.text));
 	}
 
-	public void onHike(SearchMap searchMap) {
-		//this is what we will use to get search trail from UI
-		StartCoroutine(searchMap.getTrailForLocation(wwwScript, currentSelectedTrail));
+	public void onHike() {
+		//function to send trail to AR view
+		StartCoroutine(wwwScript.UpdateUserTrail("User2", currentSelectedTrail));
+		hikeButton.gameObject.SetActive (false);
 	}
 
 
@@ -275,8 +277,31 @@ public class UIManager : MonoBehaviour {
 		cameraHandler.expand2D (enabled);
 	}
 
-	public void enablePlaces() {
+	public IEnumerator enablePlaces() {
+		clearResults ();
 		topTrailsPanel.gameObject.SetActive (true);
+
+		CoroutineWithData userData = new CoroutineWithData(this, wwwScript.GetUserInfo ("User2"));
+		yield return userData.coroutine;
+		var parsedUser = SimpleJSON.JSON.Parse (userData.result.ToString());
+		Debug.Log (parsedUser ["TrailHistory"].Count);
+		for (int i = 0; i < parsedUser ["TrailHistory"].Count; i++) {
+			if (i < 5) {
+				Debug.Log (parsedUser ["TrailHistory"][i]);
+
+				GameObject tempResult = (GameObject)Instantiate (result, topTrailsPanel.transform);
+				Text text = tempResult.AddComponent<Text> ();
+				text.font = Resources.GetBuiltinResource (typeof(Font), "Arial.ttf") as Font;
+				text.fontSize = 25;
+				RectTransform tempTransform = text.GetComponent<RectTransform> ();
+				tempTransform.sizeDelta = new Vector2 (400f, 100f);
+				text.transform.position = new Vector3 (400f, 100f);
+				text.transform.localScale = new Vector3 (0.25f, 3f, 1f);
+				text.color = Color.black;
+				text.text = parsedUser ["TrailHistory"] [i].ToString ();
+				resultList.Add (tempResult);
+			}
+		}
 	}
 
 	public void clearDuplicateTrails(){
@@ -381,7 +406,7 @@ public class UIManager : MonoBehaviour {
 						enableExplore ();
 						cameraHandler.enableBackgroundTime ();
 					} else if (hit == "Your Places") {
-						enablePlaces ();
+						StartCoroutine(enablePlaces ());
 						cameraHandler.enableBackgroundTime ();
 					} else if (hit == "Settings") {
 						enableSettings ();
@@ -410,7 +435,7 @@ public class UIManager : MonoBehaviour {
 						enableExplore ();
 						cameraHandler.enableBackgroundTime ();
 					} else if (hit == "Your Places") {
-						enablePlaces ();
+						StartCoroutine(enablePlaces ());
 						cameraHandler.enableBackgroundTime ();
 					} else if (hit == "Settings") {
 						enableSettings ();

@@ -131,10 +131,10 @@ public class SearchMap : MonoBehaviour {
 		Mapbox.Utils.Vector2dBounds bounds = new Mapbox.Utils.Vector2dBounds(sw, ne);
 		loadMapWithBounds(bounds);
 
-		if (latHead != 0 || lonHead != 0) {
-			Mapbox.Utils.Vector2d searchLoc = new Mapbox.Utils.Vector2d (latHead, lonHead);
-			//searchForLocation (searchLoc, false);
-		}
+//		if (latHead != 0 || lonHead != 0) {
+//			Mapbox.Utils.Vector2d searchLoc = new Mapbox.Utils.Vector2d (latHead, lonHead);
+//			searchForLocation (searchLoc, false);
+//		}
 	}
 
 
