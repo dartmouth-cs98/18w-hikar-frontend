@@ -55,11 +55,13 @@ namespace Mapbox.Examples
 		}
 
 		Vector3 _targetPosition;
+		float _originalYPosition;
 
 		void Start()
 		{
 			LocationProvider.OnLocationUpdated += LocationProvider_OnLocationUpdated;
 			_map.OnInitialized += () => _isInitialized = true;
+			_originalYPosition = transform.position.y;
 		}
 
 		void OnDestroy()
@@ -74,7 +76,8 @@ namespace Mapbox.Examples
 		{
 			if (_isInitialized && location.IsLocationUpdated)
 			{
-				_targetPosition = _map.GeoToWorldPosition(location.LatitudeLongitude);
+				Vector3 destinationVec = _map.GeoToWorldPosition(location.LatitudeLongitude);
+				_targetPosition = new Vector3(destinationVec.x, _originalYPosition, destinationVec.z);
 			}
 		}
 
