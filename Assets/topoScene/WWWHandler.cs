@@ -82,11 +82,14 @@ public class WWWHandler : MonoBehaviour {
 			{
 				yield return w.error + ". Post unsuccessful";
 				Debug.Log ("Post unsuccessful");
+				Debug.Log (w.error);
 			}
 			else
 			{
 				yield return "Annotation successfully posted";
 				Debug.Log ("Annotation successfully posted");
+				Debug.Log (w.downloadHandler.text);
+	
 			}
 		}
 	}
