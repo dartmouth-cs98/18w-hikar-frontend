@@ -9,7 +9,10 @@ public class AnnotationHandler : MonoBehaviour
 {
 	//Player cam reference
 	public Camera arCam;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 2dfa09cc13ce474f335f2753d2bf0104cc2d5252
 	// Annotation assets
 	public GameObject billboardAnnotation;
 	public GameObject rayCastObject;
@@ -53,6 +56,7 @@ public class AnnotationHandler : MonoBehaviour
 			//Mapbox Vec2d lat and lon (x and y)
 			float annoLat = parsedAnnotation [i] ["lat"].AsFloat;
 			float annoLon = parsedAnnotation [i] ["lon"].AsFloat;
+			//TODO
 			float annoOffset = parsedAnnotation [i] ["__v"].AsFloat;
 
 			if (inRange (annoLat, annoLon)) {
@@ -64,7 +68,7 @@ public class AnnotationHandler : MonoBehaviour
 					GameObject tempBoard = Instantiate (billboardAnnotation, new Vector3 (annotationUnityVec.x, annoOffset, annotationUnityVec.z), Quaternion.identity);
 					billboards.Add(tempBoard);
 					tempAnnotation = (GameObject) billboards [billboards.Count - 1];
-					Debug.Log ("rebillboardx: " + tempBoard.transform.position.x + " rebillboardy: " + tempBoard.transform.position.y + " rebillboardz: " + tempBoard.transform.position.z);
+//					Debug.Log ("rebillboardx: " + tempBoard.transform.position.x + " rebillboardy: " + tempBoard.transform.position.y + " rebillboardz: " + tempBoard.transform.position.z);
 				} else {
 					//TODO: figure this out with different meshes
 					billboards.Add(Instantiate (billboardAnnotation, new Vector3 (annotationUnityVec.x, annoOffset, annotationUnityVec.z), Quaternion.identity));
@@ -131,8 +135,8 @@ public class AnnotationHandler : MonoBehaviour
 		billboard.transform.position = new Vector3 (correctPos.x, height, correctPos.z);
 		billboards.Add (billboard);
 		Mapbox.Utils.Vector2d billboardVec2d = directionsHandler.Vec2dFromUnityVector (billboard.transform.position);
-		Debug.Log ("billboardx: " + billboard.transform.position.x + " billboardy: " + billboard.transform.position.y + " billboardz: " + billboard.transform.position.z);
-		Debug.Log ("longitude is " + billboardVec2d.x + " and latitude is " + billboardVec2d.y);
+//		Debug.Log ("billboardx: " + billboard.transform.position.x + " billboardy: " + billboard.transform.position.y + " billboardz: " + billboard.transform.position.z);
+//		Debug.Log ("longitude is " + billboardVec2d.x + " and latitude is " + billboardVec2d.y);
 		sendAnnotation ("billboard", text, billboardVec2d.x, billboardVec2d.y, height);
 	}
 
