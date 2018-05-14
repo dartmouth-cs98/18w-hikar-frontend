@@ -52,9 +52,9 @@ public class AnnotationHandler : MonoBehaviour
 			//Mapbox Vec2d lat and lon (x and y)
 			float annoLat = parsedAnnotation [i] ["lat"].AsFloat;
 			float annoLon = parsedAnnotation [i] ["lon"].AsFloat;
-			//TODO
-			float annoOffset = parsedAnnotation [i] ["__v"].AsFloat;
-
+			float annoOffset = parsedAnnotation [i] ["offset"].AsFloat;
+			int style = parsedAnnotation [i] ["style"].AsInt;
+			int color = parsedAnnotation [i] ["color"].AsInt;
 			if (inRange (annoLat, annoLon)) {
 				//Convert to unity world coordinates
 				Vector3 annotationUnityVec = directionsHandler.UnityVectorFromVec2dMap(new Mapbox.Utils.Vector2d (annoLat, annoLon));
@@ -91,6 +91,7 @@ public class AnnotationHandler : MonoBehaviour
 				if(builder.Length != 0)
 					annotation.text = builder;
 				annotation.alignment = TextAlignment.Center;
+				setFontAndColor (annotation, color, style); 
 			}
 		}
 	}
@@ -109,8 +110,8 @@ public class AnnotationHandler : MonoBehaviour
 		return false;
 	}
 
-	public void sendAnnotation (string type, string text, double lat, double lon, double offset) {
-		StartCoroutine(wwwScript.PostAnnotation (type, text, lat, lon, offset));
+	public void sendAnnotation (string type, string text, double lat, double lon, double offset, int color, int style) {
+		StartCoroutine(wwwScript.PostAnnotation (type, text, lat, lon, offset, color, style));
 	}
 
 	public void addBillboard(string text, int color, int style){
@@ -133,11 +134,10 @@ public class AnnotationHandler : MonoBehaviour
 		Mapbox.Utils.Vector2d billboardVec2d = directionsHandler.Vec2dFromUnityVector (billboard.transform.position);
 //		Debug.Log ("billboardx: " + billboard.transform.position.x + " billboardy: " + billboard.transform.position.y + " billboardz: " + billboard.transform.position.z);
 //		Debug.Log ("longitude is " + billboardVec2d.x + " and latitude is " + billboardVec2d.y);
-		sendAnnotation ("billboard", text, billboardVec2d.x, billboardVec2d.y, height);
+		sendAnnotation ("billboard", text, billboardVec2d.x, billboardVec2d.y, height, color, style);
 	}
 
 	public void setFontAndColor(TextMesh textMesh, int color, int style){
-		
 		if (style == 0)
 			textMesh.fontStyle = FontStyle.Normal;
 		else if (style == 1)

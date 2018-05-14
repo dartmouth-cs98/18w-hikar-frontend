@@ -30,8 +30,6 @@ public class WWWHandler : MonoBehaviour {
 
 	//References this tutorial: https://docs.unity3d.com/ScriptReference/WWW.html
 
-//	string debugPostNodeUrl = "http://localhost:9090/postNode";
-
 	const string getAnnotationUrl = "https://hikar.herokuapp.com/api/annotation";
 	const string postAnnotationUrl = "https://hikar.herokuapp.com/api/annotation";
 	const string userURL = "https://hikar.herokuapp.com/api/users/";
@@ -50,15 +48,17 @@ public class WWWHandler : MonoBehaviour {
 	const string accesKeyMapBox = ".json?radius=5000&access_token=pk.eyJ1IjoiamN0d2FrZSIsImEiOiJjamQ1NHN2MGEweDJkMndxcmI3eHRuczRlIn0.if6fE47kjlJQbrKmRMMpZg";
 
 
-	public IEnumerator PostAnnotation(string signType, string text, double lat, double lon, double offset)
+	public IEnumerator PostAnnotation(string signType, string text, double lat, double lon, double offset, int color, int style)
 	{
 		WWWForm form = new WWWForm();
-		form.AddField("type", signType);
+		form.AddField ("type", signType);
 		form.AddField ("text", text);
 		form.AddField ("lat", lat.ToString());
 		form.AddField ("long", lon.ToString());
-		//TODO
-		form.AddField ("__v", offset.ToString ());
+		form.AddField ("style", style.ToString());
+		form.AddField ("color", color.ToString());
+		form.AddField ("offset", offset.ToString ());
+
 		using (var w = UnityWebRequest.Post (postAnnotationUrl, form))
 		{
 			yield return w.SendWebRequest();
