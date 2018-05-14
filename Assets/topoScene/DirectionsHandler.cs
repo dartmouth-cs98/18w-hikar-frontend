@@ -87,7 +87,7 @@ public class DirectionsHandler : MonoBehaviour {
 
 		CoroutineWithData nodeData = new CoroutineWithData(this, wwwScript.GetTestTrail());
 		yield return nodeData.coroutine;
-		var parsedNode = SimpleJSON.JSON.Parse (nodeData.result.ToString ());
+		JSONNode parsedNode = SimpleJSON.JSON.Parse (nodeData.result.ToString ());
 
 		for(int i = 0; i < parsedNode.Count; i++) {
 
@@ -126,7 +126,7 @@ public class DirectionsHandler : MonoBehaviour {
 		CoroutineWithData nodeData = new CoroutineWithData(this, wwwScript.GetTrail(trailName));
 		yield return nodeData.coroutine;
 		try{
-			var parsedNode = SimpleJSON.JSON.Parse (nodeData.result.ToString ());
+			JSONNode parsedNode = SimpleJSON.JSON.Parse (nodeData.result.ToString ());
 
 			Debug.Log("trail node count: " + parsedNode["geometry"]["coordinates"].Count);
 
@@ -274,7 +274,7 @@ public class DirectionsHandler : MonoBehaviour {
 	}
 
 	public Vector3 UnityVectorFromVec2d(Vector2d vec2d) {
-		return Conversions.GeoToWorldPosition(vec2d, _map.CenterMercator, scaleRadius).ToVector3xz();
+		return Conversions.GeoToWorldPosition(vec2d, _map.CenterMercator, _map.WorldRelativeScale).ToVector3xz();
 	}
 		
 	public Vector2d Vec2dFromUnityVector(Vector3 unityVector){

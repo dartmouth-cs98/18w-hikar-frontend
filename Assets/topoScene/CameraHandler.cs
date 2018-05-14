@@ -39,14 +39,9 @@ public class CameraHandler : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.touchCount > 0) {
-			if (HUDRect.Contains (Input.GetTouch (0).position)) {
-				touchText.GetComponent<UnityEngine.UI.Text> ().text = Input.GetTouch (0).position.ToString ();
-				expand2D (true);
-				UIManagerObject.enable2D (true);
-			} else {
-				touchText.GetComponent<UnityEngine.UI.Text> ().text = HUDRect.width.ToString() + " " + HUDRect.height.ToString();
-			}
+		if (Input.touchCount > 0 && HUDRect.Contains (Input.GetTouch (0).position)) {
+			expand2D (true);
+			UIManagerObject.enable2D (true);
 		}
 	}
 

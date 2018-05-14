@@ -11,6 +11,7 @@ public class MenuScript : MonoBehaviour {
 
 	//UIHandler
 	public GameObject uiObject;
+	public TransitionalObject transitionObject;
 	private UIManager UIHandler;
 
 	void Start () {
@@ -52,10 +53,13 @@ public class MenuScript : MonoBehaviour {
 	//function to pause the game
 	public void OpenMenu(){
 		//enable the animator component
-		anim.enabled = true;
+		//anim.enabled = true;
 		//play the Slidein animation
-		anim.Play("MenuSlideIn");
+		//anim.Play("MenuSlideIn");
 		//set the isPaused flag to true to indicate that the game is paused
+
+		transitionObject.TriggerTransition();
+
 		isOpen = true;
 		//freeze the timescale
 		Time.timeScale = 0;
@@ -65,7 +69,8 @@ public class MenuScript : MonoBehaviour {
 		//set the isPaused flag to false to indicate that the game is not paused
 		isOpen = false;
 		//play the SlideOut animation
-		anim.Play("MenuSlideOut");
+		//anim.Play("MenuSlideOut");
+		transitionObject.TriggerFadeOut();
 		//set back the time scale to normal time scale
 		Time.timeScale = 1;
 	}

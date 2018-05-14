@@ -37,10 +37,6 @@ public class SceneManager : MonoBehaviour {
 
 	private GameObject cameraPosition;
 
-	private Vector2 initialLocation; //where user is on app start
-	private Vector2 currentLocation; //where user is on latest location update with test = new Vector2((float)-4, 0);
-	private Vector2 lastLocation;
-
 	public Location currentLoc;
 	private Location lastLoc;
 
@@ -115,20 +111,8 @@ public class SceneManager : MonoBehaviour {
 			StartCoroutine(getTrailsForLocation(location, 50));
 			//getTestDirectionsFromLocation(location);
 			StartCoroutine (annotationHandler.SetupMap ());
+
 //			distanceText.GetComponent<UnityEngine.UI.Text> ().text = "Initialized";
-		}
-
-
-//		if(isHeadingUpdated){
-//			if(compassText == null){
-//				compassText = GameObject.FindGameObjectWithTag ("compassText");
-//			}
-//			compassText.GetComponent<UnityEngine.UI.Text> ().text = "Compass: " +  location.Heading;
-//		}
-
-		if(isLatLngUpdated){
-			map = (Mapbox.Unity.Map.AbstractMap) mapObject.GetComponent((typeof(Mapbox.Unity.Map.AbstractMap)));
-			playerObject.transform.MoveToGeocoordinate(location.LatitudeLongitude, map.CenterMercator, map.WorldRelativeScale);
 		}
 	}
 
@@ -188,12 +172,14 @@ public class SceneManager : MonoBehaviour {
 		hudCamera.transform.SetPositionAndRotation(hudCamera.transform.position, lookAt);
 
 
+//		Debug.Log ("LAT: " + currentLoc.LatitudeLongitude.x + " " + "LONG: " + currentLoc.LatitudeLongitude.y);
+//		Vector3 test = directionHandler.UnityVectorFromVec2dMap(new Mapbox.Utils.Vector2d (currentLoc.LatitudeLongitude.x, currentLoc.LatitudeLongitude.y));
+//		Debug.Log ("Vec3x: " + test.x + " Vec3y: " + test.y + " Vec3z: " + test.z);
+//		Vector2d revert = directionHandler.Vec2dFromUnityVector (test);
+//		Debug.Log ("RELAT: " + revert.x + " RELONG: " + revert.y);
 		//hudCamera.transform.forward = UnityEngine.Camera.main.transform.forward;
 
 		//hudCamera.transform.Rotate(
-
-		// Let annotationHandler know the current location. Will need to change this to every 20 or so seconds
-		//annotationHandler.updateLoc (currentLocation);
 	}
 
 	private IEnumerator setPositionOnVuforiaEnabled() {
@@ -261,7 +247,6 @@ public class SceneManager : MonoBehaviour {
 		wwwScript.GetFeaturesAtLocation(latLong);
 	}
 
-
 	public IEnumerator getTrailsForLocation(Location location, int rad){
 
 		Debug.Log("getting trails at location: " + location.LatitudeLongitude.ToString());
@@ -271,7 +256,7 @@ public class SceneManager : MonoBehaviour {
 		CoroutineWithData nearbyData = new CoroutineWithData(this, wwwScript.GetTrails(location.LatitudeLongitude.x, location.LatitudeLongitude.y, rad));
 		yield return nearbyData.coroutine;
 
-		var parsedNearby = SimpleJSON.JSON.Parse (nearbyData.result.ToString());
+		JSONNode parsedNearby = SimpleJSON.JSON.Parse (nearbyData.result.ToString());
 
 		Debug.Log("parsedNearby count: " + parsedNearby.Count);
 		uiHandler.clearNearby ();
