@@ -44,7 +44,7 @@ public class AnnotationHandler : MonoBehaviour
 	{
 		CoroutineWithData annotationData = new CoroutineWithData(this, wwwScript.GetAnnotation());
 		yield return annotationData.coroutine;
-		var parsedAnnotation = JSON.Parse (annotationData.result.ToString());
+		JSONNode parsedAnnotation = JSON.Parse (annotationData.result.ToString());
 		Debug.Log ("Current lat: " + sceneHandler.currentLoc.LatitudeLongitude.x + " Current lon: " + sceneHandler.currentLoc.LatitudeLongitude.y);
 		//Instantiate all annotations here
 		for (int i = 0; i < parsedAnnotation.Count; i++)
