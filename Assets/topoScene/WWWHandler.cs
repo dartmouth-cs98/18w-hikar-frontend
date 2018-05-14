@@ -57,6 +57,7 @@ public class WWWHandler : MonoBehaviour {
 		form.AddField ("text", text);
 		form.AddField ("lat", lat.ToString());
 		form.AddField ("long", lon.ToString());
+		//TODO
 		form.AddField ("__v", offset.ToString ());
 		using (var w = UnityWebRequest.Post (postAnnotationUrl, form))
 		{
