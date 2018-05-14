@@ -127,15 +127,15 @@ public class WWWHandler : MonoBehaviour {
 		}
 	}
 
-	public IEnumerator UpdateUserTrail(string username, string trail)
+	public IEnumerator UpdateUserSettings(string username, string radius, string toggle)
 	{
 		StringBuilder userQuery = new StringBuilder (userURL);
 		userQuery.Append (username);
 
-		WWWForm form = new WWWForm();
-		form.AddField ("trail", trail);
+		WWWForm form = new WWWForm ();
+		form.AddField ("radius", radius);
+		form.AddField ("toggleAnnotations", toggle);
 
-		Debug.Log ("hi");
 		using (var w = UnityWebRequest.Post (userQuery.ToString(), form))
 		{
 			yield return w.SendWebRequest();
@@ -149,6 +149,29 @@ public class WWWHandler : MonoBehaviour {
 			}
 		}
 	}
+
+	public IEnumerator UpdateUserTrail(string username, string trail)
+	{
+		StringBuilder userQuery = new StringBuilder (userURL);
+		userQuery.Append (username);
+
+		WWWForm form = new WWWForm();
+		form.AddField ("trail", trail);
+
+		using (var w = UnityWebRequest.Post (userQuery.ToString(), form))
+		{
+			yield return w.SendWebRequest();
+			if (w.isNetworkError || w.isHttpError) 
+			{
+				yield return w.error + ". Update unsuccessful";
+			}
+			else
+			{
+				yield return "User successfully updated";
+			}
+		}
+	}
+
 	public IEnumerator GetTestTrail()
 	{
 		using (WWW www = new WWW (getTestTrailUrl))

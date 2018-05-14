@@ -256,7 +256,7 @@ public class SceneManager : MonoBehaviour {
 		CoroutineWithData nearbyData = new CoroutineWithData(this, wwwScript.GetTrails(location.LatitudeLongitude.x, location.LatitudeLongitude.y, rad));
 		yield return nearbyData.coroutine;
 
-		var parsedNearby = SimpleJSON.JSON.Parse (nearbyData.result.ToString());
+		JSONNode parsedNearby = SimpleJSON.JSON.Parse (nearbyData.result.ToString());
 
 		Debug.Log("parsedNearby count: " + parsedNearby.Count);
 		uiHandler.clearNearby ();

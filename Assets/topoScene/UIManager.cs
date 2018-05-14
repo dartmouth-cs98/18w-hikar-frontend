@@ -16,6 +16,7 @@ public class UIManager : MonoBehaviour {
 	private GameObject result;
 	public Text errorText;
 	public Canvas loadingCanvas;
+	public JSONNode parsedUser;
 
 	// Log in and Sign up
 	public InputField usernameValue;
@@ -100,18 +101,26 @@ public class UIManager : MonoBehaviour {
 		if (annotationObject != null) {
 			annotationHandler = (AnnotationHandler)annotationObject.gameObject.GetComponent (typeof(AnnotationHandler));
 		}
-
 		if (sceneObject != null) {
 			sceneManager = (SceneManager)sceneObject.gameObject.GetComponent (typeof(SceneManager));
 		}
+		StartCoroutine(initUser());
 		radiusSlider.minValue = 1;
 		radiusSlider.maxValue = 100;
+		//TODO SET RADIUS AND ANNOTATION PREFERENCES
 		radiusSlider.value = 50;
+
 		createAnnotationButton.onClick.AddListener (onClickAnnotation);
 		submitAnnotationButton.onClick.AddListener (onAnnotationSubmit);
 		exitSelectionButton.onClick.AddListener (disable2D);
 		loginButton.onClick.AddListener (signInSubmit);
 		hikeButton.onClick.AddListener (onHike);
+	}
+
+	public IEnumerator initUser() {
+		CoroutineWithData userData = new CoroutineWithData(this, wwwScript.GetUserInfo ("User2"));
+		yield return userData.coroutine;
+		parsedUser = SimpleJSON.JSON.Parse (userData.result.ToString());	
 	}
 
 	void Update(){
@@ -244,17 +253,16 @@ public class UIManager : MonoBehaviour {
 		annotationInput.text = "";
 		annotationInput.gameObject.SetActive (!annotationInput.gameObject.activeSelf);
 	}
+
 	public void signInSubmit(){
 		Debug.Log ("Got Here");
 		StartCoroutine(wwwScript.PostSignIn (usernameValue.text, PasswordValue.text));
 	}
 
 	public void onHike() {
-		//function to send trail to AR view
 		StartCoroutine(wwwScript.UpdateUserTrail("User2", currentSelectedTrail));
 		hikeButton.gameObject.SetActive (false);
 	}
-
 
 	public void disable2D() {
 		cameraHandler.resetCams ();
@@ -277,13 +285,9 @@ public class UIManager : MonoBehaviour {
 		cameraHandler.expand2D (enabled);
 	}
 
-	public IEnumerator enablePlaces() {
+	public void enablePlaces() {
 		clearResults ();
 		topTrailsPanel.gameObject.SetActive (true);
-
-		CoroutineWithData userData = new CoroutineWithData(this, wwwScript.GetUserInfo ("User2"));
-		yield return userData.coroutine;
-		var parsedUser = SimpleJSON.JSON.Parse (userData.result.ToString());
 		for (int i = 0; i < parsedUser ["trailHistory"].Count; i++) {
 			if (i < 5) {
 				GameObject tempResult = (GameObject)Instantiate (result, topTrailsPanel.transform);
@@ -386,8 +390,7 @@ public class UIManager : MonoBehaviour {
 		exitSelectionButton.gameObject.SetActive (false);
 	}
 
-	public void userSelection()
-	{
+	public void userSelection() {
 		if (Input.touchSupported && Application.platform != RuntimePlatform.WebGLPlayer && Input.touchCount > 0) {
 			PointerEventData pointerData = new PointerEventData (EventSystem.current);
 			pointerData.position = Input.GetTouch (0).position;
@@ -404,7 +407,7 @@ public class UIManager : MonoBehaviour {
 						enableExplore ();
 						cameraHandler.enableBackgroundTime ();
 					} else if (hit == "Your Places") {
-						StartCoroutine(enablePlaces ());
+						enablePlaces ();
 						cameraHandler.enableBackgroundTime ();
 					} else if (hit == "Settings") {
 						enableSettings ();
@@ -416,8 +419,7 @@ public class UIManager : MonoBehaviour {
 				}
 			}
 		}
-		if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
-		{
+		if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)) {
 			PointerEventData pointerData = new PointerEventData(EventSystem.current);
 			pointerData.position = Input.mousePosition;
 			List<RaycastResult> hits = new List<RaycastResult>();
@@ -433,7 +435,7 @@ public class UIManager : MonoBehaviour {
 						enableExplore ();
 						cameraHandler.enableBackgroundTime ();
 					} else if (hit == "Your Places") {
-						StartCoroutine(enablePlaces ());
+						enablePlaces ();
 						cameraHandler.enableBackgroundTime ();
 					} else if (hit == "Settings") {
 						enableSettings ();
@@ -472,10 +474,16 @@ public class UIManager : MonoBehaviour {
 		radiusText.text = System.Math.Round (radiusSlider.value).ToString();
 		sceneManager.updateRadius ((int)System.Math.Round (radiusSlider.value));
 		sceneManager.updateNearby((int)System.Math.Round (radiusSlider.value));
+		updateUserSettings ();
 	}
 
 	public void toggleAnnotations(){
 		annotationHandler.enableAnnotations (annotationsToggle.isOn);
+		updateUserSettings ();
+	}
+
+	public void updateUserSettings(){
+		StartCoroutine(wwwScript.UpdateUserSettings("User2", radiusText.text, annotationsToggle.isOn.ToString()));
 	}
 
 	public void changeAnnotationFont(){
