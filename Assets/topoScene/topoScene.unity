@@ -8006,7 +8006,7 @@ GameObject:
   - component: {fileID: 1414637091}
   m_Layer: 0
   m_Name: SearchMapObject
-  m_TagString: SearchMap
+  m_TagString: SearchMapObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

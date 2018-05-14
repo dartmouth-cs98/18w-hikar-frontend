@@ -9,10 +9,6 @@ public class AnnotationHandler : MonoBehaviour
 {
 	//Player cam reference
 	public Camera arCam;
-<<<<<<< HEAD
-
-=======
->>>>>>> 2dfa09cc13ce474f335f2753d2bf0104cc2d5252
 	// Annotation assets
 	public GameObject billboardAnnotation;
 	public GameObject rayCastObject;
