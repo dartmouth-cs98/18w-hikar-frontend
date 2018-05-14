@@ -143,7 +143,7 @@ MonoBehaviour:
   menuButton: {fileID: 514013290}
   MenuPanel: {fileID: 1168278570}
   uiObject: {fileID: 309927545}
-  transitionObject: {fileID: 0}
+  transitionObject: {fileID: 1168278576}
 --- !u!4 &14276371
 Transform:
   m_ObjectHideFlags: 0
@@ -2410,6 +2410,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   arCam: {fileID: 1366135902}
+  map: {fileID: 97133395}
+  player: {fileID: 656005445}
   billboardAnnotation: {fileID: 1611328790}
   rayCastObject: {fileID: 1941805711}
   wwwHandler: {fileID: 1225752238}
@@ -3876,7 +3878,7 @@ GameObject:
   - component: {fileID: 656005449}
   - component: {fileID: 656005448}
   - component: {fileID: 656005446}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -4943,12 +4945,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 0
+    m_Left: 40
     m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
+    m_Top: -20
+    m_Bottom: -15
   m_ChildAlignment: 0
-  m_Spacing: 0
+  m_Spacing: 20
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
@@ -5001,7 +5003,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -11.999954, y: 0.000030517578}
+  m_AnchoredPosition: {x: 12, y: 0.000030517578}
   m_SizeDelta: {x: -789.99994, y: -1413.3333}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &899550314
@@ -6575,6 +6577,8 @@ GameObject:
   - component: {fileID: 1168278572}
   - component: {fileID: 1168278571}
   - component: {fileID: 1168278575}
+  - component: {fileID: 1168278576}
+  - component: {fileID: 1168278577}
   m_Layer: 0
   m_Name: MenuPanel
   m_TagString: Untagged
@@ -6726,7 +6730,7 @@ MonoBehaviour:
     m_Value: 0
 --- !u!114 &1168278577
 MonoBehaviour:
-  m_ObjectHideFlags: 2
+  m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1168278570}
@@ -7903,7 +7907,7 @@ Camera:
   m_Depth: 1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967279
+    m_Bits: 4294967263
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -8003,7 +8007,7 @@ GameObject:
   - component: {fileID: 1414637091}
   m_Layer: 0
   m_Name: SearchMapObject
-  m_TagString: SearchMap
+  m_TagString: SearchMapObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11376,15 +11380,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 400000, guid: 20fd816a83c48484c8fee8a7ae243377, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.2
+      value: 100000
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 20fd816a83c48484c8fee8a7ae243377, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 100000
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 20fd816a83c48484c8fee8a7ae243377, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 100000
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 20fd816a83c48484c8fee8a7ae243377, type: 3}
       propertyPath: m_LocalRotation.x

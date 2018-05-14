@@ -9,6 +9,8 @@ public class AnnotationHandler : MonoBehaviour
 {
 
 	public Camera arCam;
+	public GameObject map;
+	public GameObject player;
 	// Annotation assets
 	public GameObject billboardAnnotation;
 	public GameObject rayCastObject;
@@ -53,21 +55,25 @@ public class AnnotationHandler : MonoBehaviour
 			//Mapbox Vec2d lat and lon (x and y)
 			float annoLat = parsedAnnotation [i] ["lat"].AsFloat;
 			float annoLon = parsedAnnotation [i] ["lon"].AsFloat;
+			float annoOffset = parsedAnnotation [i] ["__v"].AsFloat;
 
 			if (inRange (annoLat, annoLon)) {
 				//Convert to unity world coordinates
-				Debug.Log("Found: " + parsedAnnotation[i]["text"]);
 				Vector3 annotationUnityVec = directionsHandler.UnityVectorFromVec2dMap(new Mapbox.Utils.Vector2d (annoLat, annoLon));
 
 				GameObject tempAnnotation;
 				if (parsedAnnotation [i] ["type"].Value == "billboard") {
-					billboards.Add(Instantiate (billboardAnnotation, new Vector3 (annotationUnityVec.x, 0, annotationUnityVec.y), Quaternion.identity));
+					GameObject tempBoard = Instantiate (billboardAnnotation, new Vector3 (annotationUnityVec.x, annoOffset, annotationUnityVec.z), Quaternion.identity);
+					billboards.Add(tempBoard);
 					tempAnnotation = (GameObject) billboards [billboards.Count - 1];
+					Debug.Log ("rebillboardx: " + tempBoard.transform.position.x + " rebillboardy: " + tempBoard.transform.position.y + " rebillboardz: " + tempBoard.transform.position.z);
 				} else {
 					//TODO: figure this out with different meshes
-					tempAnnotation = Instantiate (billboardAnnotation, new Vector3 (annotationUnityVec.x, 0, annotationUnityVec.y), Quaternion.identity);
+					billboards.Add(Instantiate (billboardAnnotation, new Vector3 (annotationUnityVec.x, annoOffset, annotationUnityVec.z), Quaternion.identity));
+					tempAnnotation = (GameObject) billboards [billboards.Count - 1];
+
 				}
-				tempAnnotation.SetActive (true);
+				tempAnnotation.gameObject.SetActive (true);
 				tempAnnotation.transform.Rotate (0, -90, 90);
 				TextMesh annotation = tempAnnotation.GetComponentInChildren (typeof(TextMesh)) as TextMesh;
 				// Word wrapping marginally adapted from https://answers.unity.com/questions/223906/textmesh-wordwrap.html
@@ -105,8 +111,8 @@ public class AnnotationHandler : MonoBehaviour
 		return false;
 	}
 
-	public void sendAnnotation (string type, string text, double lat, double lon) {
-		StartCoroutine(wwwScript.PostAnnotation (type, text, lat, lon));
+	public void sendAnnotation (string type, string text, double lat, double lon, double offset) {
+		StartCoroutine(wwwScript.PostAnnotation (type, text, lat, lon, offset));
 	}
 
 	public void addBillboard(string text, int color, int style){
@@ -126,8 +132,10 @@ public class AnnotationHandler : MonoBehaviour
 		}
 		billboard.transform.position = new Vector3 (correctPos.x, height, correctPos.z);
 		billboards.Add (billboard);
-		Mapbox.Utils.Vector2d billboardVec2d = directionsHandler.Vec2dFromUnityVector (billboard.transform.localPosition);
-		sendAnnotation ("billboard", text, billboardVec2d.x, billboardVec2d.y);
+		Mapbox.Utils.Vector2d billboardVec2d = directionsHandler.Vec2dFromUnityVector (billboard.transform.position);
+		Debug.Log ("billboardx: " + billboard.transform.position.x + " billboardy: " + billboard.transform.position.y + " billboardz: " + billboard.transform.position.z);
+		Debug.Log ("longitude is " + billboardVec2d.x + " and latitude is " + billboardVec2d.y);
+		sendAnnotation ("billboard", text, billboardVec2d.x, billboardVec2d.y, height);
 	}
 
 	public void setFontAndColor(TextMesh textMesh, int color, int style){

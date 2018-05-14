@@ -284,22 +284,21 @@ public class UIManager : MonoBehaviour {
 		CoroutineWithData userData = new CoroutineWithData(this, wwwScript.GetUserInfo ("User2"));
 		yield return userData.coroutine;
 		var parsedUser = SimpleJSON.JSON.Parse (userData.result.ToString());
-		Debug.Log (parsedUser ["TrailHistory"].Count);
-		for (int i = 0; i < parsedUser ["TrailHistory"].Count; i++) {
+		for (int i = 0; i < parsedUser ["trailHistory"].Count; i++) {
 			if (i < 5) {
-				Debug.Log (parsedUser ["TrailHistory"][i]);
-
 				GameObject tempResult = (GameObject)Instantiate (result, topTrailsPanel.transform);
 				Text text = tempResult.AddComponent<Text> ();
 				text.font = Resources.GetBuiltinResource (typeof(Font), "Arial.ttf") as Font;
-				text.fontSize = 25;
+				text.fontSize = 50;
 				RectTransform tempTransform = text.GetComponent<RectTransform> ();
-				tempTransform.sizeDelta = new Vector2 (400f, 100f);
-				text.transform.position = new Vector3 (400f, 100f);
-				text.transform.localScale = new Vector3 (0.25f, 3f, 1f);
+				tempTransform.sizeDelta = new Vector2 (600f, 100f);
+				text.transform.localScale = new Vector3 (1f, 0.5f, 1f);
+				text.alignment = TextAnchor.MiddleLeft;
 				text.color = Color.black;
-				text.text = parsedUser ["TrailHistory"] [i].ToString ();
+				text.text = i + 1 + ". " + parsedUser ["trailHistory"] [i] [0].ToString ().Replace ("\"", "");
 				resultList.Add (tempResult);
+			} else {
+				break;
 			}
 		}
 	}
@@ -357,10 +356,9 @@ public class UIManager : MonoBehaviour {
 				text.fontSize = 25;
 				RectTransform tempTransform = text.GetComponent<RectTransform> ();
 				tempTransform.sizeDelta = new Vector2 (400f, 100f);
-				text.transform.position = new Vector3 (400f, 100f);
 				text.transform.localScale = new Vector3 (0.25f, 3f, 1f);
 				text.color = Color.black;
-				text.text = System.String.Format("{0,-10} {1,10}", nearbyTrails [i] [0], (System.Math.Truncate(100* double.Parse(nearbyTrails [i] [1]))/100d).ToString() + " mi");
+				text.text = nearbyTrails [i] [0].ToString() + " " + (System.Math.Truncate(100* double.Parse(nearbyTrails [i] [1]))/100d).ToString() + " mi";
 				resultList.Add (tempResult);
 				i++;
 			}
