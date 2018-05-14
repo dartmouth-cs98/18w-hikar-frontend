@@ -7,14 +7,12 @@ using Mapbox.Unity.Location;
 
 public class AnnotationHandler : MonoBehaviour 
 {
-
+	//Player cam reference
 	public Camera arCam;
-	public GameObject map;
-	public GameObject player;
+
 	// Annotation assets
 	public GameObject billboardAnnotation;
 	public GameObject rayCastObject;
-
 	private ArrayList billboards;
 
 	//wwwHandler
