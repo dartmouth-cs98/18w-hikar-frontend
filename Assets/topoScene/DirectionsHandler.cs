@@ -294,6 +294,12 @@ public class DirectionsHandler : MonoBehaviour {
 		totalOffset = 0;
 	}
 
+	public void clearLine(){
+		//call before updating trail
+		lineRenderer = GetComponent<LineRenderer> ();
+		lineRenderer.positionCount = 0;
+	}
+
 	public float castRaycastDownAtPosition(Vector3 rayOrigin){
 
 		rayCastObject.transform.position = rayOrigin;

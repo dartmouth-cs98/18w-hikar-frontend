@@ -127,17 +127,14 @@ public class SceneManager : MonoBehaviour {
 //			compassText.GetComponent<UnityEngine.UI.Text> ().text = "Compass: " +  location.Heading;
 //		}
 
-<<<<<<< HEAD
 		if(isLatLngUpdated){
 			//map = (Mapbox.Unity.Map.AbstractMap) mapObject.GetComponent((typeof(Mapbox.Unity.Map.AbstractMap)));
 			//playerObject.transform.MoveToGeocoordinate(location.LatitudeLongitude, map.CenterMercator, map.WorldRelativeScale);
 		}
-=======
 //		if(isLatLngUpdated){
 //			map = (Mapbox.Unity.Map.AbstractMap) mapObject.GetComponent((typeof(Mapbox.Unity.Map.AbstractMap)));
 //			playerObject.transform.MoveToGeocoordinate(location.LatitudeLongitude, map.CenterMercator, map.WorldRelativeScale);
 //		}
->>>>>>> 83a72de83c8f94bf90e8572b492ec7f8514d89a2
 	}
 
 	//updates camera position if user is touching screen
