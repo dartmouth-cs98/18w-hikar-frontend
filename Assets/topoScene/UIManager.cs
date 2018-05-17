@@ -66,6 +66,11 @@ public class UIManager : MonoBehaviour {
 	public GameObject cameraObject;
 	private CameraHandler cameraHandler;
 
+	//camera2D 
+	public GameObject camera2D;
+	private Mapbox.Examples.QuadTreeCameraMovement quadTreeCameraMovement;
+	private Vector3 camera2Dposition;
+
 	//menuHandler
 	public GameObject menuObject;
 	private MenuScript menuHandler;
@@ -89,6 +94,12 @@ public class UIManager : MonoBehaviour {
 		if(cameraObject != null) {
 			cameraHandler = (CameraHandler) cameraObject.gameObject.GetComponent(typeof(CameraHandler));
 		}
+
+		if(camera2D != null){
+			quadTreeCameraMovement = (Mapbox.Examples.QuadTreeCameraMovement)camera2D.GetComponent(typeof(Mapbox.Examples.QuadTreeCameraMovement));
+			quadTreeCameraMovement.enabled = false;
+		}
+
 		if(menuObject != null) {
 			menuHandler = (MenuScript) menuObject.gameObject.GetComponent(typeof(MenuScript));
 		}
@@ -147,7 +158,7 @@ public class UIManager : MonoBehaviour {
 						if (resultText != "_________") {
 							Debug.Log (resultText);
 							scrollView.gameObject.SetActive (false);
-							SearchMap searchMap = GameObject.FindGameObjectWithTag ("SearchMapObject").GetComponent<SearchMap> ();
+							SearchMap searchMap = GameObject.FindGameObjectWithTag ("SearchMap").GetComponent<SearchMap> ();
 							if (exploreTrailsPanel.gameObject.activeSelf) {
 								string[] trailNameOnly = resultText.Split (new char[0]);
 								StringBuilder trailName = new StringBuilder ();
@@ -196,7 +207,7 @@ public class UIManager : MonoBehaviour {
 						if (resultText != "_________") {
 							Debug.Log (resultText);
 							scrollView.gameObject.SetActive (false);
-							SearchMap searchMap = GameObject.FindGameObjectWithTag ("SearchMapObject").GetComponent<SearchMap> ();
+							SearchMap searchMap = GameObject.FindGameObjectWithTag ("SearchMap").GetComponent<SearchMap> ();
 							if (exploreTrailsPanel.gameObject.activeSelf) {
 								string[] trailNameOnly = resultText.Split (new char[0]);
 								StringBuilder trailName = new StringBuilder ();
@@ -288,11 +299,15 @@ public class UIManager : MonoBehaviour {
 			createAnnotationButton.gameObject.SetActive (false);
 			searchInput.gameObject.SetActive (true);
 			toggleARButton.gameObject.SetActive (true);
+			camera2Dposition = camera2D.transform.position;
 		} else {
 			createAnnotationButton.gameObject.SetActive (true);
 			toggleARButton.gameObject.SetActive (false);
 			searchInput.gameObject.SetActive (false);
+			camera2D.transform.position = camera2Dposition;
 		}	
+
+		quadTreeCameraMovement.enabled = enabled;
 		cameraHandler.expand2D (enabled);
 	}
 
