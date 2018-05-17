@@ -133,6 +133,7 @@ public class AnnotationHandler : MonoBehaviour
 			directionsHandler.setTotalOffset();
 			height -= directionsHandler.totalOffset;
 		}
+		billboards.Add (billboard);
 		Vector3 initPosition = new Vector3 (correctPos.x, height+20, correctPos.z);
 		Vector3 droppedPosition = new Vector3 (correctPos.x, height, correctPos.z);
 		TransitionalObject billboardDrop = (TransitionalObject)billboard.GetComponent (typeof(TransitionalObject));
@@ -141,7 +142,6 @@ public class AnnotationHandler : MonoBehaviour
 			billboard.transform.localPosition = Vector3.Lerp(initPosition, droppedPosition, ratio);
 			yield return null;
 		}
-		billboards.Add (billboard);
 		Mapbox.Utils.Vector2d billboardVec2d = directionsHandler.Vec2dFromUnityVector (billboard.transform.position);
 //		Debug.Log ("billboardx: " + billboard.transform.position.x + " billboardy: " + billboard.transform.position.y + " billboardz: " + billboard.transform.position.z);
 //		Debug.Log ("longitude is " + billboardVec2d.x + " and latitude is " + billboardVec2d.y);

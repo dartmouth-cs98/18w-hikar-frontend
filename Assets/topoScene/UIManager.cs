@@ -118,14 +118,19 @@ public class UIManager : MonoBehaviour {
 		CoroutineWithData userData = new CoroutineWithData(this, wwwScript.GetUserInfo ("User2"));
 		yield return userData.coroutine;
 		parsedUser = SimpleJSON.JSON.Parse (userData.result.ToString());	
-		if (parsedUser ["radius"] != null)
+		if (parsedUser ["radius"] != null) {
 			radiusSlider.value = parsedUser ["radius"].AsInt;
+			Debug.Log (parsedUser ["radius"].AsInt);
+		}
 		else
 			radiusSlider.value = 50;
-		if (parsedUser ["toggleAnnotations"] != null)
+		if (parsedUser ["toggleAnnotations"] != null) {
 			annotationsToggle.isOn = parsedUser ["toggleAnnotations"].AsBool;
-		else
+			toggleAnnotations ();
+		} else {
 			annotationsToggle.isOn = true;
+			toggleAnnotations ();
+		}
 	}
 
 	void Update() {
@@ -267,6 +272,7 @@ public class UIManager : MonoBehaviour {
 	public void onHike() {
 		StartCoroutine(wwwScript.UpdateUserTrail("User2", currentSelectedTrail));
 		hikeButton.gameObject.SetActive (false);
+		disable2D ();
 	}
 
 	public void disable2D() {
