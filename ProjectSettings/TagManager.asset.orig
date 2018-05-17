@@ -20,6 +20,13 @@ TagManager:
   - loadingText
   - sceneManager
   - SearchMapObject
+  - results
+  - SearchCamera
+  - explorePanel
+  - rayCastObject
+  - SearchMap
+  - rayCastObjectSearch
+  - playerLocation
   layers:
   - Default
   - TransparentFX
@@ -29,10 +36,10 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
-  - 
+  - ARGameObject
+  - Map
+  - Path
+  - Both
   - 
   - 
   - 
@@ -56,4 +63,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Top
+    uniqueID: 2033846869
     locked: 0

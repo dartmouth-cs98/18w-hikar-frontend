@@ -35,6 +35,8 @@ public class SceneManager : MonoBehaviour {
 
 	public GameObject playerObject;
 
+	public GameObject playerLocation;
+
 	private GameObject cameraPosition;
 
 	public Location currentLoc;
@@ -79,6 +81,10 @@ public class SceneManager : MonoBehaviour {
 		if (playerObject == null) {
 			playerObject = GameObject.FindGameObjectWithTag ("Player");
 		}
+
+		if (playerLocation == null){
+			playerLocation = GameObject.FindGameObjectWithTag("playerLocation");
+		}
 		setCompassDirection ();
 	}
 		
@@ -114,12 +120,14 @@ public class SceneManager : MonoBehaviour {
 
 //			distanceText.GetComponent<UnityEngine.UI.Text> ().text = "Initialized";
 		}
-//		if(isHeadingUpdated){
+		if(isHeadingUpdated){
 //			if(compassText == null){
 //				compassText = GameObject.FindGameObjectWithTag ("compassText");
 //			}
 //			compassText.GetComponent<UnityEngine.UI.Text> ().text = "Compass: " +  location.Heading;
-//		}
+			playerLocation.transform.Rotate(Vector3.up, location.Heading);
+
+		}
 
 		if(isLatLngUpdated){
 			//map = (Mapbox.Unity.Map.AbstractMap) mapObject.GetComponent((typeof(Mapbox.Unity.Map.AbstractMap)));
