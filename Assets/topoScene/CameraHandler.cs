@@ -45,7 +45,7 @@ public class CameraHandler : MonoBehaviour {
 		}
 	}
 
-	public void expand2D(bool expand){
+	public void expand2D(bool expand) {
 		//Switch cameras
 		if (expand) {
 			HUDCam.depth = 0;
@@ -57,12 +57,11 @@ public class CameraHandler : MonoBehaviour {
 		}
 	}
 
-	public void enableSearchMap(){
+	public void enableSearchMap() {
 		SearchCam.depth = 3; //highest depth in scene
 	}
 
-	public void enableBackgroundTime()
-	{
+	public void enableBackgroundTime() {
 		int time = (int)DateTime.Now.Hour;
 		if (time > 6 && time < 16)
 			DayCam.depth = 3;
@@ -76,8 +75,7 @@ public class CameraHandler : MonoBehaviour {
 		LoginCam.depth = 5;
 	}
 
-	public void resetCams()
-	{
+	public void resetCams() {
 		SearchCam.depth = -1;
 		DayCam.depth = -1;
 		EveningCam.depth = -1;

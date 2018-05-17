@@ -88,7 +88,7 @@ public class SearchMap : MonoBehaviour {
 		//parse data
 		CoroutineWithData trailData = new CoroutineWithData(this, www.GetTrail(trailName));
 		yield return trailData.coroutine;
-		var parsedTrail = SimpleJSON.JSON.Parse (trailData.result.ToString ());
+		JSONNode parsedTrail = SimpleJSON.JSON.Parse (trailData.result.ToString ());
 
 		//used to calculate the bounds for the trail
 		double south = double.MaxValue;
@@ -146,7 +146,7 @@ public class SearchMap : MonoBehaviour {
 	public IEnumerator getTrailData(WWWHandler www, string trailName){
 		CoroutineWithData trailData = new CoroutineWithData(this, www.GetTrail(trailName));
 		yield return trailData.coroutine;
-		var parsedTrail = JSON.Parse (trailData.result.ToString());
+		JSONNode parsedTrail = JSON.Parse (trailData.result.ToString());
 		//TODO: get a trailhead lat/lon
 		double lat = parsedTrail["geometry"]["coordinates"][0][1].AsDouble;
 		double lon = parsedTrail["geometry"]["coordinates"][0][0].AsDouble;

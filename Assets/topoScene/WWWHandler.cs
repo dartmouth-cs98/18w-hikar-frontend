@@ -30,8 +30,6 @@ public class WWWHandler : MonoBehaviour {
 
 	//References this tutorial: https://docs.unity3d.com/ScriptReference/WWW.html
 
-//	string debugPostNodeUrl = "http://localhost:9090/postNode";
-
 	const string getAnnotationUrl = "https://hikar.herokuapp.com/api/annotation";
 	const string postAnnotationUrl = "https://hikar.herokuapp.com/api/annotation";
 	const string userURL = "https://hikar.herokuapp.com/api/users/";
@@ -50,13 +48,17 @@ public class WWWHandler : MonoBehaviour {
 	const string accesKeyMapBox = ".json?radius=5000&access_token=pk.eyJ1IjoiamN0d2FrZSIsImEiOiJjamQ1NHN2MGEweDJkMndxcmI3eHRuczRlIn0.if6fE47kjlJQbrKmRMMpZg";
 
 
-	public IEnumerator PostAnnotation(string signType, string text, double lat, double lon)
+	public IEnumerator PostAnnotation(string signType, string text, double lat, double lon, double offset, int color, int style)
 	{
 		WWWForm form = new WWWForm();
-		form.AddField("type", signType);
+		form.AddField ("type", signType);
 		form.AddField ("text", text);
 		form.AddField ("lat", lat.ToString());
 		form.AddField ("long", lon.ToString());
+		form.AddField ("style", style.ToString());
+		form.AddField ("color", color.ToString());
+		form.AddField ("offset", offset.ToString ());
+
 		using (var w = UnityWebRequest.Post (postAnnotationUrl, form))
 		{
 			yield return w.SendWebRequest();
@@ -125,15 +127,15 @@ public class WWWHandler : MonoBehaviour {
 		}
 	}
 
-	public IEnumerator UpdateUserTrail(string username, string trail)
+	public IEnumerator UpdateUserSettings(string username, string radius, string toggle)
 	{
 		StringBuilder userQuery = new StringBuilder (userURL);
 		userQuery.Append (username);
 
-		WWWForm form = new WWWForm();
-		form.AddField ("trail", trail);
+		WWWForm form = new WWWForm ();
+		form.AddField ("radius", radius);
+		form.AddField ("toggleAnnotations", toggle);
 
-		Debug.Log ("hi");
 		using (var w = UnityWebRequest.Post (userQuery.ToString(), form))
 		{
 			yield return w.SendWebRequest();
@@ -147,6 +149,49 @@ public class WWWHandler : MonoBehaviour {
 			}
 		}
 	}
+
+	public IEnumerator UpdateUserTrail(string username, string trail)
+	{
+		StringBuilder userQuery = new StringBuilder (userURL);
+		userQuery.Append (username);
+
+		WWWForm form = new WWWForm();
+		form.AddField ("trail", trail);
+		using (var w = UnityWebRequest.Post (userQuery.ToString(), form))
+		{
+			yield return w.SendWebRequest();
+			if (w.isNetworkError || w.isHttpError) 
+			{
+				yield return w.error + ". Update unsuccessful";
+			}
+			else
+			{
+				yield return "User successfully updated";
+			}
+		}
+	}
+
+	public IEnumerator UpdateUserDistance (string username, double distance)
+	{
+		StringBuilder userQuery = new StringBuilder (userURL);
+		userQuery.Append (username);
+
+		WWWForm form = new WWWForm ();
+		form.AddField ("distance", distance.ToString ());
+		using (var w = UnityWebRequest.Post (userQuery.ToString(), form))
+		{
+			yield return w.SendWebRequest();
+			if (w.isNetworkError || w.isHttpError) 
+			{
+				yield return w.error + ". Update unsuccessful";
+			}
+			else
+			{
+				yield return "User successfully updated";
+			}
+		}
+	}
+
 	public IEnumerator GetTestTrail()
 	{
 		using (WWW www = new WWW (getTestTrailUrl))
