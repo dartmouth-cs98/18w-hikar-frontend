@@ -7,12 +7,11 @@ using Mapbox.Unity.Location;
 
 public class AnnotationHandler : MonoBehaviour 
 {
-
+	//Player cam reference
 	public Camera arCam;
 	// Annotation assets
 	public GameObject billboardAnnotation;
 	public GameObject rayCastObject;
-
 	private ArrayList billboards;
 
 	//wwwHandler
@@ -28,6 +27,9 @@ public class AnnotationHandler : MonoBehaviour
 	private SceneManager sceneHandler;
 
 	const float mileToLatLon = 1f/69f;
+	const float duration = 1f;
+	const float multiplier = 1 / duration;
+	private float ratio = 0;
 
 	void Start(){
 		billboards = new ArrayList ();
@@ -45,29 +47,35 @@ public class AnnotationHandler : MonoBehaviour
 	{
 		CoroutineWithData annotationData = new CoroutineWithData(this, wwwScript.GetAnnotation());
 		yield return annotationData.coroutine;
-		var parsedAnnotation = JSON.Parse (annotationData.result.ToString());
-		Debug.Log ("Current lat: " + sceneHandler.currentLoc.LatitudeLongitude.x + " Current lon: " + sceneHandler.currentLoc.LatitudeLongitude.y);
+		JSONNode parsedAnnotation = JSON.Parse (annotationData.result.ToString());
 		//Instantiate all annotations here
 		for (int i = 0; i < parsedAnnotation.Count; i++)
 		{
 			//Mapbox Vec2d lat and lon (x and y)
 			float annoLat = parsedAnnotation [i] ["lat"].AsFloat;
 			float annoLon = parsedAnnotation [i] ["lon"].AsFloat;
+			float annoOffset = parsedAnnotation [i] ["offset"].AsFloat;
+			int style = parsedAnnotation [i] ["style"].AsInt;
+			int color = parsedAnnotation [i] ["color"].AsInt;
 
+			//TODO: Match with current trailName
 			if (inRange (annoLat, annoLon)) {
 				//Convert to unity world coordinates
-				Debug.Log("Found: " + parsedAnnotation[i]["text"]);
 				Vector3 annotationUnityVec = directionsHandler.UnityVectorFromVec2dMap(new Mapbox.Utils.Vector2d (annoLat, annoLon));
 
 				GameObject tempAnnotation;
 				if (parsedAnnotation [i] ["type"].Value == "billboard") {
-					billboards.Add(Instantiate (billboardAnnotation, new Vector3 (annotationUnityVec.x, 0, annotationUnityVec.y), Quaternion.identity));
+					GameObject tempBoard = Instantiate (billboardAnnotation, new Vector3 (annotationUnityVec.x, annoOffset, annotationUnityVec.z), Quaternion.identity);
+					billboards.Add(tempBoard);
 					tempAnnotation = (GameObject) billboards [billboards.Count - 1];
+//					Debug.Log ("rebillboardx: " + tempBoard.transform.position.x + " rebillboardy: " + tempBoard.transform.position.y + " rebillboardz: " + tempBoard.transform.position.z);
 				} else {
 					//TODO: figure this out with different meshes
-					tempAnnotation = Instantiate (billboardAnnotation, new Vector3 (annotationUnityVec.x, 0, annotationUnityVec.y), Quaternion.identity);
+					billboards.Add(Instantiate (billboardAnnotation, new Vector3 (annotationUnityVec.x, annoOffset, annotationUnityVec.z), Quaternion.identity));
+					tempAnnotation = (GameObject) billboards [billboards.Count - 1];
+
 				}
-				tempAnnotation.SetActive (true);
+				tempAnnotation.gameObject.SetActive (true);
 				tempAnnotation.transform.Rotate (0, -90, 90);
 				TextMesh annotation = tempAnnotation.GetComponentInChildren (typeof(TextMesh)) as TextMesh;
 				// Word wrapping marginally adapted from https://answers.unity.com/questions/223906/textmesh-wordwrap.html
@@ -87,6 +95,7 @@ public class AnnotationHandler : MonoBehaviour
 				if(builder.Length != 0)
 					annotation.text = builder;
 				annotation.alignment = TextAlignment.Center;
+				setFontAndColor (annotation, color, style); 
 			}
 		}
 	}
@@ -105,11 +114,11 @@ public class AnnotationHandler : MonoBehaviour
 		return false;
 	}
 
-	public void sendAnnotation (string type, string text, double lat, double lon) {
-		StartCoroutine(wwwScript.PostAnnotation (type, text, lat, lon));
+	public void sendAnnotation (string type, string text, double lat, double lon, double offset, int color, int style) {
+		StartCoroutine(wwwScript.PostAnnotation (type, text, lat, lon, offset, color, style));
 	}
 
-	public void addBillboard(string text, int color, int style){
+	public IEnumerator addBillboard(string text, int color, int style) {
 		GameObject billboard = Instantiate(GameObject.FindGameObjectWithTag("billboardObject"));
 		TextMesh billboardText = billboard.GetComponentInChildren<TextMesh> ();
 		setFontAndColor (billboardText, color, style);
@@ -124,14 +133,22 @@ public class AnnotationHandler : MonoBehaviour
 			directionsHandler.setTotalOffset();
 			height -= directionsHandler.totalOffset;
 		}
-		billboard.transform.position = new Vector3 (correctPos.x, height, correctPos.z);
 		billboards.Add (billboard);
-		Mapbox.Utils.Vector2d billboardVec2d = directionsHandler.Vec2dFromUnityVector (billboard.transform.localPosition);
-		sendAnnotation ("billboard", text, billboardVec2d.x, billboardVec2d.y);
+		Vector3 initPosition = new Vector3 (correctPos.x, height+20, correctPos.z);
+		Vector3 droppedPosition = new Vector3 (correctPos.x, height, correctPos.z);
+		TransitionalObject billboardDrop = (TransitionalObject)billboard.GetComponent (typeof(TransitionalObject));
+		while (billboard.transform.localPosition != droppedPosition) {
+			ratio += Time.deltaTime * multiplier;
+			billboard.transform.localPosition = Vector3.Lerp(initPosition, droppedPosition, ratio);
+			yield return null;
+		}
+		Mapbox.Utils.Vector2d billboardVec2d = directionsHandler.Vec2dFromUnityVector (billboard.transform.position);
+//		Debug.Log ("billboardx: " + billboard.transform.position.x + " billboardy: " + billboard.transform.position.y + " billboardz: " + billboard.transform.position.z);
+//		Debug.Log ("longitude is " + billboardVec2d.x + " and latitude is " + billboardVec2d.y);
+		sendAnnotation ("billboard", text, billboardVec2d.x, billboardVec2d.y, height, color, style);
 	}
 
 	public void setFontAndColor(TextMesh textMesh, int color, int style){
-		
 		if (style == 0)
 			textMesh.fontStyle = FontStyle.Normal;
 		else if (style == 1)
