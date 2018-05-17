@@ -104,12 +104,9 @@ public class UIManager : MonoBehaviour {
 		if (sceneObject != null) {
 			sceneManager = (SceneManager)sceneObject.gameObject.GetComponent (typeof(SceneManager));
 		}
-		StartCoroutine(initUser());
 		radiusSlider.minValue = 1;
 		radiusSlider.maxValue = 100;
-		//TODO SET RADIUS AND ANNOTATION PREFERENCES
-		radiusSlider.value = 50;
-
+		StartCoroutine(initUser());
 		createAnnotationButton.onClick.AddListener (onClickAnnotation);
 		submitAnnotationButton.onClick.AddListener (onAnnotationSubmit);
 		exitSelectionButton.onClick.AddListener (disable2D);
@@ -121,9 +118,22 @@ public class UIManager : MonoBehaviour {
 		CoroutineWithData userData = new CoroutineWithData(this, wwwScript.GetUserInfo ("User2"));
 		yield return userData.coroutine;
 		parsedUser = SimpleJSON.JSON.Parse (userData.result.ToString());	
+		if (parsedUser ["radius"] != null) {
+			radiusSlider.value = parsedUser ["radius"].AsInt;
+			Debug.Log (parsedUser ["radius"].AsInt);
+		}
+		else
+			radiusSlider.value = 50;
+		if (parsedUser ["toggleAnnotations"] != null) {
+			annotationsToggle.isOn = parsedUser ["toggleAnnotations"].AsBool;
+			toggleAnnotations ();
+		} else {
+			annotationsToggle.isOn = true;
+			toggleAnnotations ();
+		}
 	}
 
-	void Update(){
+	void Update() {
 		if (scrollView.gameObject.activeSelf && scrollView.content.childCount > 0 || exploreTrailsPanel.gameObject.activeSelf) {
 			if (Input.touchSupported && Application.platform != RuntimePlatform.WebGLPlayer && Input.touchCount > 0) {
 				PointerEventData pointerData = new PointerEventData(EventSystem.current);
@@ -246,7 +256,7 @@ public class UIManager : MonoBehaviour {
 			//TODO: Add switches between types of annotations
 			//if billboard:
 
-			annotationHandler.addBillboard (annotationInput.text, colorDropdown.value, styleDropdown.value);
+			StartCoroutine(annotationHandler.addBillboard (annotationInput.text, colorDropdown.value, styleDropdown.value));
 		}
 		styleDropdown.value = 0;
 		colorDropdown.value = 0;
@@ -262,6 +272,7 @@ public class UIManager : MonoBehaviour {
 	public void onHike() {
 		StartCoroutine(wwwScript.UpdateUserTrail("User2", currentSelectedTrail));
 		hikeButton.gameObject.SetActive (false);
+		disable2D ();
 	}
 
 	public void disable2D() {
@@ -463,30 +474,30 @@ public class UIManager : MonoBehaviour {
 		nearbyTrails.Clear ();
 	}
 
-	public void populateNearby(string trailName, string trailDist){
+	public void populateNearby(string trailName, string trailDist) {
 		string[] trail = new string[2];
 		trail [0] = trailName.Replace("\"" , "");
 		trail [1] = trailDist.ToString ();
 		nearbyTrails.Add (trail);
 	}
 
-	public void setRadius(){
+	public void setRadius() {
 		radiusText.text = System.Math.Round (radiusSlider.value).ToString();
 		sceneManager.updateRadius ((int)System.Math.Round (radiusSlider.value));
 		sceneManager.updateNearby((int)System.Math.Round (radiusSlider.value));
 		updateUserSettings ();
 	}
 
-	public void toggleAnnotations(){
+	public void toggleAnnotations() {
 		annotationHandler.enableAnnotations (annotationsToggle.isOn);
 		updateUserSettings ();
 	}
 
-	public void updateUserSettings(){
+	public void updateUserSettings() {
 		StartCoroutine(wwwScript.UpdateUserSettings("User2", radiusText.text, annotationsToggle.isOn.ToString()));
 	}
 
-	public void changeAnnotationFont(){
+	public void changeAnnotationFont() {
 		Text annotation = annotationInput.GetComponentInChildren<Text> ();
 		if (annotation.text != "") {
 			if (styleDropdown.value == 0)
@@ -500,7 +511,7 @@ public class UIManager : MonoBehaviour {
 		}
 	}
 
-	public void changeAnnotationColor(){
+	public void changeAnnotationColor() {
 		Text annotation = annotationInput.GetComponentInChildren<Text> ();
 		if (annotation.text != "") {
 			if (colorDropdown.value == 0)

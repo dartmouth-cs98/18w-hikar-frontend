@@ -27,6 +27,9 @@ public class AnnotationHandler : MonoBehaviour
 	private SceneManager sceneHandler;
 
 	const float mileToLatLon = 1f/69f;
+	const float duration = 1f;
+	const float multiplier = 1 / duration;
+	private float ratio = 0;
 
 	void Start(){
 		billboards = new ArrayList ();
@@ -45,7 +48,6 @@ public class AnnotationHandler : MonoBehaviour
 		CoroutineWithData annotationData = new CoroutineWithData(this, wwwScript.GetAnnotation());
 		yield return annotationData.coroutine;
 		JSONNode parsedAnnotation = JSON.Parse (annotationData.result.ToString());
-		Debug.Log ("Current lat: " + sceneHandler.currentLoc.LatitudeLongitude.x + " Current lon: " + sceneHandler.currentLoc.LatitudeLongitude.y);
 		//Instantiate all annotations here
 		for (int i = 0; i < parsedAnnotation.Count; i++)
 		{
@@ -55,6 +57,8 @@ public class AnnotationHandler : MonoBehaviour
 			float annoOffset = parsedAnnotation [i] ["offset"].AsFloat;
 			int style = parsedAnnotation [i] ["style"].AsInt;
 			int color = parsedAnnotation [i] ["color"].AsInt;
+
+			//TODO: Match with current trailName
 			if (inRange (annoLat, annoLon)) {
 				//Convert to unity world coordinates
 				Vector3 annotationUnityVec = directionsHandler.UnityVectorFromVec2dMap(new Mapbox.Utils.Vector2d (annoLat, annoLon));
@@ -114,7 +118,7 @@ public class AnnotationHandler : MonoBehaviour
 		StartCoroutine(wwwScript.PostAnnotation (type, text, lat, lon, offset, color, style));
 	}
 
-	public void addBillboard(string text, int color, int style){
+	public IEnumerator addBillboard(string text, int color, int style) {
 		GameObject billboard = Instantiate(GameObject.FindGameObjectWithTag("billboardObject"));
 		TextMesh billboardText = billboard.GetComponentInChildren<TextMesh> ();
 		setFontAndColor (billboardText, color, style);
@@ -129,8 +133,15 @@ public class AnnotationHandler : MonoBehaviour
 			directionsHandler.setTotalOffset();
 			height -= directionsHandler.totalOffset;
 		}
-		billboard.transform.position = new Vector3 (correctPos.x, height, correctPos.z);
 		billboards.Add (billboard);
+		Vector3 initPosition = new Vector3 (correctPos.x, height+20, correctPos.z);
+		Vector3 droppedPosition = new Vector3 (correctPos.x, height, correctPos.z);
+		TransitionalObject billboardDrop = (TransitionalObject)billboard.GetComponent (typeof(TransitionalObject));
+		while (billboard.transform.localPosition != droppedPosition) {
+			ratio += Time.deltaTime * multiplier;
+			billboard.transform.localPosition = Vector3.Lerp(initPosition, droppedPosition, ratio);
+			yield return null;
+		}
 		Mapbox.Utils.Vector2d billboardVec2d = directionsHandler.Vec2dFromUnityVector (billboard.transform.position);
 //		Debug.Log ("billboardx: " + billboard.transform.position.x + " billboardy: " + billboard.transform.position.y + " billboardz: " + billboard.transform.position.z);
 //		Debug.Log ("longitude is " + billboardVec2d.x + " and latitude is " + billboardVec2d.y);
