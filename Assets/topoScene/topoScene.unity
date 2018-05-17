@@ -737,7 +737,6 @@ GameObject:
   - component: {fileID: 97133397}
   - component: {fileID: 97133401}
   - component: {fileID: 97133400}
-  - component: {fileID: 97133402}
   m_Layer: 9
   m_Name: MapObject
   m_TagString: MapObject
@@ -920,21 +919,6 @@ MonoBehaviour:
   _arTrustRange: 30
   _minimumDeltaDistance: 3
   _minimumDesiredAccuracy: 45
---- !u!114 &97133402
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 97133395}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dcf32ea2cc0514b569329f6b6b68f9b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _map: {fileID: 0}
-  _locationStrings: []
-  _spawnScale: 100
-  _markerPrefab: {fileID: 0}
 --- !u!1 &99643306
 GameObject:
   m_ObjectHideFlags: 0
@@ -1650,6 +1634,7 @@ MonoBehaviour:
   wwwHandler: {fileID: 1225752238}
   sceneObject: {fileID: 1630137530}
   cameraObject: {fileID: 1778709995}
+  camera2D: {fileID: 920573817}
   menuObject: {fileID: 14276369}
   annotationObject: {fileID: 450956515}
   loginButton: {fileID: 851508138}
@@ -5252,7 +5237,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _panSpeed: 1
-  _zoomSpeed: 0.15
+  _zoomSpeed: 0.1
   _referenceCamera: {fileID: 920573821}
   _mapManager: {fileID: 97133396}
   _useDegreeMethod: 0
