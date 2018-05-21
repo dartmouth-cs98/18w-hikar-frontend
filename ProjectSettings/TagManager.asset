@@ -25,6 +25,8 @@ TagManager:
   - explorePanel
   - rayCastObject
   - rayCastObjectSearch
+  - SearchMap
+  - exploreResults
   layers:
   - Default
   - TransparentFX
