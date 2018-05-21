@@ -284,8 +284,8 @@ MonoBehaviour:
   menuButton: {fileID: 514013290}
   MenuPanel: {fileID: 1168278570}
   uiObject: {fileID: 309927545}
-  menuTransitionObject: {fileID: 1168278576}
-  panelTransitionObject: {fileID: 1828399384}
+  menuTransitionObject: {fileID: 0}
+  panelTransitionObject: {fileID: 0}
 --- !u!4 &14276371
 Transform:
   m_ObjectHideFlags: 0
@@ -398,12 +398,13 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 253059862}
+  - {fileID: 1584102540}
   - {fileID: 400885344}
   - {fileID: 851508137}
   - {fileID: 653909326}
   - {fileID: 1600845369}
   - {fileID: 2069820491}
+  - {fileID: 253059862}
   m_Father: {fileID: 907095095}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1739,7 +1740,7 @@ RectTransform:
   m_LocalScale: {x: 0.4999999, y: 0.4999999, z: 1}
   m_Children: []
   m_Father: {fileID: 53505045}
-  m_RootOrder: 0
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1910,32 +1911,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   errorText: {fileID: 1719733591}
   loadingCanvas: {fileID: 738642580}
-  transitionHikePanel: {fileID: 1828399384}
-  logoutButton: {fileID: 430632274}
+  transitionHikePanel: {fileID: 0}
+  logoutButton: {fileID: 0}
   usernameValue: {fileID: 2069820492}
   PasswordValue: {fileID: 1600845370}
   hikeButton: {fileID: 351885289}
   isHiking: 0
-  mapButton: {fileID: 1952812350}
-  explorePanelObject: {fileID: 177128996}
-  exploreScrollView: {fileID: 1491931307}
-  exploreHeadingText: {fileID: 440790845}
-  exploreInstructionsText: {fileID: 8941064}
-  exploreButton: {fileID: 1142340248}
+  mapButton: {fileID: 0}
+  explorePanelObject: {fileID: 0}
+  exploreScrollView: {fileID: 0}
+  exploreHeadingText: {fileID: 0}
+  exploreInstructionsText: {fileID: 0}
+  exploreButton: {fileID: 0}
   topTrailsPanel: {fileID: 898794846}
-  placesButton: {fileID: 226019777}
+  placesButton: {fileID: 0}
   settingsPanel: {fileID: 702313498}
   radiusSlider: {fileID: 1940922702}
   radiusText: {fileID: 93848448}
   annotationsToggle: {fileID: 2008585243}
-  settingsButton: {fileID: 1303229638}
+  settingsButton: {fileID: 0}
   createAnnotationButton: {fileID: 1027811460}
   submitAnnotationButton: {fileID: 1916866862}
   annotationInput: {fileID: 1689657053}
   styleDropdown: {fileID: 689248919}
   colorDropdown: {fileID: 2001677650}
   searchInput: {fileID: 1700913139}
-  searchScrollView: {fileID: 826829784}
+  searchScrollView: {fileID: 0}
   toggleARButton: {fileID: 519581601}
   exitSelectionButton: {fileID: 1574720907}
   wwwHandler: {fileID: 1225752238}
@@ -1944,8 +1945,8 @@ MonoBehaviour:
   camera2D: {fileID: 920573817}
   menuObject: {fileID: 14276369}
   annotationObject: {fileID: 450956515}
-  directionsObjects: {fileID: 190707104}
-  searchDirectionsObject: {fileID: 637545507}
+  directionsObjects: {fileID: 0}
+  searchDirectionsObject: {fileID: 0}
   loginButton: {fileID: 851508138}
 --- !u!114 &309927548
 MonoBehaviour:
@@ -3854,11 +3855,6 @@ Transform:
   m_Father: {fileID: 483010721}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
---- !u!1 &637545507 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1281087856729222, guid: ed0b4f7d5e35d485d9c34aa9bf71bed8,
-    type: 2}
-  m_PrefabInternal: {fileID: 895761668}
 --- !u!1 &637576753
 GameObject:
   m_ObjectHideFlags: 0
@@ -5121,7 +5117,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: c9913b121893841059506e94f17fb6ce, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1103
+      value: 1104
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: c9913b121893841059506e94f17fb6ce, type: 3}
       propertyPath: m_LocalPosition.z
@@ -5614,6 +5610,7 @@ RectTransform:
   - {fileID: 1828399380}
   - {fileID: 53505045}
   - {fileID: 514013291}
+  - {fileID: 1705359568}
   m_Father: {fileID: 309927546}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -9877,15 +9874,13 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 755383816}
-  - {fileID: 76921557}
+  m_Children: []
   m_Father: {fileID: 53505045}
-  m_RootOrder: 4
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.00005848427}
+  m_AnchoredPosition: {x: 0, y: 0.00005722046}
   m_SizeDelta: {x: 0, y: 40}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1584102541
@@ -11160,7 +11155,7 @@ RectTransform:
   - {fileID: 2116709909}
   - {fileID: 974296520}
   m_Father: {fileID: 907095095}
-  m_RootOrder: 9
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -11951,8 +11946,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1584102540}
+  m_Children: []
   m_Father: {fileID: 1491931304}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -13690,7 +13684,7 @@ Transform:
   - {fileID: 497788756}
   - {fileID: 1141425251}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2116709908
 GameObject:
