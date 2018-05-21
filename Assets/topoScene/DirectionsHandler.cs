@@ -15,7 +15,7 @@ public class DirectionsHandler : MonoBehaviour {
 	[SerializeField]
 	GameObject rayCastObject;
 
-	private Vector2d[] waypoints;
+	public Vector2d[] waypoints;
 
 	public List<Vector2d> waypointList;
 
