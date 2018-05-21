@@ -26,6 +26,7 @@ public class UIManager : MonoBehaviour {
 
 	//Trail UI
 	private string currentSelectedTrail;
+	public GameObject trailPanelObject;
 	public Button hikeButton;
 	public bool isHiking;
 	public Button mapButton;
@@ -341,6 +342,37 @@ public class UIManager : MonoBehaviour {
 		cameraHandler.expand2D (enabled);
 	}
 
+	public void enableExplore() {
+		cameraHandler.resetCams();
+		resetUI ();
+		cameraHandler.enableBackgroundTime ();
+		clearResults ();
+		exploreScrollView.gameObject.SetActive (true);
+		exploreHeadingText.gameObject.SetActive (true);
+		exploreInstructionsText.gameObject.SetActive (true);
+		GameObject exploreResults = GameObject.FindGameObjectWithTag ("exploreResults");
+		try{
+			trailNames.Clear ();
+			int i = 0;
+			while (i < 10 && i < nearbyTrails.Count) {
+				GameObject tempPanel = (GameObject)Instantiate (explorePanelObject, exploreResults.transform);
+				tempPanel.gameObject.SetActive(true);
+				Text[] tempTrailInfo = tempPanel.GetComponentsInChildren<Text>();
+				tempTrailInfo[0].text = nearbyTrails [i] [0].ToString();
+				tempTrailInfo[1].text = (System.Math.Truncate(100* double.Parse(nearbyTrails [i] [1]))/100d).ToString() + " mi";
+				Button clickPanel = tempPanel.GetComponent<Button>();
+				clickPanel.onClick.AddListener(() => onClickPanel(tempTrailInfo[0].text));
+				resultList.Add (tempPanel);
+				i++;
+			}
+		} catch {
+			errorText.gameObject.SetActive (true);
+			errorText.color = Color.red;
+			errorText.text = "Error: Our servers are down for maintenance";
+		}
+		menuHandler.CloseMenu ();
+	}
+
 	public void enablePlaces() {
 		cameraHandler.resetCams();
 		resetUI ();
@@ -348,22 +380,32 @@ public class UIManager : MonoBehaviour {
 		clearResults ();
 		topTrailsPanel.gameObject.SetActive (true);
 		for (int i = 0; i < parsedUser ["trailHistory"].Count; i++) {
-			if (i < 5) {
-				GameObject tempResult = (GameObject)Instantiate (result, topTrailsPanel.transform);
-				Text text = tempResult.AddComponent<Text> ();
-				text.font = Resources.GetBuiltinResource (typeof(Font), "Arial.ttf") as Font;
-				text.fontSize = 50;
-				RectTransform tempTransform = text.GetComponent<RectTransform> ();
-				tempTransform.sizeDelta = new Vector2 (600f, 100f);
-				text.transform.localScale = new Vector3 (1f, 0.5f, 1f);
-				text.alignment = TextAnchor.MiddleLeft;
-				text.color = Color.black;
-				text.text = i + 1 + ". " + parsedUser ["trailHistory"] [i] [0].ToString ().Replace ("\"", "");
-				resultList.Add (tempResult);
-			} else {
-				break;
+			try{
+				if (i < 5) {
+					GameObject tempPanel = (GameObject)Instantiate (trailPanelObject, topTrailsPanel.transform);
+					tempPanel.gameObject.SetActive(true);
+					Text[] tempTrailInfo = tempPanel.GetComponentsInChildren<Text>();
+					tempTrailInfo [0].text = i + 1 + ". " + parsedUser ["trailHistory"] [i] [0].ToString ().Replace ("\"", "");
+					tempTrailInfo [1].text = "Hiked: " + parsedUser ["trailHistory"] [i] [1].ToString ().Replace ("\"", "");
+					Button clickPanel = tempPanel.GetComponent<Button>();
+					clickPanel.onClick.AddListener(() => onClickPanel(parsedUser ["trailHistory"] [i] [0].ToString ().Replace ("\"", "")));
+					resultList.Add (tempPanel);
+				} else 
+					break;
+			} catch {
+				errorText.gameObject.SetActive (true);
+				errorText.color = Color.red;
+				errorText.text = "Error: Our servers are down for maintenance";
 			}
 		}
+		menuHandler.CloseMenu ();
+	}
+
+	public void enableSettings() {
+		cameraHandler.resetCams();
+		resetUI ();
+		cameraHandler.enableBackgroundTime ();
+		settingsPanel.gameObject.SetActive (true);
 		menuHandler.CloseMenu ();
 	}
 
@@ -406,45 +448,7 @@ public class UIManager : MonoBehaviour {
 			}
 		}
 	}
-
-	public void enableExplore() {
-		cameraHandler.resetCams();
-		resetUI ();
-		cameraHandler.enableBackgroundTime ();
-		clearResults ();
-		exploreScrollView.gameObject.SetActive (true);
-		exploreHeadingText.gameObject.SetActive (true);
-		exploreInstructionsText.gameObject.SetActive (true);
-		GameObject exploreResults = GameObject.FindGameObjectWithTag ("exploreResults");
-		try{
-			trailNames.Clear ();
-			int i = 0;
-			while (i < 10 && i < nearbyTrails.Count) {
-				GameObject tempPanel = (GameObject)Instantiate (explorePanelObject, exploreResults.transform);
-				tempPanel.gameObject.SetActive(true);
-				Text[] tempTrailInfo = tempPanel.GetComponentsInChildren<Text>();
-				tempTrailInfo[0].text = nearbyTrails [i] [0].ToString();
-				tempTrailInfo[1].text = (System.Math.Truncate(100* double.Parse(nearbyTrails [i] [1]))/100d).ToString() + " mi";
-				Button clickPanel = tempPanel.GetComponent<Button>();
-				clickPanel.onClick.AddListener(() => onClickPanel(tempTrailInfo[0].text));
-				resultList.Add (tempPanel);
-				i++;
-			}
-		} catch {
-			errorText.gameObject.SetActive (true);
-			errorText.color = Color.red;
-			errorText.text = "Error: Our servers are down for maintenance";
-		}
-		menuHandler.CloseMenu ();
-	}
-
-	public void enableSettings() {
-		cameraHandler.resetCams();
-		resetUI ();
-		cameraHandler.enableBackgroundTime ();
-		settingsPanel.gameObject.SetActive (true);
-		menuHandler.CloseMenu ();
-	}
+		
 
 	public void resetUI() {
 		annotationInput.gameObject.SetActive (false);
