@@ -11,8 +11,11 @@ public class MenuScript : MonoBehaviour {
 
 	//UIHandler
 	public GameObject uiObject;
-	public TransitionalObject transitionObject;
-	private UIManager UIHandler;
+	private UIManager uiHandler;
+
+	//transition objects
+	public TransitionalObject menuTransitionObject;
+	public TransitionalObject panelTransitionObject;
 
 	void Start () {
 		//unpause the game on start
@@ -23,7 +26,7 @@ public class MenuScript : MonoBehaviour {
 		anim.enabled = false;
 
 		if (uiObject != null) {
-			UIHandler = (UIManager)uiObject.GetComponent (typeof(UIManager));
+			uiHandler = (UIManager)uiObject.GetComponent (typeof(UIManager));
 		}
 	}
 
@@ -39,7 +42,7 @@ public class MenuScript : MonoBehaviour {
 			CloseMenu();
 		}
 		if(isOpen)
-			UIHandler.userSelection ();
+			uiHandler.userSelection ();
 	}
 
 	public void onClickHamburger() {
@@ -57,8 +60,11 @@ public class MenuScript : MonoBehaviour {
 		//play the Slidein animation
 		//anim.Play("MenuSlideIn");
 		//set the isPaused flag to true to indicate that the game is paused
-
-		transitionObject.TriggerTransition();
+		if (uiHandler.isHiking) {
+			panelTransitionObject.TriggerFadeOut ();
+			StartCoroutine (waitPanel(0.6f));
+		}
+		menuTransitionObject.TriggerTransition();
 
 		isOpen = true;
 		//freeze the timescale
@@ -70,8 +76,16 @@ public class MenuScript : MonoBehaviour {
 		isOpen = false;
 		//play the SlideOut animation
 		//anim.Play("MenuSlideOut");
-		transitionObject.TriggerFadeOut();
+		menuTransitionObject.TriggerFadeOut();
+		if (uiHandler.isHiking) {
+			StartCoroutine (waitPanel(1f));
+			panelTransitionObject.TriggerTransition ();
+		}
 		//set back the time scale to normal time scale
 		Time.timeScale = 1;
+	}
+
+	public IEnumerator waitPanel(float wait){
+		yield return new WaitForSeconds (wait);
 	}
 }
