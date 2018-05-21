@@ -77,7 +77,7 @@ public class MenuScript : MonoBehaviour {
 		//play the SlideOut animation
 		//anim.Play("MenuSlideOut");
 		menuTransitionObject.TriggerFadeOut();
-		if (uiHandler.isHiking) {
+		if (uiHandler.isHiking && uiHandler.inAR) {
 			StartCoroutine (waitPanel(1f));
 			panelTransitionObject.TriggerTransition ();
 		}

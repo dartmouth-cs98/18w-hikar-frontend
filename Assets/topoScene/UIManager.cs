@@ -19,6 +19,7 @@ public class UIManager : MonoBehaviour {
 	public JSONNode parsedUser;
 	public TransitionalObject transitionHikePanel;
 	public Button logoutButton;
+	public bool inAR;
 
 	// Log in and Sign up
 	public InputField usernameValue;
@@ -153,6 +154,7 @@ public class UIManager : MonoBehaviour {
 		exploreButton.onClick.AddListener (enableExplore);
 		placesButton.onClick.AddListener (enablePlaces);
 		settingsButton.onClick.AddListener (enableSettings);
+		inAR = true;
 	}
 
 	public IEnumerator initUser() {
@@ -261,10 +263,10 @@ public class UIManager : MonoBehaviour {
 	public void onClickPanel(string trailName){
 		SearchMap searchMap = GameObject.FindGameObjectWithTag ("SearchMap").GetComponent<SearchMap> ();
 		StartCoroutine (searchMap.getTrailForLocation (wwwScript, trailName));
+		topTrailsPanel.gameObject.SetActive (false);
 		exploreScrollView.gameObject.SetActive (false);
 		searchInput.text = "";
 		searchInput.gameObject.SetActive (true);
-		searchInput.text = "";
 		searchScrollView.gameObject.SetActive (false);
 		trailNames.Clear ();
 		cameraHandler.enableSearchMap (); //show search map if not currently showing
@@ -332,12 +334,16 @@ public class UIManager : MonoBehaviour {
 			toggleARButton.gameObject.SetActive (true);
 			camera2Dposition = camera2D.transform.position;
 			menuHandler.CloseMenu ();
+			inAR = false;
 		} else {
 			createAnnotationButton.gameObject.SetActive (true);
 			toggleARButton.gameObject.SetActive (false);
 			searchInput.gameObject.SetActive (false);
 			camera2D.transform.position = camera2Dposition;
+			inAR = true;
 		}
+		if (isHiking && inAR)
+			transitionHikePanel.TriggerTransition ();
 		quadTreeCameraMovement.enabled = enabled;
 		cameraHandler.expand2D (enabled);
 	}
@@ -347,6 +353,7 @@ public class UIManager : MonoBehaviour {
 		resetUI ();
 		cameraHandler.enableBackgroundTime ();
 		clearResults ();
+		inAR = false;
 		exploreScrollView.gameObject.SetActive (true);
 		exploreHeadingText.gameObject.SetActive (true);
 		exploreInstructionsText.gameObject.SetActive (true);
@@ -378,6 +385,7 @@ public class UIManager : MonoBehaviour {
 		resetUI ();
 		cameraHandler.enableBackgroundTime ();
 		clearResults ();
+		inAR = false;
 		topTrailsPanel.gameObject.SetActive (true);
 		for (int i = 0; i < parsedUser ["trailHistory"].Count; i++) {
 			try{
@@ -385,10 +393,11 @@ public class UIManager : MonoBehaviour {
 					GameObject tempPanel = (GameObject)Instantiate (trailPanelObject, topTrailsPanel.transform);
 					tempPanel.gameObject.SetActive(true);
 					Text[] tempTrailInfo = tempPanel.GetComponentsInChildren<Text>();
-					tempTrailInfo [0].text = i + 1 + ". " + parsedUser ["trailHistory"] [i] [0].ToString ().Replace ("\"", "");
+					string trailName = parsedUser ["trailHistory"] [i] [0].ToString ().Replace ("\"", "");
+					tempTrailInfo [0].text = i + 1 + ". " + trailName;
 					tempTrailInfo [1].text = "Hiked: " + parsedUser ["trailHistory"] [i] [1].ToString ().Replace ("\"", "");
 					Button clickPanel = tempPanel.GetComponent<Button>();
-					clickPanel.onClick.AddListener(() => onClickPanel(parsedUser ["trailHistory"] [i] [0].ToString ().Replace ("\"", "")));
+					clickPanel.onClick.AddListener(() => onClickPanel(trailName));
 					resultList.Add (tempPanel);
 				} else 
 					break;
@@ -404,6 +413,7 @@ public class UIManager : MonoBehaviour {
 	public void enableSettings() {
 		cameraHandler.resetCams();
 		resetUI ();
+		inAR = false;
 		cameraHandler.enableBackgroundTime ();
 		settingsPanel.gameObject.SetActive (true);
 		menuHandler.CloseMenu ();
