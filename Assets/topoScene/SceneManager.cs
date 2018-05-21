@@ -42,6 +42,8 @@ public class SceneManager : MonoBehaviour {
 	public Location currentLoc;
 	private Location lastLoc;
 
+	private Vector3 lastPlayerPosition;
+
 	private bool isRootTransformSet = false;
 
 	//private Vector2 testLocaiton = new Vector2((float)43.7021, (float)72.2890); //test location

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -398,7 +398,6 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 1584102540}
   - {fileID: 400885344}
   - {fileID: 851508137}
   - {fileID: 653909326}
@@ -903,7 +902,7 @@ MonoBehaviour:
           UserName: 
       rasterOptions:
         useRetina: 0
-        useCompression: 0
+        useCompression: 1
         useMipMap: 0
   _terrain:
     _layerProperty:
@@ -1814,7 +1813,7 @@ RectTransform:
   m_LocalScale: {x: 0.4999999, y: 0.4999999, z: 1}
   m_Children: []
   m_Father: {fileID: 53505045}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2576,7 +2575,7 @@ RectTransform:
   m_LocalScale: {x: 0.4999999, y: 0.4999999, z: 1}
   m_Children: []
   m_Father: {fileID: 53505045}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -4146,7 +4145,7 @@ RectTransform:
   m_LocalScale: {x: 0.49999988, y: 0.49999988, z: 1}
   m_Children: []
   m_Father: {fileID: 53505045}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -4342,6 +4341,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 890212704}
   - {fileID: 938390820}
   m_Father: {fileID: 725116869}
   m_RootOrder: 6
@@ -5163,7 +5163,7 @@ RectTransform:
   m_Children:
   - {fileID: 282287541}
   m_Father: {fileID: 53505045}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -5264,15 +5264,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 400004, guid: c9913b121893841059506e94f17fb6ce, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 4.84
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: c9913b121893841059506e94f17fb6ce, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1104
+      value: 1136.4
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: c9913b121893841059506e94f17fb6ce, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 15
+      value: 14.997196
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: c9913b121893841059506e94f17fb6ce, type: 3}
       propertyPath: m_LocalRotation.x
@@ -5280,11 +5280,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: c9913b121893841059506e94f17fb6ce, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: c9913b121893841059506e94f17fb6ce, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: c9913b121893841059506e94f17fb6ce, type: 3}
       propertyPath: m_LocalRotation.w
@@ -5292,7 +5292,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: c9913b121893841059506e94f17fb6ce, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 100004, guid: c9913b121893841059506e94f17fb6ce, type: 3}
       propertyPath: m_Name
@@ -5310,6 +5310,14 @@ Prefab:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 55643c4fd976d7e429bda0a90c976b14, type: 2}
+    - target: {fileID: 400004, guid: c9913b121893841059506e94f17fb6ce, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 400004, guid: c9913b121893841059506e94f17fb6ce, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c9913b121893841059506e94f17fb6ce, type: 3}
   m_IsPrefabParent: 0
@@ -5761,7 +5769,6 @@ RectTransform:
   - {fileID: 1828399380}
   - {fileID: 53505045}
   - {fileID: 514013291}
-  - {fileID: 1705359568}
   m_Father: {fileID: 309927546}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6156,7 +6163,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 656005450}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &939891847
 GameObject:
@@ -8873,7 +8880,7 @@ MonoBehaviour:
           UserName: 
       rasterOptions:
         useRetina: 0
-        useCompression: 0
+        useCompression: 1
         useMipMap: 0
   _terrain:
     _layerProperty:
@@ -10007,7 +10014,7 @@ RectTransform:
   - {fileID: 755383816}
   - {fileID: 76921557}
   m_Father: {fileID: 53505045}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -10587,7 +10594,7 @@ MonoBehaviour:
   directionsObject: {fileID: 190707104}
   uiObject: {fileID: 309927545}
   playerObject: {fileID: 656005445}
-  playerLocation: {fileID: 0}
+  playerLocation: {fileID: 2109664612}
   zoomFactor: 16
   radius: 50
 --- !u!1 &1636630575
@@ -11969,7 +11976,8 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1584102540}
   m_Father: {fileID: 1491931304}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -13539,7 +13547,7 @@ RectTransform:
   - {fileID: 1739856062}
   - {fileID: 1323194537}
   m_Father: {fileID: 53505045}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -13776,3 +13784,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2109664612 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 100004, guid: c9913b121893841059506e94f17fb6ce, type: 3}
+  m_PrefabInternal: {fileID: 890212703}
