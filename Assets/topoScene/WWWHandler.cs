@@ -157,7 +157,27 @@ public class WWWHandler : MonoBehaviour {
 
 		WWWForm form = new WWWForm();
 		form.AddField ("trail", trail);
+		using (var w = UnityWebRequest.Post (userQuery.ToString(), form))
+		{
+			yield return w.SendWebRequest();
+			if (w.isNetworkError || w.isHttpError) 
+			{
+				yield return w.error + ". Update unsuccessful";
+			}
+			else
+			{
+				yield return "User successfully updated";
+			}
+		}
+	}
 
+	public IEnumerator UpdateUserDistance (string username, double distance)
+	{
+		StringBuilder userQuery = new StringBuilder (userURL);
+		userQuery.Append (username);
+
+		WWWForm form = new WWWForm ();
+		form.AddField ("distance", distance.ToString ());
 		using (var w = UnityWebRequest.Post (userQuery.ToString(), form))
 		{
 			yield return w.SendWebRequest();

@@ -15,9 +15,9 @@ public class DirectionsHandler : MonoBehaviour {
 	[SerializeField]
 	GameObject rayCastObject;
 
-	private Vector2d[] waypoints;
+	public Vector2d[] waypoints;
 
-	private List<Vector2d> waypointList;
+	public List<Vector2d> waypointList;
 
 	private double[] coordinateArray;
 
@@ -292,6 +292,12 @@ public class DirectionsHandler : MonoBehaviour {
 
 		//Reset the offset
 		totalOffset = 0;
+	}
+
+	public void clearLine(){
+		//call before updating trail
+		lineRenderer = GetComponent<LineRenderer> ();
+		lineRenderer.positionCount = 0;
 	}
 
 	public float castRaycastDownAtPosition(Vector3 rayOrigin){

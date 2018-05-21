@@ -30,7 +30,7 @@ public class SearchMap : MonoBehaviour {
 		cameraPosition = searchCamera.transform.position;
 
 		if(map == null){
-			map = (AbstractMap)GameObject.FindGameObjectWithTag("SearchMapObject").GetComponent(typeof(AbstractMap));
+			map = (AbstractMap)GameObject.FindGameObjectWithTag("SearchMap").GetComponent(typeof(AbstractMap));
 		}
 	}
 	
@@ -46,6 +46,10 @@ public class SearchMap : MonoBehaviour {
 	}
 
 	public void loadMapWithBounds(Mapbox.Utils.Vector2dBounds bounds){
+
+		//clear previous trail
+		directions.clearLine();
+
 		Debug.Log("Bounding Map at: " + bounds);
 		map.UpdateMap(bounds.Center, 16);
 

@@ -120,7 +120,13 @@ public class SceneManager : MonoBehaviour {
 
 //			distanceText.GetComponent<UnityEngine.UI.Text> ().text = "Initialized";
 		}
+<<<<<<< HEAD
+
+
 		if(isHeadingUpdated){
+=======
+//		if(isHeadingUpdated){
+>>>>>>> 185477d3cff8ed8db81a09c95976e1e99485de4a
 //			if(compassText == null){
 //				compassText = GameObject.FindGameObjectWithTag ("compassText");
 //			}
