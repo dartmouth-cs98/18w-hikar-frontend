@@ -27,11 +27,14 @@ public class CameraHandler : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		
 		// Retrieve the UI Manager
 		if(UIObject != null) {
 			UIManagerObject = (UIManager) UIObject.gameObject.GetComponent(typeof(UIManager));
 		}
-//		Cam2D.transform.eulerAngles = new Vector3 (90, 0, 0);
+
+		touchText = GameObject.FindGameObjectWithTag ("touchText");
+		Cam2D.transform.eulerAngles = new Vector3 (90, 0, 0);
 	}
 	
 	// Update is called once per frame

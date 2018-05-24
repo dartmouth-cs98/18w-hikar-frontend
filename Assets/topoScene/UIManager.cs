@@ -13,13 +13,12 @@ public class UIManager : MonoBehaviour {
 	private Mapbox.Utils.Vector2d[] trailHeads;
 	private Hashtable trailTable;
 	private List<GameObject> resultList;
-	public GameObject searchResultObject;
+	private GameObject result;
 	public Text errorText;
 	public Canvas loadingCanvas;
 	public JSONNode parsedUser;
 	public TransitionalObject transitionHikePanel;
 	public Button logoutButton;
-	public Button exitHikeButton;
 	public bool inAR;
 
 	// Log in and Sign up
@@ -28,6 +27,7 @@ public class UIManager : MonoBehaviour {
 
 	//Trail UI
 	private string currentSelectedTrail;
+	public GameObject trailPanelObject;
 	public Button hikeButton;
 	public bool isHiking;
 	public Button mapButton;
@@ -44,8 +44,6 @@ public class UIManager : MonoBehaviour {
 	//Your Places UI
 	private string[] topTrails;
 	public GameObject topTrailsPanel;
-	public GameObject trailPanelObject;
-	public GameObject YourPlacesObject;
 	public Button placesButton;
 
 	//Settings UI
@@ -54,8 +52,6 @@ public class UIManager : MonoBehaviour {
 	public Text radiusText;
 	public Toggle annotationsToggle;
 	public Button settingsButton;
-	public InputField usernameInput;
-	public RawImage ProfilePicture;
 
 	//Annotation UI
 	public Button createAnnotationButton;
@@ -109,6 +105,7 @@ public class UIManager : MonoBehaviour {
 	public Button loginButton;
 
 	void Start () {
+		result = new GameObject ();
 		resultList = new List<GameObject> ();
 		nearbyTrails = new List<string[]> ();
 		trailNames = new List<string> ();
@@ -117,6 +114,7 @@ public class UIManager : MonoBehaviour {
 		if(cameraObject != null) {
 			cameraHandler = (CameraHandler) cameraObject.gameObject.GetComponent(typeof(CameraHandler));
 		}
+
 		if(camera2D != null){
 			quadTreeCameraMovement = (Mapbox.Examples.QuadTreeCameraMovement)camera2D.GetComponent(typeof(Mapbox.Examples.QuadTreeCameraMovement));
 			quadTreeCameraMovement.enabled = false;
@@ -144,6 +142,8 @@ public class UIManager : MonoBehaviour {
 			searchDirectionsHandler = (DirectionsHandler)searchDirectionsObject.gameObject.GetComponent (typeof(DirectionsHandler));
 		}
 		isHiking = false;
+		radiusSlider.minValue = 1;
+		radiusSlider.maxValue = 100;
 		StartCoroutine(initUser());
 		createAnnotationButton.onClick.AddListener (onClickAnnotation);
 		submitAnnotationButton.onClick.AddListener (onAnnotationSubmit);
@@ -154,22 +154,25 @@ public class UIManager : MonoBehaviour {
 		exploreButton.onClick.AddListener (enableExplore);
 		placesButton.onClick.AddListener (enablePlaces);
 		settingsButton.onClick.AddListener (enableSettings);
-		toggleARButton.onClick.AddListener (disable2D);
-		exitHikeButton.onClick.AddListener (exitHike);
 		inAR = true;
 	}
 
 	public IEnumerator initUser() {
 		CoroutineWithData userData = new CoroutineWithData(this, wwwScript.GetUserInfo ("User2"));
 		yield return userData.coroutine;
-		parsedUser = SimpleJSON.JSON.Parse (userData.result.ToString());
-		if (parsedUser ["radius"].AsInt != null) {
+		parsedUser = SimpleJSON.JSON.Parse (userData.result.ToString());	
+		if (parsedUser ["radius"] != null) {
 			radiusSlider.value = parsedUser ["radius"].AsInt;
-		} else {
-			radiusSlider.value = 50;
+			Debug.Log (parsedUser ["radius"].AsInt);
 		}
-		if (parsedUser ["toggleAnnotations"].AsBool != null) {
-			annotationHandler.enableAnnotations (parsedUser ["toggleAnnotations"].AsBool);
+		else
+			radiusSlider.value = 50;
+		if (parsedUser ["toggleAnnotations"] != null) {
+			annotationsToggle.isOn = parsedUser ["toggleAnnotations"].AsBool;
+			toggleAnnotations ();
+		} else {
+			annotationsToggle.isOn = true;
+			toggleAnnotations ();
 		}
 	}
 
@@ -182,16 +185,37 @@ public class UIManager : MonoBehaviour {
 				EventSystem.current.RaycastAll(pointerData, hits);
 				if (hits.Count > 0 && hits [0].gameObject.GetComponent<Text> () != null) {
 					string resultText = hits [0].gameObject.GetComponent<Text> ().text;
+					Debug.Log (resultText);
 					if (resultText != "Submit" && resultText != "Explore" && resultText != searchInput.text) {
 						// Cancel search
 						if (resultText != "_________") {
 							Debug.Log (resultText);
 							searchScrollView.gameObject.SetActive (false);
 							SearchMap searchMap = GameObject.FindGameObjectWithTag ("SearchMap").GetComponent<SearchMap> ();
-							StartCoroutine (searchMap.getTrailForLocation (wwwScript, resultText));
-							searchInput.text = "";
-							searchScrollView.gameObject.SetActive (false);
-							trailNames.Clear ();
+//							if (exploreScrollView.gameObject.activeSelf) {
+//								string[] trailNameOnly = resultText.Split (new char[0]);
+//								StringBuilder trailName = new StringBuilder ();
+//								for (int i = 0; i < trailNameOnly.Length - 2; i++) {
+//									if (i == 0)
+//										trailName.Append (trailNameOnly [i]);
+//									else
+//										trailName.Append (" " + trailNameOnly [i]);
+//								}
+//								resultText = trailName.ToString ().Trim ();
+//							}
+							//Quick search function from explore page
+							if (exploreScrollView.gameObject.activeSelf) {
+								StartCoroutine (searchMap.getTrailForLocation (wwwScript, resultText));
+								exploreScrollView.gameObject.SetActive (false);
+								searchInput.text = "";
+								searchInput.gameObject.SetActive (true);
+							}
+							//Regular search function from search bar
+							else {
+								StartCoroutine (searchMap.getTrailForLocation (wwwScript, resultText));
+								searchInput.text = "";
+								searchScrollView.gameObject.SetActive (false);
+							}
 							cameraHandler.enableSearchMap (); //show search map if not currently showing
 							hikeButton.gameObject.SetActive (true);
 							currentSelectedTrail = resultText;
@@ -239,7 +263,7 @@ public class UIManager : MonoBehaviour {
 	public void onClickPanel(string trailName){
 		SearchMap searchMap = GameObject.FindGameObjectWithTag ("SearchMap").GetComponent<SearchMap> ();
 		StartCoroutine (searchMap.getTrailForLocation (wwwScript, trailName));
-		YourPlacesObject.gameObject.SetActive (false);
+		topTrailsPanel.gameObject.SetActive (false);
 		exploreScrollView.gameObject.SetActive (false);
 		searchInput.text = "";
 		searchInput.gameObject.SetActive (true);
@@ -293,12 +317,6 @@ public class UIManager : MonoBehaviour {
 		isHiking = true;
 	}
 
-	public void exitHike() {
-		isHiking = false;
-		transitionHikePanel.TriggerFadeOut ();
-		directionsHandler.waypointList.Clear ();
-	}
-
 	public void disable2D() {
 		cameraHandler.resetCams ();
 		enable2D (false);
@@ -314,19 +332,18 @@ public class UIManager : MonoBehaviour {
 			createAnnotationButton.gameObject.SetActive (false);
 			searchInput.gameObject.SetActive (true);
 			toggleARButton.gameObject.SetActive (true);
-//			camera2Dposition = camera2D.transform.position;
-			inAR = false;
+			camera2Dposition = camera2D.transform.position;
 			menuHandler.CloseMenu ();
+			inAR = false;
 		} else {
 			createAnnotationButton.gameObject.SetActive (true);
 			toggleARButton.gameObject.SetActive (false);
 			searchInput.gameObject.SetActive (false);
-//			camera2D.transform.position = camera2Dposition;
+			camera2D.transform.position = camera2Dposition;
 			inAR = true;
 		}
-		if (isHiking && inAR && !enabled) {
+		if (isHiking && inAR)
 			transitionHikePanel.TriggerTransition ();
-		}
 		quadTreeCameraMovement.enabled = enabled;
 		cameraHandler.expand2D (enabled);
 	}
@@ -369,7 +386,7 @@ public class UIManager : MonoBehaviour {
 		cameraHandler.enableBackgroundTime ();
 		clearResults ();
 		inAR = false;
-		YourPlacesObject.gameObject.SetActive (true);
+		topTrailsPanel.gameObject.SetActive (true);
 		for (int i = 0; i < parsedUser ["trailHistory"].Count; i++) {
 			try{
 				if (i < 5) {
@@ -425,8 +442,14 @@ public class UIManager : MonoBehaviour {
 			// checking trails agaist search input 
 			if (nearbyTrails [i][0].ToLower().Contains (searchInput.text.ToLower())) {
 				if (!trailNames.Contains (nearbyTrails [i][0])) {
-					GameObject tempResult = (GameObject)Instantiate (searchResultObject, results.transform);
-					Text text = tempResult.GetComponentInChildren<Text>();
+					GameObject tempResult = (GameObject)Instantiate (result, results.transform);
+					tempResult.layer = 5;
+					RectTransform tempRect = tempResult.AddComponent<RectTransform> ();
+					tempRect.sizeDelta = new Vector2 (600, 40);
+					//Add text
+					Text text = tempResult.AddComponent<Text> ();
+					text.font = Resources.GetBuiltinResource (typeof(Font), "Arial.ttf") as Font;
+					text.fontSize = 35;
 					text.color = Color.blue;
 					text.text = nearbyTrails [i][0];
 					resultList.Add (tempResult);
@@ -445,7 +468,7 @@ public class UIManager : MonoBehaviour {
 		exploreScrollView.gameObject.SetActive (false);
 		exploreHeadingText.gameObject.SetActive (false);
 		exploreInstructionsText.gameObject.SetActive (false);
-		YourPlacesObject.gameObject.SetActive (false);
+		topTrailsPanel.gameObject.SetActive (false);
 		settingsPanel.gameObject.SetActive (false);
 		errorText.gameObject.SetActive (false);
 		hikeButton.gameObject.SetActive (false);
@@ -503,7 +526,8 @@ public class UIManager : MonoBehaviour {
 
 	public void clearResults() {
 		//Clear the list
-		for(int i = 0; i < resultList.Count; i++) {
+		for(int i = 0; i < resultList.Count; i++)
+		{
 			Object.Destroy (resultList [i]);
 		}
 		resultList.Clear ();
