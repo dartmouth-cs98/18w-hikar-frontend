@@ -158,9 +158,8 @@ public class DirectionsHandler : MonoBehaviour {
 	}
 
 	public void getDirectionsFromLatLngs(List<Mapbox.Utils.Vector2d> waypointsList){
-
 		waypoints = new Vector2d[waypointsList.Count]; //1:1 trail 
-		heights = new float[waypointList.Count];
+		heights = new float[waypointsList.Count];
 		waypoints = waypointsList.ToArray();
 
 		//wait for map to load before directions
@@ -260,7 +259,6 @@ public class DirectionsHandler : MonoBehaviour {
 			Vector3 rayOrigin = new Vector3(positions[i].x, rayCastObject.transform.position.y, positions[i].z);
 
 			float height = castRaycastDownAtPosition(rayOrigin);
-
 			if(height != rayOrigin.y){
 				//adjust path to player level
 				heights[i] = height;
