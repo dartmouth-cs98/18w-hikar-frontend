@@ -286,7 +286,7 @@ public class UIManager : MonoBehaviour {
 
 	public void onHike() {
 		StartCoroutine(wwwScript.UpdateUserTrail("User2", currentSelectedTrail));
-		directionsHandler.getDirectionsFromLatLngs (searchDirectionsHandler.waypointList);
+		directionsHandler.getDirectionsFromSearchMap(searchDirectionsHandler.waypointList, searchDirectionsHandler.heights);
 		transitionHikePanel.TriggerTransition ();
 		hikeButton.gameObject.SetActive (false);
 		disable2D ();

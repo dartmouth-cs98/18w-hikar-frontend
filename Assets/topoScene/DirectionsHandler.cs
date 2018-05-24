@@ -19,6 +19,8 @@ public class DirectionsHandler : MonoBehaviour {
 
 	public List<Vector2d> waypointList;
 
+	public float[] heights;
+
 	private double[] coordinateArray;
 
 	public float scaleRadius = 100f;
@@ -42,6 +44,7 @@ public class DirectionsHandler : MonoBehaviour {
 	public float trailElevationBuffer = 0.3f;
 
 	public float loadTime = 1;
+
 
 
 	// Use this for initialization
@@ -102,6 +105,7 @@ public class DirectionsHandler : MonoBehaviour {
 
 		//waypoints = new Mapbox.Utils.Vector2d[(waypointList.Count * 2) - 1]; //minus one because you can't calculate midpoint at end
 		waypoints = new Vector2d[waypointList.Count]; //1:1 trail 
+		heights = new float[waypointList.Count];
 		waypoints = waypointList.ToArray();
 		startDirections();
 	}
@@ -145,6 +149,7 @@ public class DirectionsHandler : MonoBehaviour {
 
 			//waypoints = new Mapbox.Utils.Vector2d[(waypointList.Count * 2) - 1]; //minus one because you can't calculate midpoint at end
 			waypoints = new Vector2d[waypointList.Count]; //1:1 trail 
+			heights = new float[waypointList.Count];
 			waypoints = waypointList.ToArray();
 
 			//wait for map to load before directions
@@ -155,10 +160,30 @@ public class DirectionsHandler : MonoBehaviour {
 	public void getDirectionsFromLatLngs(List<Mapbox.Utils.Vector2d> waypointsList){
 
 		waypoints = new Vector2d[waypointsList.Count]; //1:1 trail 
+		heights = new float[waypointList.Count];
 		waypoints = waypointsList.ToArray();
 
 		//wait for map to load before directions
 		StartCoroutine(this.waitForTime(loadTime));
+	}
+
+	public void getDirectionsFromSearchMap(List<Mapbox.Utils.Vector2d> waypointsList, float[] heights){
+
+		//initialize arrays
+		waypoints = new Vector2d[waypointsList.Count]; //1:1 trail 
+		heights = new float[waypointList.Count];
+		positions = new Vector3[waypointsList.Count];
+		waypoints = waypointsList.ToArray();
+		 
+		setTotalOffset ();
+
+		for(int i = 0; i < waypoints.Length; i++){
+			Vector3 adjustedPosition = UnityVectorFromVec2dMap(waypoints[i]);
+			adjustedPosition.y = heights[i] - totalOffset;
+			positions[i] = adjustedPosition;
+		}
+
+		drawLine();
 	}
 
 	//waits for a couple seconds before loading trail
@@ -238,6 +263,7 @@ public class DirectionsHandler : MonoBehaviour {
 
 			if(height != rayOrigin.y){
 				//adjust path to player level
+				heights[i] = height;
 				height -= totalOffset;
 			} else {
 				height = (rayOrigin.y - map.transform.position.y) - totalOffset;
@@ -288,7 +314,7 @@ public class DirectionsHandler : MonoBehaviour {
 		lineRenderer.positionCount = positions.Length;
 		lineRenderer.SetPositions (positions);
 
-		lineRenderer.numCapVertices = 90; //adjust this value for smoother lines (90 MAX)
+		lineRenderer.numCapVertices = 10; //adjust this value for smoother lines (90 MAX)
 
 		//Reset the offset
 		totalOffset = 0;
