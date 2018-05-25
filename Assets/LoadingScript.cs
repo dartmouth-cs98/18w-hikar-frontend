@@ -11,6 +11,7 @@ public class LoadingScript : MonoBehaviour {
 
 	private string loadText;
 	private string dots;
+	private bool loggedIn;
 
 	private bool isLoading;
 
@@ -22,7 +23,7 @@ public class LoadingScript : MonoBehaviour {
 	}
 
 	void Update () {
-		if (!isLoading) {
+		if (!isLoading && loggedIn) {
 			isLoading = true;
 			StartCoroutine (LoadNewScene ());
 		}
