@@ -89,7 +89,9 @@ public class WWWHandler : MonoBehaviour {
 			else
 			{
 				yield return "Annotation successfully posted";
+				Debug.Log ("Annotation successfully posted");
 				Debug.Log (w.downloadHandler.text);
+	
 			}
 		}
 	}
