@@ -15,16 +15,13 @@ public class UIManager : MonoBehaviour {
 	private List<GameObject> resultList;
 	public GameObject searchResultObject;
 	public Text errorText;
+	public Text usernameText;
 	public Canvas loadingCanvas;
 	public JSONNode parsedUser;
 	public TransitionalObject transitionHikePanel;
 	public Button logoutButton;
 	public Button exitHikeButton;
 	public bool inAR;
-
-	// Log in and Sign up
-	public InputField usernameValue;
-	public InputField PasswordValue;
 
 	//Trail UI
 	private string currentSelectedTrail;
@@ -102,10 +99,6 @@ public class UIManager : MonoBehaviour {
 	//searchDirectionHandler
 	public GameObject searchDirectionsObject;
 	private DirectionsHandler searchDirectionsHandler;
-
-	//LoginHandler
-	//	public GameObject loginObject;
-	//	private LoginHandler loginHandler;
 	public Button loginButton;
 
 	void Start () {
@@ -148,7 +141,6 @@ public class UIManager : MonoBehaviour {
 		createAnnotationButton.onClick.AddListener (onClickAnnotation);
 		submitAnnotationButton.onClick.AddListener (onAnnotationSubmit);
 		exitSelectionButton.onClick.AddListener (disable2D);
-		loginButton.onClick.AddListener (signInSubmit);
 		hikeButton.onClick.AddListener (onHike);
 		mapButton.onClick.AddListener (() => enable2D (true));
 		exploreButton.onClick.AddListener (enableExplore);
@@ -157,10 +149,11 @@ public class UIManager : MonoBehaviour {
 		toggleARButton.onClick.AddListener (disable2D);
 		exitHikeButton.onClick.AddListener (exitHike);
 		inAR = true;
+		usernameText.text = GlobalUserManager.Instance.username;
 	}
 
 	public IEnumerator initUser() {
-		CoroutineWithData userData = new CoroutineWithData(this, wwwScript.GetUserInfo ("User2"));
+		CoroutineWithData userData = new CoroutineWithData(this, wwwScript.GetUserInfo (GlobalUserManager.Instance.username));
 		yield return userData.coroutine;
 		parsedUser = SimpleJSON.JSON.Parse (userData.result.ToString());
 		if (parsedUser ["radius"].AsInt != null) {
@@ -279,13 +272,8 @@ public class UIManager : MonoBehaviour {
 		annotationInput.gameObject.SetActive (!annotationInput.gameObject.activeSelf);
 	}
 
-	public void signInSubmit(){
-		Debug.Log ("Got Here");
-		StartCoroutine(wwwScript.PostSignIn (usernameValue.text, PasswordValue.text));
-	}
-
 	public void onHike() {
-		StartCoroutine(wwwScript.UpdateUserTrail("User2", currentSelectedTrail));
+		StartCoroutine(wwwScript.UpdateUserTrail(GlobalUserManager.Instance.username, currentSelectedTrail));
 		directionsHandler.getDirectionsFromSearchMap(searchDirectionsHandler.waypointList, searchDirectionsHandler.heights);
 		transitionHikePanel.TriggerTransition ();
 		hikeButton.gameObject.SetActive (false);
@@ -537,7 +525,7 @@ public class UIManager : MonoBehaviour {
 	}
 
 	public void updateUserSettings() {
-		StartCoroutine(wwwScript.UpdateUserSettings("User2", radiusText.text, annotationsToggle.isOn.ToString()));
+		StartCoroutine(wwwScript.UpdateUserSettings(GlobalUserManager.Instance.username, radiusText.text, annotationsToggle.isOn.ToString()));
 	}
 
 	public void changeAnnotationFont() {
