@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Networking;
 using System.Text;
 using System;
@@ -26,6 +27,9 @@ public class CoroutineWithData {
 public class WWWHandler : MonoBehaviour {
 
 	public static WWWHandler Instance { set; get; }
+	public Text errorText;
+	public GameObject menuObject;
+	private MenuScript menuHandler;
 
 
 	//References this tutorial: https://docs.unity3d.com/ScriptReference/WWW.html
@@ -47,6 +51,15 @@ public class WWWHandler : MonoBehaviour {
 
 	const string accesKeyMapBox = ".json?radius=5000&access_token=pk.eyJ1IjoiamN0d2FrZSIsImEiOiJjamQ1NHN2MGEweDJkMndxcmI3eHRuczRlIn0.if6fE47kjlJQbrKmRMMpZg";
 
+	void Start () 
+	{
+		Instance = this;
+		DontDestroyOnLoad (gameObject);
+		if(menuObject != null) {
+			menuHandler = (MenuScript) menuObject.gameObject.GetComponent(typeof(MenuScript));
+		}
+		StartCoroutine(GetFeaturesAtLocation (testLocation));
+	}
 
 	public IEnumerator PostAnnotation(string signType, string text, double lat, double lon, double offset, int color, int style)
 	{
@@ -65,6 +78,9 @@ public class WWWHandler : MonoBehaviour {
 			if (w.isNetworkError || w.isHttpError) 
 			{
 				yield return w.error + ". Post unsuccessful";
+				menuHandler.OpenError ();
+				errorText.gameObject.SetActive (true);
+				errorText.text = "No network connection detected.";
 			}
 			else
 			{
@@ -83,13 +99,13 @@ public class WWWHandler : MonoBehaviour {
 			if (w.isNetworkError || w.isHttpError) 
 			{
 				yield return w.error + ". Post unsuccessful";
-				Debug.Log ("Post unsuccessful");
-				Debug.Log (w.error);
+				menuHandler.OpenError ();
+				errorText.gameObject.SetActive (true);
+				errorText.text = "No network connection detected.";		
 			}
 			else
 			{
 				yield return "Annotation successfully posted";
-				Debug.Log ("Annotation successfully posted");
 				Debug.Log (w.downloadHandler.text);
 	
 			}
@@ -105,11 +121,14 @@ public class WWWHandler : MonoBehaviour {
 			yield return w.SendWebRequest();
 			if (w.isNetworkError || w.isHttpError) 
 			{
-				yield return w.error + ". Post unsuccessful";
+				yield return w.error;
+				menuHandler.OpenError ();
+				errorText.gameObject.SetActive (true);
+				errorText.text = "No network connection detected.";
 			}
 			else
 			{
-				yield return "Annotation successfully posted";
+				yield return "Signed in successfully";
 			}
 		}
 	}
@@ -120,10 +139,14 @@ public class WWWHandler : MonoBehaviour {
 		using (WWW www = new WWW (userQuery.ToString()))
 		{
 			yield return www;
-			if(www.error != null)
+			if (www.error != null) {
 				yield return www.error + ". Get unsuccessful";
-			else
+				menuHandler.OpenError ();
+				errorText.gameObject.SetActive (true);
+				errorText.text = "No network connection detected.";
+			} else {
 				yield return www.text;
+			}
 		}
 	}
 
@@ -142,6 +165,9 @@ public class WWWHandler : MonoBehaviour {
 			if (w.isNetworkError || w.isHttpError) 
 			{
 				yield return w.error + ". Update unsuccessful";
+				menuHandler.OpenError ();
+				errorText.gameObject.SetActive (true);
+				errorText.text = "No network connection detected.";
 			}
 			else
 			{
@@ -163,6 +189,9 @@ public class WWWHandler : MonoBehaviour {
 			if (w.isNetworkError || w.isHttpError) 
 			{
 				yield return w.error + ". Update unsuccessful";
+				menuHandler.OpenError ();
+				errorText.gameObject.SetActive (true);
+				errorText.text = "No network connection detected.";
 			}
 			else
 			{
@@ -184,6 +213,9 @@ public class WWWHandler : MonoBehaviour {
 			if (w.isNetworkError || w.isHttpError) 
 			{
 				yield return w.error + ". Update unsuccessful";
+				menuHandler.OpenError ();
+				errorText.gameObject.SetActive (true);
+				errorText.text = "No network connection detected.";
 			}
 			else
 			{
@@ -197,10 +229,14 @@ public class WWWHandler : MonoBehaviour {
 		using (WWW www = new WWW (getTestTrailUrl))
 		{
 			yield return www;
-			if(www.error != null)
+			if (www.error != null) {
 				yield return www.error + ". Get unsuccessful";
-			else
+				menuHandler.OpenError ();
+				errorText.gameObject.SetActive (true);
+				errorText.text = "No network connection detected.";
+			} else {
 				yield return www.text;
+			}
 		}
 	}
 
@@ -211,10 +247,14 @@ public class WWWHandler : MonoBehaviour {
 			query.Append (name.Replace (' ', '-'));
 			using (WWW www = new WWW (query.ToString())) {
 				yield return www;
-				if (www.error != null)
+				if (www.error != null) {
 					yield return www.error + ". Get unsuccessful";
-				else
+					menuHandler.OpenError ();
+					errorText.gameObject.SetActive (true);
+					errorText.text = "No network connection detected.";
+				} else {
 					yield return www.text;
+				}
 			}
 		} else {
 			Debug.Log ("Empty search query");
@@ -229,10 +269,14 @@ public class WWWHandler : MonoBehaviour {
 		using (WWW www = new WWW (query.ToString()))
 		{
 			yield return www;
-			if(www.error != null)
+			if (www.error != null) {
 				yield return www.error + ". Get unsuccessful";
-			else 
+				menuHandler.OpenError ();
+				errorText.gameObject.SetActive (true);
+				errorText.text = "No network connection detected.";
+			} else {
 				yield return www.text;
+			}
 		}
 	}
 
@@ -242,10 +286,14 @@ public class WWWHandler : MonoBehaviour {
 		using (WWW www = new WWW (getAnnotationUrl))
 		{
 			yield return www;
-			if(www.error != null)
+			if (www.error != null) {
 				yield return www.error + ". Get unsuccessful";
-			else
+				menuHandler.OpenError ();
+				errorText.gameObject.SetActive (true);
+				errorText.text = "No network connection detected.";
+			} else {
 				yield return www.text;
+			}
 		}
 	}
 
@@ -260,25 +308,14 @@ public class WWWHandler : MonoBehaviour {
 			if (www.error != null) {
 				Debug.Log ("Data retrieval unsuccessful");
 				yield return www.error + ". Data retrieval unsuccessful";
+				menuHandler.OpenError ();
+				errorText.gameObject.SetActive (true);
+				errorText.text = "No network connection detected.";
 			} else {
 //				Debug.Log (www.text);
 //				print (www.text);
 				yield return www.text;
 			}
 		}
-	}
-
-	void Start () 
-	{
-		Instance = this;
-		DontDestroyOnLoad (gameObject);
-
-		StartCoroutine(GetFeaturesAtLocation (testLocation));
-
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
 	}
 }

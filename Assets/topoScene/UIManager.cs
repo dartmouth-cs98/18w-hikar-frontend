@@ -306,6 +306,12 @@ public class UIManager : MonoBehaviour {
 		hikeButton.gameObject.SetActive (false);
 	}
 
+	public void displayNetworkError(){
+		menuHandler.OpenError ();
+		errorText.gameObject.SetActive (true);
+		errorText.text = "No network connection detected.";
+	}
+
 	public void enable2D(bool enabled) {
 		if (enabled) {
 			cameraHandler.resetCams();
@@ -314,14 +320,12 @@ public class UIManager : MonoBehaviour {
 			createAnnotationButton.gameObject.SetActive (false);
 			searchInput.gameObject.SetActive (true);
 			toggleARButton.gameObject.SetActive (true);
-//			camera2Dposition = camera2D.transform.position;
 			inAR = false;
 			menuHandler.CloseMenu ();
 		} else {
 			createAnnotationButton.gameObject.SetActive (true);
 			toggleARButton.gameObject.SetActive (false);
 			searchInput.gameObject.SetActive (false);
-//			camera2D.transform.position = camera2Dposition;
 			inAR = true;
 		}
 		if (isHiking && inAR && !enabled) {
@@ -341,24 +345,21 @@ public class UIManager : MonoBehaviour {
 		exploreHeadingText.gameObject.SetActive (true);
 		exploreInstructionsText.gameObject.SetActive (true);
 		GameObject exploreResults = GameObject.FindGameObjectWithTag ("exploreResults");
-		try{
-			trailNames.Clear ();
-			int i = 0;
-			while (i < 10 && i < nearbyTrails.Count) {
-				GameObject tempPanel = (GameObject)Instantiate (explorePanelObject, exploreResults.transform);
-				tempPanel.gameObject.SetActive(true);
-				Text[] tempTrailInfo = tempPanel.GetComponentsInChildren<Text>();
-				tempTrailInfo[0].text = nearbyTrails [i] [0].ToString();
-				tempTrailInfo[1].text = (System.Math.Truncate(100* double.Parse(nearbyTrails [i] [1]))/100d).ToString() + " mi";
-				Button clickPanel = tempPanel.GetComponent<Button>();
-				clickPanel.onClick.AddListener(() => onClickPanel(tempTrailInfo[0].text));
-				resultList.Add (tempPanel);
-				i++;
-			}
-		} catch {
-			errorText.gameObject.SetActive (true);
-			errorText.color = Color.red;
-			errorText.text = "Error: Our servers are down for maintenance";
+		trailNames.Clear ();
+		int i = 0;
+		while (i < 10 && i < nearbyTrails.Count) {
+			GameObject tempPanel = (GameObject)Instantiate (explorePanelObject, exploreResults.transform);
+			tempPanel.gameObject.SetActive(true);
+			Text[] tempTrailInfo = tempPanel.GetComponentsInChildren<Text>();
+			tempTrailInfo[0].text = nearbyTrails [i] [0].ToString();
+			tempTrailInfo[1].text = (System.Math.Truncate(100* double.Parse(nearbyTrails [i] [1]))/100d).ToString() + " mi";
+			Button clickPanel = tempPanel.GetComponent<Button>();
+			clickPanel.onClick.AddListener(() => onClickPanel(tempTrailInfo[0].text));
+			resultList.Add (tempPanel);
+			i++;
+		} 
+		if(nearbyTrails.Count == 0) {
+			displayNetworkError ();
 		}
 		menuHandler.CloseMenu ();
 	}
@@ -370,8 +371,8 @@ public class UIManager : MonoBehaviour {
 		clearResults ();
 		inAR = false;
 		YourPlacesObject.gameObject.SetActive (true);
-		for (int i = 0; i < parsedUser ["trailHistory"].Count; i++) {
-			try{
+		try{
+			for (int i = 0; i < parsedUser ["trailHistory"].Count; i++) {
 				if (i < 5) {
 					GameObject tempPanel = (GameObject)Instantiate (trailPanelObject, topTrailsPanel.transform);
 					tempPanel.gameObject.SetActive(true);
@@ -384,11 +385,9 @@ public class UIManager : MonoBehaviour {
 					resultList.Add (tempPanel);
 				} else 
 					break;
-			} catch {
-				errorText.gameObject.SetActive (true);
-				errorText.color = Color.red;
-				errorText.text = "Error: Our servers are down for maintenance";
 			}
+		} catch {
+			displayNetworkError();
 		}
 		menuHandler.CloseMenu ();
 	}
@@ -426,6 +425,7 @@ public class UIManager : MonoBehaviour {
 			if (nearbyTrails [i][0].ToLower().Contains (searchInput.text.ToLower())) {
 				if (!trailNames.Contains (nearbyTrails [i][0])) {
 					GameObject tempResult = (GameObject)Instantiate (searchResultObject, results.transform);
+					tempResult.gameObject.SetActive (true);
 					Text text = tempResult.GetComponentInChildren<Text>();
 					text.color = Color.blue;
 					text.text = nearbyTrails [i][0];
@@ -433,6 +433,9 @@ public class UIManager : MonoBehaviour {
 					trailNames.Add (text.text);
 				}
 			}
+		}
+		if (nearbyTrails.Count == 0) {
+			displayNetworkError ();
 		}
 	}
 		
@@ -450,6 +453,7 @@ public class UIManager : MonoBehaviour {
 		errorText.gameObject.SetActive (false);
 		hikeButton.gameObject.SetActive (false);
 		exitSelectionButton.gameObject.SetActive (false);
+		menuHandler.CloseError ();
 	}
 
 	public void userSelection() {

@@ -5,7 +5,6 @@ using UnityEngine;
 public class MenuScript : MonoBehaviour {
 
 	public GameObject menuButton;
-	public GameObject menuPanel;
 	public GameObject menuBlockPanel;
 	private Animator anim;
 	private bool isOpen = false;
@@ -17,6 +16,8 @@ public class MenuScript : MonoBehaviour {
 	//transition objects
 	public TransitionalObject menuTransitionObject;
 	public TransitionalObject panelTransitionObject;
+	public TransitionalObject errorTransitionaObject;
+
 
 	void Start () {
 		Time.timeScale = 1;
@@ -68,5 +69,13 @@ public class MenuScript : MonoBehaviour {
 
 	public IEnumerator waitPanel(float wait){
 		yield return new WaitForSeconds (wait);
+	}
+
+	public void OpenError(){
+		errorTransitionaObject.TriggerTransition ();
+	}
+
+	public void CloseError(){
+		errorTransitionaObject.TriggerFadeOut ();
 	}
 }

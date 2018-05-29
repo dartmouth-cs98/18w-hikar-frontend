@@ -45,8 +45,6 @@ public static class OpenSourceInitializer
     static void ReplaceInitErrorPlaceHolder(DefaultInitializationErrorHandlerPlaceHolder placeHolder)
     {
         var go = placeHolder.gameObject;
-        go.AddComponent<DefaultInitializationErrorHandler>();
-
         Object.DestroyImmediate(placeHolder);
     }
 
@@ -57,9 +55,6 @@ public static class OpenSourceInitializer
             go.AddComponent<DefaultTrackableEventHandler>();
         }
 
-        public void AddDefaultInitializationErrorHandler(GameObject go)
-        {
-            go.AddComponent<DefaultInitializationErrorHandler>();
-        }
+        public void AddDefaultInitializationErrorHandler(GameObject go) {}
     }
 }
