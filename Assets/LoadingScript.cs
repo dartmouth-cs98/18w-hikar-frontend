@@ -14,7 +14,11 @@ public class LoadingScript : MonoBehaviour {
 
 	private bool isLoading;
 
+	public bool isAuthenticated;
+	public GameObject loadingPanel;
+
 	void Start () {
+		isAuthenticated = false;
 		isLoading = false;
 		dots = ".";
 		loadText = "LOADING HIKAR";
@@ -22,8 +26,9 @@ public class LoadingScript : MonoBehaviour {
 	}
 
 	void Update () {
-		if (!isLoading) {
+		if (!isLoading && isAuthenticated) {
 			isLoading = true;
+			loadingPanel.gameObject.SetActive (true);
 			StartCoroutine (LoadNewScene ());
 		}
 			
@@ -35,6 +40,7 @@ public class LoadingScript : MonoBehaviour {
 			yield return null;
 		}
 	}
+
 	void Loading(){
 		loadingText.text = loadText + dots;
 		dots += ".";

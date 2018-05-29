@@ -28,8 +28,7 @@ public class WWWHandler : MonoBehaviour {
 
 	public static WWWHandler Instance { set; get; }
 	public Text errorText;
-	public GameObject menuObject;
-	private MenuScript menuHandler;
+	public TransitionalObject errorTransitionalObject;
 
 
 	//References this tutorial: https://docs.unity3d.com/ScriptReference/WWW.html
@@ -55,9 +54,6 @@ public class WWWHandler : MonoBehaviour {
 	{
 		Instance = this;
 		DontDestroyOnLoad (gameObject);
-		if(menuObject != null) {
-			menuHandler = (MenuScript) menuObject.gameObject.GetComponent(typeof(MenuScript));
-		}
 		StartCoroutine(GetFeaturesAtLocation (testLocation));
 	}
 
@@ -78,7 +74,7 @@ public class WWWHandler : MonoBehaviour {
 			if (w.isNetworkError || w.isHttpError) 
 			{
 				yield return w.error + ". Post unsuccessful";
-				menuHandler.OpenError ();
+				errorTransitionalObject.TriggerTransition ();
 				errorText.gameObject.SetActive (true);
 				errorText.text = "No network connection detected.";
 			}
@@ -98,16 +94,20 @@ public class WWWHandler : MonoBehaviour {
 			yield return w.SendWebRequest();
 			if (w.isNetworkError || w.isHttpError) 
 			{
-				yield return w.error + ". Post unsuccessful";
-				menuHandler.OpenError ();
+				yield return w.downloadHandler.text;
+				errorTransitionalObject.TriggerTransition ();
 				errorText.gameObject.SetActive (true);
-				errorText.text = "No network connection detected.";		
+				if (w.downloadHandler.text == "Unauthorized") {
+					errorText.text = "Invalid credentials";	
+				} else {
+					errorText.text = "No network connection detected.";
+				}
+				yield return new WaitForSeconds (2.5f);
+				errorTransitionalObject.TriggerFadeOutIfActive ();
 			}
 			else
 			{
-				yield return "Annotation successfully posted";
-				Debug.Log (w.downloadHandler.text);
-	
+				yield return w.downloadHandler.text;
 			}
 		}
 	}
@@ -121,14 +121,14 @@ public class WWWHandler : MonoBehaviour {
 			yield return w.SendWebRequest();
 			if (w.isNetworkError || w.isHttpError) 
 			{
-				yield return w.error;
-				menuHandler.OpenError ();
+				yield return w.downloadHandler.text;
+				errorTransitionalObject.TriggerTransition ();
 				errorText.gameObject.SetActive (true);
 				errorText.text = "No network connection detected.";
 			}
 			else
 			{
-				yield return "Signed in successfully";
+				yield return w.downloadHandler.text;
 			}
 		}
 	}
@@ -141,7 +141,7 @@ public class WWWHandler : MonoBehaviour {
 			yield return www;
 			if (www.error != null) {
 				yield return www.error + ". Get unsuccessful";
-				menuHandler.OpenError ();
+				errorTransitionalObject.TriggerTransition ();
 				errorText.gameObject.SetActive (true);
 				errorText.text = "No network connection detected.";
 			} else {
@@ -165,7 +165,7 @@ public class WWWHandler : MonoBehaviour {
 			if (w.isNetworkError || w.isHttpError) 
 			{
 				yield return w.error + ". Update unsuccessful";
-				menuHandler.OpenError ();
+				errorTransitionalObject.TriggerTransition ();
 				errorText.gameObject.SetActive (true);
 				errorText.text = "No network connection detected.";
 			}
@@ -189,7 +189,7 @@ public class WWWHandler : MonoBehaviour {
 			if (w.isNetworkError || w.isHttpError) 
 			{
 				yield return w.error + ". Update unsuccessful";
-				menuHandler.OpenError ();
+				errorTransitionalObject.TriggerTransition ();
 				errorText.gameObject.SetActive (true);
 				errorText.text = "No network connection detected.";
 			}
@@ -213,7 +213,7 @@ public class WWWHandler : MonoBehaviour {
 			if (w.isNetworkError || w.isHttpError) 
 			{
 				yield return w.error + ". Update unsuccessful";
-				menuHandler.OpenError ();
+				errorTransitionalObject.TriggerTransition ();
 				errorText.gameObject.SetActive (true);
 				errorText.text = "No network connection detected.";
 			}
@@ -231,7 +231,7 @@ public class WWWHandler : MonoBehaviour {
 			yield return www;
 			if (www.error != null) {
 				yield return www.error + ". Get unsuccessful";
-				menuHandler.OpenError ();
+				errorTransitionalObject.TriggerTransition ();
 				errorText.gameObject.SetActive (true);
 				errorText.text = "No network connection detected.";
 			} else {
@@ -249,7 +249,7 @@ public class WWWHandler : MonoBehaviour {
 				yield return www;
 				if (www.error != null) {
 					yield return www.error + ". Get unsuccessful";
-					menuHandler.OpenError ();
+					errorTransitionalObject.TriggerTransition ();
 					errorText.gameObject.SetActive (true);
 					errorText.text = "No network connection detected.";
 				} else {
@@ -271,7 +271,7 @@ public class WWWHandler : MonoBehaviour {
 			yield return www;
 			if (www.error != null) {
 				yield return www.error + ". Get unsuccessful";
-				menuHandler.OpenError ();
+				errorTransitionalObject.TriggerTransition ();
 				errorText.gameObject.SetActive (true);
 				errorText.text = "No network connection detected.";
 			} else {
@@ -288,7 +288,7 @@ public class WWWHandler : MonoBehaviour {
 			yield return www;
 			if (www.error != null) {
 				yield return www.error + ". Get unsuccessful";
-				menuHandler.OpenError ();
+				errorTransitionalObject.TriggerTransition ();
 				errorText.gameObject.SetActive (true);
 				errorText.text = "No network connection detected.";
 			} else {
@@ -308,7 +308,7 @@ public class WWWHandler : MonoBehaviour {
 			if (www.error != null) {
 				Debug.Log ("Data retrieval unsuccessful");
 				yield return www.error + ". Data retrieval unsuccessful";
-				menuHandler.OpenError ();
+				errorTransitionalObject.TriggerTransition ();
 				errorText.gameObject.SetActive (true);
 				errorText.text = "No network connection detected.";
 			} else {
