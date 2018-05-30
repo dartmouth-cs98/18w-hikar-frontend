@@ -7,7 +7,7 @@ public class MenuScript : MonoBehaviour {
 	public GameObject menuButton;
 	public GameObject menuBlockPanel;
 	private Animator anim;
-	private bool isOpen = false;
+	public bool isOpen = false;
 	public bool isErrorOpen = false;
 	//UIHandler
 	public GameObject uiObject;
