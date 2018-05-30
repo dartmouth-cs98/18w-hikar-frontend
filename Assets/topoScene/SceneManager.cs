@@ -46,8 +46,6 @@ public class SceneManager : MonoBehaviour {
 
 	private bool isRootTransformSet = false;
 
-	//private Vector2 testLocaiton = new Vector2((float)43.7021, (float)72.2890); //test location
-
 	public int zoomFactor = 16; //handles the zoom level on the map (hardcode for now)
 	public int radius = 50;
 
@@ -134,12 +132,6 @@ public class SceneManager : MonoBehaviour {
 
 		//update hud camera
 		Camera hudCamera = playerObject.GetComponentInChildren<Camera>();
-		//Quaternion camRot = new Quaternion(UnityEngine.Camera.main.transform.rotation.x, UnityEngine.Camera.main.transform.rotation.y, UnityEngine.Camera.main.transform.rotation.z, 1);
-
-		//rotate
-		//hudCamera.transform.SetPositionAndRotation(hudCamera.transform.position, camRot);
-		//hudCamera.transform.rotation = Quaternion.Lerp(hudCamera.transform.rotation, camRot, Time.deltaTime * 1);
-
 		Quaternion lookAt = new Quaternion();
 		lookAt.SetLookRotation(UnityEngine.Camera.main.transform.forward, Vector3.up);
 		hudCamera.transform.SetPositionAndRotation(hudCamera.transform.position, lookAt);

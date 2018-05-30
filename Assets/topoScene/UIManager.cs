@@ -274,7 +274,6 @@ public class UIManager : MonoBehaviour {
 	}
 
 	public void disable2D() {
-		Debug.Log("her");
 		cameraHandler.resetCams ();
 		enable2D (false);
 		exitSelectionButton.gameObject.SetActive (false);

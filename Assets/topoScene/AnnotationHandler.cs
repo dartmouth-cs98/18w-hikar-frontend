@@ -68,7 +68,6 @@ public class AnnotationHandler : MonoBehaviour
 					GameObject tempBoard = Instantiate (billboardAnnotation, new Vector3 (annotationUnityVec.x, annoOffset, annotationUnityVec.z), Quaternion.identity);
 					billboards.Add(tempBoard);
 					tempAnnotation = (GameObject) billboards [billboards.Count - 1];
-//					Debug.Log ("rebillboardx: " + tempBoard.transform.position.x + " rebillboardy: " + tempBoard.transform.position.y + " rebillboardz: " + tempBoard.transform.position.z);
 				} else {
 					//TODO: figure this out with different meshes
 					billboards.Add(Instantiate (billboardAnnotation, new Vector3 (annotationUnityVec.x, annoOffset, annotationUnityVec.z), Quaternion.identity));
@@ -143,8 +142,6 @@ public class AnnotationHandler : MonoBehaviour
 			yield return null;
 		}
 		Mapbox.Utils.Vector2d billboardVec2d = directionsHandler.Vec2dFromUnityVector (billboard.transform.position);
-//		Debug.Log ("billboardx: " + billboard.transform.position.x + " billboardy: " + billboard.transform.position.y + " billboardz: " + billboard.transform.position.z);
-//		Debug.Log ("longitude is " + billboardVec2d.x + " and latitude is " + billboardVec2d.y);
 		sendAnnotation ("billboard", text, billboardVec2d.x, billboardVec2d.y, height, color, style);
 	}
 
