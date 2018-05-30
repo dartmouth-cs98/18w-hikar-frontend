@@ -54,7 +54,6 @@ public class SceneManager : MonoBehaviour {
 	void Start () {
 		
 		//object that updates camera position based on player position
-		cameraPosition = GameObject.FindGameObjectWithTag("cameraPosition");
 
 		StartCoroutine(setPositionOnVuforiaEnabled());
 
@@ -87,6 +86,10 @@ public class SceneManager : MonoBehaviour {
 		if (playerLocation == null){
 			playerLocation = GameObject.FindGameObjectWithTag("playerLocation");
 		}
+
+		if (cameraPosition == null) {
+			cameraPosition = GameObject.FindGameObjectWithTag ("cameraPosition");
+		}
 		setCompassDirection ();
 	}
 		
@@ -110,70 +113,19 @@ public class SceneManager : MonoBehaviour {
 	public void updateLocation(Location location, bool isInitialLocation, bool isHeadingUpdated, bool isLatLngUpdated){
 
 		currentLoc = location;
-
-//		locationText.GetComponent<UnityEngine.UI.Text>().text = "" + location.LatitudeLongitude.x + ", " + location.LatitudeLongitude.y;
-
 		if(isInitialLocation == true){
 			Debug.Log("Initial location set: " + location.LatitudeLongitude.ToString() + " with heading: " + location.Heading);
 			setMapOrientation(location.Heading);
 			StartCoroutine(getTrailsForLocation(location, 50));
-			//getTestDirectionsFromLocation(location);
 			StartCoroutine (annotationHandler.SetupMap ());
-
-//			distanceText.GetComponent<UnityEngine.UI.Text> ().text = "Initialized";
 		}
 		if(isHeadingUpdated){
-//			if(compassText == null){
-//				compassText = GameObject.FindGameObjectWithTag ("compassText");
-//			}
-//			compassText.GetComponent<UnityEngine.UI.Text> ().text = "Compass: " +  location.Heading;
-			playerLocation.transform.Rotate(Vector3.up, location.Heading);
-
-		}
-
-		if(isLatLngUpdated){
-			//map = (Mapbox.Unity.Map.AbstractMap) mapObject.GetComponent((typeof(Mapbox.Unity.Map.AbstractMap)));
-			//playerObject.transform.MoveToGeocoordinate(location.LatitudeLongitude, map.CenterMercator, map.WorldRelativeScale);
+//			playerLocation.transform.Rotate(Vector3.up, location.Heading);
 		}
 	}
 
-	//updates camera position if user is touching screen
-//	private void updateCameraPositionAuto(){ 
-//
-//		if(playerObject == null)
-//			playerObject = GameObject.FindGameObjectWithTag("Player");
-//
-//		if(cameraPosition == null)
-//			cameraPosition = GameObject.FindGameObjectWithTag("cameraPosition");
-//
-//		if (Input.touchSupported && Application.platform != RuntimePlatform.WebGLPlayer && Input.touchCount > 0) {
-//
-//			//Debug.Log("updating camera location Automatically");
-//			playerObject.transform.position += UnityEngine.Camera.main.transform.forward * Time.deltaTime * speed;
-//
-//			//sets position for camera without rotation changes
-//			Vector3 newPosition = new Vector3(playerObject.transform.position.x, cameraPosition.transform.position.y, playerObject.transform.position.z);
-//			cameraPosition.transform.position = newPosition;
-//
-//			//		Camera hudCamera = playerObject.GetComponentInChildren<Camera>();
-//			//		Quaternion camRot = new Quaternion(90, UnityEngine.Camera.main.transform.rotation.y, 0, 0);
-//			//		hudCamera.transform.rotation = camRot;
-//
-//			lastPosition = playerObject.transform.position;
-//			lastLocation = currentLocation;
-//
-//			distanceText.GetComponent<UnityEngine.UI.Text> ().text = "World Position: " + playerObject.transform.position.ToString();
-//			//Debug.Log("New position: " + playerObject.transform.position);
-//		}
-//
-//	}
-
 	// Update is called once per frame
 	void Update () {
-
-		if(playerObject == null)
-			playerObject = GameObject.FindGameObjectWithTag("Player");
-
 		if(cameraPosition == null)
 			cameraPosition = GameObject.FindGameObjectWithTag("cameraPosition");
 
@@ -191,16 +143,6 @@ public class SceneManager : MonoBehaviour {
 		Quaternion lookAt = new Quaternion();
 		lookAt.SetLookRotation(UnityEngine.Camera.main.transform.forward, Vector3.up);
 		hudCamera.transform.SetPositionAndRotation(hudCamera.transform.position, lookAt);
-
-
-//		Debug.Log ("LAT: " + currentLoc.LatitudeLongitude.x + " " + "LONG: " + currentLoc.LatitudeLongitude.y);
-//		Vector3 test = directionHandler.UnityVectorFromVec2dMap(new Mapbox.Utils.Vector2d (currentLoc.LatitudeLongitude.x, currentLoc.LatitudeLongitude.y));
-//		Debug.Log ("Vec3x: " + test.x + " Vec3y: " + test.y + " Vec3z: " + test.z);
-//		Vector2d revert = directionHandler.Vec2dFromUnityVector (test);
-//		Debug.Log ("RELAT: " + revert.x + " RELONG: " + revert.y);
-		//hudCamera.transform.forward = UnityEngine.Camera.main.transform.forward;
-
-		//hudCamera.transform.Rotate(
 	}
 
 	private IEnumerator setPositionOnVuforiaEnabled() {
@@ -220,13 +162,9 @@ public class SceneManager : MonoBehaviour {
 		Transform cam = UnityEngine.Camera.main.transform;
 
 		if(cam != null) {
-			//root.transform.position = cam.position;
 			Quaternion q = new Quaternion(0, cam.transform.rotation.y, 0, 1);
 			root.transform.rotation = q;
-
 		}
-			
-		Debug.Log("root transform: " + root.transform);
 	}
 
 	void getTestDirectionsFromLocation(Location location){
@@ -250,22 +188,18 @@ public class SceneManager : MonoBehaviour {
 
 	// Pass trail name and user location to start getting directions for the trail
 	void getTrailByName(string trailName, Location userLoc){
-
-
 		if(directionHandler == null) {
 			directionHandler = (DirectionsHandler)directionsObject.GetComponent(typeof(DirectionsHandler));
 		}
 		if(wwwScript == null && wwwHandler != null){
 			wwwScript = (WWWHandler)wwwHandler.GetComponent(typeof(WWWHandler));
 		}
-
 		directionHandler.StartCoroutine(directionHandler.getDirectionsFromTrailName(wwwScript, trailName, userLoc));
-
 	}
 
+	//not sure what this does...
 	void getFeaturesForLocation(Vector2 latLong) {
-		//gets features at location
-		wwwScript.GetFeaturesAtLocation(latLong);
+		StartCoroutine(wwwScript.GetFeaturesAtLocation(latLong));
 	}
 
 	public IEnumerator getTrailsForLocation(Location location, int rad){
@@ -285,11 +219,6 @@ public class SceneManager : MonoBehaviour {
 			uiHandler.populateNearby(parsedNearby[i][0].ToString(), parsedNearby[i][1].ToString());
 		}
 		uiHandler.clearDuplicateTrails ();
-
-		//DEBUG: GOAT TRAIL test first trail in renderer
-//		string trail = parsedNearby[1][0];
-//		getTrailByName(trail, location);
-
 	}
 
 	public void updateNearby(int rad){

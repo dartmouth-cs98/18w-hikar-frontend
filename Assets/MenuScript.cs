@@ -8,7 +8,7 @@ public class MenuScript : MonoBehaviour {
 	public GameObject menuBlockPanel;
 	private Animator anim;
 	private bool isOpen = false;
-
+	public bool isErrorOpen = false;
 	//UIHandler
 	public GameObject uiObject;
 	private UIManager uiHandler;
@@ -73,9 +73,11 @@ public class MenuScript : MonoBehaviour {
 
 	public void OpenError(){
 		errorTransitionaObject.TriggerTransition ();
+		isErrorOpen = true;
 	}
 
 	public void CloseError(){
-		errorTransitionaObject.TriggerFadeOut ();
+		errorTransitionaObject.TriggerFadeOutIfActive ();
+		isErrorOpen = false;
 	}
 }

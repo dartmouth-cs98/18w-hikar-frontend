@@ -22,7 +22,7 @@ public class LoadingScript : MonoBehaviour {
 		isLoading = false;
 		dots = ".";
 		loadText = "LOADING HIKAR";
-		InvokeRepeating ("Loading", 0f, 0.05f);
+		InvokeRepeating ("Loading", 0f, 0.2f);
 	}
 
 	void Update () {

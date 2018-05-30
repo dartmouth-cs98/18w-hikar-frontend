@@ -50,10 +50,7 @@ public class WWWHandler : MonoBehaviour {
 
 	const string accesKeyMapBox = ".json?radius=5000&access_token=pk.eyJ1IjoiamN0d2FrZSIsImEiOiJjamQ1NHN2MGEweDJkMndxcmI3eHRuczRlIn0.if6fE47kjlJQbrKmRMMpZg";
 
-	void Start () 
-	{
-		Instance = this;
-		DontDestroyOnLoad (gameObject);
+	void Start () {
 		StartCoroutine(GetFeaturesAtLocation (testLocation));
 	}
 
@@ -300,8 +297,6 @@ public class WWWHandler : MonoBehaviour {
 	public IEnumerator GetFeaturesAtLocation(Vector2 latLong)
 	{
 		getFeaturesUrl = getFeaturesUrl + latLong.x.ToString() + "," + latLong.y.ToString() + accesKeyMapBox;
-//		Debug.Log ("Now sending API request");
-//		Debug.Log (getFeaturesUrl);
 		using (WWW www = new WWW (getFeaturesUrl))
 		{
 			yield return www;
@@ -312,8 +307,6 @@ public class WWWHandler : MonoBehaviour {
 				errorText.gameObject.SetActive (true);
 				errorText.text = "No network connection detected.";
 			} else {
-//				Debug.Log (www.text);
-//				print (www.text);
 				yield return www.text;
 			}
 		}

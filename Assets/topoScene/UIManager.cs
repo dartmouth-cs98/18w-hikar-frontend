@@ -16,7 +16,6 @@ public class UIManager : MonoBehaviour {
 	public GameObject searchResultObject;
 	public Text errorText;
 	public Text usernameText;
-	public Canvas loadingCanvas;
 	public JSONNode parsedUser;
 	public TransitionalObject transitionHikePanel;
 	public Button logoutButton;
@@ -176,8 +175,8 @@ public class UIManager : MonoBehaviour {
 				if (hits.Count > 0 && hits [0].gameObject.GetComponent<Text> () != null) {
 					string resultText = hits [0].gameObject.GetComponent<Text> ().text;
 					if (resultText != "Submit" && resultText != "Explore" && resultText != searchInput.text) {
-						// Cancel search
-						if (resultText != "_________") {
+						searchScrollView.gameObject.SetActive (false);
+						if (resultText != "_________" && !exploreScrollView.gameObject.activeSelf) {
 							Debug.Log (resultText);
 							searchScrollView.gameObject.SetActive (false);
 							SearchMap searchMap = GameObject.FindGameObjectWithTag ("SearchMap").GetComponent<SearchMap> ();
@@ -204,9 +203,9 @@ public class UIManager : MonoBehaviour {
 				EventSystem.current.RaycastAll(pointerData, hits);
 				if (hits.Count > 0 && hits [0].gameObject.GetComponent<Text> () != null) {
 					string resultText = hits [0].gameObject.GetComponent<Text> ().text;
-					if (resultText != "Submit" && resultText != "Explore" && resultText != searchInput.text) {
-						// Cancel search
-						if (resultText != "_________") {
+					if (resultText != "Explore" && resultText != searchInput.text) {
+						searchScrollView.gameObject.SetActive (false);
+						if (resultText != "_________" && !exploreScrollView.gameObject.activeSelf) {
 							Debug.Log (resultText);
 							searchScrollView.gameObject.SetActive (false);
 							SearchMap searchMap = GameObject.FindGameObjectWithTag ("SearchMap").GetComponent<SearchMap> ();
@@ -245,27 +244,14 @@ public class UIManager : MonoBehaviour {
 		exitSelectionButton.gameObject.SetActive (true);
 	}
 
-
-	public void isLoading(bool enabled){
-		if(enabled){
-			loadingCanvas.gameObject.SetActive (true);
-		} else {
-			loadingCanvas.gameObject.SetActive(false);
-		}
-	}
-
 	// When annotation button is clicked
 	public void onClickAnnotation() {
 		annotationInput.gameObject.SetActive (!annotationInput.gameObject.activeSelf);
 	}
 
 	public void onAnnotationSubmit() {
-		if (annotationInput.text != "") {
-			//TODO: Add switches between types of annotations
-			//if billboard:
-
+		if (annotationInput.text != "")
 			StartCoroutine(annotationHandler.addBillboard (annotationInput.text, colorDropdown.value, styleDropdown.value));
-		}
 		styleDropdown.value = 0;
 		colorDropdown.value = 0;
 		annotationInput.text = "";
@@ -288,6 +274,7 @@ public class UIManager : MonoBehaviour {
 	}
 
 	public void disable2D() {
+		Debug.Log("her");
 		cameraHandler.resetCams ();
 		enable2D (false);
 		exitSelectionButton.gameObject.SetActive (false);
@@ -342,7 +329,7 @@ public class UIManager : MonoBehaviour {
 			tempTrailInfo[0].text = nearbyTrails [i] [0].ToString();
 			tempTrailInfo[1].text = (System.Math.Truncate(100* double.Parse(nearbyTrails [i] [1]))/100d).ToString() + " mi";
 			Button clickPanel = tempPanel.GetComponent<Button>();
-			clickPanel.onClick.AddListener(() => onClickPanel(tempTrailInfo[0].text));
+			clickPanel.onClick.AddListener(() => onClickPanel(nearbyTrails [i] [0].ToString()));
 			resultList.Add (tempPanel);
 			i++;
 		} 
@@ -441,7 +428,8 @@ public class UIManager : MonoBehaviour {
 		errorText.gameObject.SetActive (false);
 		hikeButton.gameObject.SetActive (false);
 		exitSelectionButton.gameObject.SetActive (false);
-		menuHandler.CloseError ();
+		if(menuHandler.isErrorOpen)
+			menuHandler.CloseError ();
 	}
 
 	public void userSelection() {
@@ -462,7 +450,7 @@ public class UIManager : MonoBehaviour {
 					} else if (hit == "Settings") {
 						enableSettings ();
 					} else if (hit == "Logout") {
-						Debug.Log ("Logout");
+						StartCoroutine(logout ());
 					}
 				}
 			}
@@ -486,7 +474,7 @@ public class UIManager : MonoBehaviour {
 					} else if (hit == "Settings") {
 						enableSettings ();
 					} else if (hit == "Logout") {
-						Debug.Log ("Logout");
+						StartCoroutine(logout ());
 					}
 				}
 			}
@@ -553,6 +541,14 @@ public class UIManager : MonoBehaviour {
 				annotation.color = Color.blue;
 			else if (colorDropdown.value == 3)
 				annotation.color = Color.green;
+		}
+	}
+
+	public IEnumerator logout() {
+		GlobalUserManager.Instance.username = "";
+		AsyncOperation async = Application.LoadLevelAsync(0);
+		while (!async.isDone) {
+			yield return null;
 		}
 	}
 }
