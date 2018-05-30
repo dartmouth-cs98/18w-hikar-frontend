@@ -38,7 +38,7 @@ public class SearchMap : MonoBehaviour {
 	public void searchForLocation(Mapbox.Utils.Vector2d location, bool displayTrail){
 		Debug.Log("Searching for Map at: " + location);
 		searchCamera.transform.position = cameraPosition;
-		map.UpdateMap(location, 16);
+		map.UpdateMap(location, 18);
 
 		if(displayTrail == true){
 			directions.getDirectionsFromLatLngs(waypointList);
@@ -51,7 +51,7 @@ public class SearchMap : MonoBehaviour {
 		directions.clearLine();
 
 		Debug.Log("Bounding Map at: " + bounds);
-		map.UpdateMap(bounds.Center, 16);
+		map.UpdateMap(bounds.Center, 18);
 
 		//move camera position to center of trail bounds
 		Vector3 newCameraPosition = map.GeoToWorldPosition(bounds.Center, true);

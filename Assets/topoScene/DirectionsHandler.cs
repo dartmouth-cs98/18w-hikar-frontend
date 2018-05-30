@@ -158,6 +158,7 @@ public class DirectionsHandler : MonoBehaviour {
 	}
 
 	public void getDirectionsFromLatLngs(List<Mapbox.Utils.Vector2d> waypointsList){
+		waypointList = waypointsList;
 		waypoints = new Vector2d[waypointsList.Count]; //1:1 trail 
 		heights = new float[waypointsList.Count];
 		waypoints = waypointsList.ToArray();
@@ -169,19 +170,18 @@ public class DirectionsHandler : MonoBehaviour {
 	public void getDirectionsFromSearchMap(List<Mapbox.Utils.Vector2d> waypointsList, float[] heights){
 
 		//initialize arrays
+		waypointList = waypointsList;
 		waypoints = new Vector2d[waypointsList.Count]; //1:1 trail 
-		heights = new float[waypointList.Count];
 		positions = new Vector3[waypointsList.Count];
 		waypoints = waypointsList.ToArray();
-		 
-		setTotalOffset ();
+		float mapOffset = rayCastObject.transform.position.y - map.transform.position.y;
 
+		setTotalOffset ();
 		for(int i = 0; i < waypoints.Length; i++){
 			Vector3 adjustedPosition = UnityVectorFromVec2dMap(waypoints[i]);
-			adjustedPosition.y = heights[i] - totalOffset;
+			adjustedPosition.y = heights[i];
 			positions[i] = adjustedPosition;
 		}
-
 		drawLine();
 	}
 
