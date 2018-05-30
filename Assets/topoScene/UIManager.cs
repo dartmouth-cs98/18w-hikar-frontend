@@ -259,7 +259,8 @@ public class UIManager : MonoBehaviour {
 	}
 
 	public void onHike() {
-		StartCoroutine(wwwScript.UpdateUserTrail(GlobalUserManager.Instance.username, currentSelectedTrail));
+//		StartCoroutine(wwwScript.UpdateUserTrail(GlobalUserManager.Instance.username, currentSelectedTrail));
+		Debug.Log("get here");
 		directionsHandler.getDirectionsFromSearchMap(searchDirectionsHandler.waypointList, searchDirectionsHandler.heights);
 		transitionHikePanel.TriggerTransition ();
 		hikeButton.gameObject.SetActive (false);
@@ -271,6 +272,7 @@ public class UIManager : MonoBehaviour {
 		isHiking = false;
 		transitionHikePanel.TriggerFadeOut ();
 		directionsHandler.waypointList.Clear ();
+		directionsHandler.clearLine ();
 	}
 
 	public void disable2D() {
