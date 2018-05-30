@@ -8,6 +8,7 @@ public class GlobalUserManager : MonoBehaviour {
 
 	public static GlobalUserManager Instance;
 	public string username;
+	private string token;
 
 	void Awake ()   
 	{
@@ -20,5 +21,9 @@ public class GlobalUserManager : MonoBehaviour {
 		{
 			Destroy (gameObject);
 		}
+	}
+
+	public void setToken(string userToken){
+		token = userToken;
 	}
 }

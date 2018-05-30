@@ -37,7 +37,7 @@ public class WWWHandler : MonoBehaviour {
 	const string postAnnotationUrl = "https://hikar.herokuapp.com/api/annotation";
 	const string userURL = "https://hikar.herokuapp.com/api/users/";
 	const string signIn = "https://hikar.herokuapp.com/api/signin";
-	const string signUp = "https://hikar.herokuapp.com/signup";
+	const string signUp = "https://hikar.herokuapp.com/api/signup";
 
 
 	const string getTestTrailUrl = "https://hikar.herokuapp.com/getTest";
@@ -83,50 +83,64 @@ public class WWWHandler : MonoBehaviour {
 	}
 	public IEnumerator PostSignIn(string username, string password)
 	{
-		WWWForm form = new WWWForm();
-		form.AddField("username", username);
-		form.AddField("password", password);
-		using (var w = UnityWebRequest.Post (signIn, form))
-		{
-			yield return w.SendWebRequest();
-			if (w.isNetworkError || w.isHttpError) 
-			{
-				yield return w.downloadHandler.text;
-				errorTransitionalObject.TriggerTransition ();
-				errorText.gameObject.SetActive (true);
-				if (w.downloadHandler.text == "Unauthorized") {
-					errorText.text = "Invalid credentials";	
+		if (!string.IsNullOrEmpty (username) && !string.IsNullOrEmpty (password)) {
+			WWWForm form = new WWWForm ();
+			form.AddField ("username", username);
+			form.AddField ("password", password);
+			using (var w = UnityWebRequest.Post (signIn, form)) {
+				yield return w.SendWebRequest ();
+				if (w.isNetworkError || w.isHttpError) {
+					yield return w.downloadHandler.text;
+					errorTransitionalObject.TriggerTransition ();
+					errorText.gameObject.SetActive (true);
+					if (w.downloadHandler.text == "Unauthorized") {
+						errorText.text = "Invalid credentials";	
+					} else {
+						errorText.text = "No network connection detected.";
+					}
+					yield return new WaitForSeconds (2.5f);
+					errorTransitionalObject.TriggerFadeOutIfActive ();
 				} else {
-					errorText.text = "No network connection detected.";
+					yield return w.downloadHandler.text;
 				}
-				yield return new WaitForSeconds (2.5f);
-				errorTransitionalObject.TriggerFadeOutIfActive ();
 			}
-			else
-			{
-				yield return w.downloadHandler.text;
-			}
+		} else {
+			errorTransitionalObject.TriggerTransition ();
+			errorText.gameObject.SetActive (true);
+			errorText.text = "One or more fields are invalid.";	
+			yield return new WaitForSeconds (2.5f);
+			errorTransitionalObject.TriggerFadeOutIfActive ();
 		}
 	}
 	public IEnumerator PostSignUp(string username, string password)
 	{
-		WWWForm form = new WWWForm();
-		form.AddField("username", username);
-		form.AddField("password", password);
-		using (var w = UnityWebRequest.Post (signUp, form))
-		{
-			yield return w.SendWebRequest();
-			if (w.isNetworkError || w.isHttpError) 
-			{
-				yield return w.downloadHandler.text;
-				errorTransitionalObject.TriggerTransition ();
-				errorText.gameObject.SetActive (true);
-				errorText.text = "No network connection detected.";
+		if (!string.IsNullOrEmpty (username) && !string.IsNullOrEmpty (password)) {
+			WWWForm form = new WWWForm ();
+			form.AddField ("username", username);
+			form.AddField ("password", password);
+			using (var w = UnityWebRequest.Post (signUp, form)) {
+				yield return w.SendWebRequest ();
+				if (w.isNetworkError || w.isHttpError) {
+					yield return w.downloadHandler.text;
+					errorTransitionalObject.TriggerTransition ();
+					errorText.gameObject.SetActive (true);
+					if (w.downloadHandler.text == "user already exists") {
+						errorText.text = "User already exists.";
+					} else {
+						errorText.text = "No network connection detected.";
+					}
+					yield return new WaitForSeconds (2.5f);
+					errorTransitionalObject.TriggerFadeOutIfActive ();
+				} else {
+					yield return w.downloadHandler.text;
+				}
 			}
-			else
-			{
-				yield return w.downloadHandler.text;
-			}
+		} else {
+			errorTransitionalObject.TriggerTransition ();
+			errorText.gameObject.SetActive (true);
+			errorText.text = "One or more fields are invalid.";	
+			yield return new WaitForSeconds (2.5f);
+			errorTransitionalObject.TriggerFadeOutIfActive ();
 		}
 	}
 	public IEnumerator GetUserInfo(string username)

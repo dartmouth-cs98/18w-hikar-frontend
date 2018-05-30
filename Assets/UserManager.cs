@@ -45,18 +45,15 @@ public class UserManager : MonoBehaviour {
 	public IEnumerator signUp() {
 		CoroutineWithData result = new CoroutineWithData(this, wwwScript.PostSignUp(username.text, password.text));
 		yield return result.coroutine;
-		Debug.Log (result.result.ToString ());	
+		JSONNode parsedAnnotation = JSON.Parse (result.result.ToString());
+		authenticate (parsedAnnotation ["token"].ToString ());
 	}
 
 	public IEnumerator signIn() {
 		CoroutineWithData result = new CoroutineWithData(this, wwwScript.PostSignIn(username.text, password.text));
 		yield return result.coroutine;
 		JSONNode parsedAnnotation = JSON.Parse (result.result.ToString());
-		if (parsedAnnotation ["token"] != null) {
-			GlobalUserManager.Instance.username = username.text;
-			disableLoginUI ();
-			loadingManager.isAuthenticated = true;
-		}
+		authenticate (parsedAnnotation ["token"].ToString ());
 	}
 
 	private void disableLoginUI() {
@@ -64,5 +61,14 @@ public class UserManager : MonoBehaviour {
 		password.gameObject.SetActive (false);
 		loginButton.gameObject.SetActive (false);
 		signUpButton.gameObject.SetActive (false);
+	}
+
+	public void authenticate(string token){
+		if (token != null) {
+			GlobalUserManager.Instance.username = username.text;
+			GlobalUserManager.Instance.setToken(token);
+			disableLoginUI ();
+			loadingManager.isAuthenticated = true;
+		}
 	}
 }
