@@ -43,11 +43,11 @@
 
 				if (Input.GetTouch(0).phase == TouchPhase.Moved)
 				{
-					var touchDelta = Input.GetTouch(0).deltaPosition;
-					var offset = new Vector3(touchDelta.x, 0f, touchDelta.y);
-					offset = _camera.transform.rotation * offset;
-					var newPos = new Vector3(offset.x, 0, offset.y);
-					_mapRoot.position = newPos + _mapRoot.position;
+//					var touchDelta = Input.GetTouch(0).deltaPosition;
+//					var offset = new Vector3(touchDelta.x, 0f, touchDelta.y);
+//					offset = _camera.transform.rotation * offset;
+//					var newPos = new Vector3(offset.x, 0, offset.y);
+//					_mapRoot.position = newPos + _mapRoot.position;
 				}
 			}
 			else

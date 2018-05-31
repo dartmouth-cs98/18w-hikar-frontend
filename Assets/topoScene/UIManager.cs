@@ -265,6 +265,7 @@ public class UIManager : MonoBehaviour {
 		hikeButton.gameObject.SetActive (false);
 		disable2D ();
 		isHiking = true;
+		cameraHandler.disableSearchMap();
 	}
 
 	public void exitHike() {
@@ -306,6 +307,7 @@ public class UIManager : MonoBehaviour {
 		if (isHiking && inAR && !enabled) {
 			transitionHikePanel.TriggerTransition ();
 		}
+		//cameraHandler.toggleCam2D(enabled);
 		quadTreeCameraMovement.enabled = enabled;
 		cameraHandler.expand2D (enabled);
 	}

@@ -43,11 +43,13 @@ public class SceneManager : MonoBehaviour {
 	private Location lastLoc;
 
 	private Vector3 lastPlayerPosition;
+	private Vector3 nextPlayerPosition;
 
 	private bool isRootTransformSet = false;
 
 	public int zoomFactor = 16; //handles the zoom level on the map (hardcode for now)
 	public int radius = 50;
+	public float followFactor = 30;
 
 	void Start () {
 		
@@ -90,6 +92,8 @@ public class SceneManager : MonoBehaviour {
 		}
 		StartCoroutine (directionHandler.waitForMapLoad ());
 		setCompassDirection ();
+
+		nextPlayerPosition = playerObject.transform.localPosition;
 	}
 		
 
@@ -122,8 +126,12 @@ public class SceneManager : MonoBehaviour {
 //			playerLocation.transform.Rotate(Vector3.up, location.Heading);
 		}
 		if(isLatLngUpdated){
-			map = (Mapbox.Unity.Map.AbstractMap) mapObject.GetComponent((typeof(Mapbox.Unity.Map.AbstractMap)));
-			playerObject.transform.MoveToGeocoordinate(location.LatitudeLongitude, map.CenterMercator, map.WorldRelativeScale);
+			if(map == null)
+				map = (Mapbox.Unity.Map.AbstractMap) mapObject.GetComponent((typeof(Mapbox.Unity.Map.AbstractMap)));
+			Vector3 destinationVec = map.GeoToWorldPosition(location.LatitudeLongitude);
+			float height = directionHandler.getHeightForPosition(location.LatitudeLongitude);
+			Debug.Log("height at new position: " + height);
+			nextPlayerPosition = new Vector3(destinationVec.x, playerObject.transform.localPosition.y, destinationVec.z);
 		}
 	}
 
@@ -140,6 +148,11 @@ public class SceneManager : MonoBehaviour {
 		Quaternion lookAt = new Quaternion();
 		lookAt.SetLookRotation(UnityEngine.Camera.main.transform.forward, Vector3.up);
 		hudCamera.transform.SetPositionAndRotation(hudCamera.transform.position, lookAt);
+
+		//update player position
+		if(playerObject.transform.localPosition != nextPlayerPosition){
+			playerObject.transform.localPosition = Vector3.Lerp(playerObject.transform.localPosition, nextPlayerPosition, Time.deltaTime * followFactor);
+		}
 	}
 
 	private IEnumerator setPositionOnVuforiaEnabled() {

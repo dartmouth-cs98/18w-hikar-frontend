@@ -55,7 +55,17 @@ public class CameraHandler : MonoBehaviour {
 	}
 
 	public void enableSearchMap() {
+		SearchCam.enabled = true;
 		SearchCam.depth = 3; //highest depth in scene
+	}
+
+	public void disableSearchMap() {
+		SearchCam.enabled = false;
+		SearchCam.depth = -1;
+	}
+
+	public void toggleCam2D(bool enable){
+		Cam2D.enabled = enable;
 	}
 
 	public void enableBackgroundTime() {
