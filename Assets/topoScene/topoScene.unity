@@ -872,6 +872,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _map: {fileID: 97133396}
+  waitTime: 3
 --- !u!4 &97133399
 Transform:
   m_ObjectHideFlags: 0
@@ -5445,7 +5446,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 920573817}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2c699b8e1864b4b248acb7a04ede9480, type: 3}
   m_Name: 
@@ -10522,6 +10523,7 @@ MonoBehaviour:
   playerLocation: {fileID: 262681230}
   zoomFactor: 16
   radius: 50
+  followFactor: 30
 --- !u!1 &1636630575
 GameObject:
   m_ObjectHideFlags: 0
