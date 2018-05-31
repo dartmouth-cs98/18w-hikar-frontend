@@ -21,7 +21,7 @@
 
 		IEnumerator Start()
 		{
-			yield return new WaitForSeconds(waitTime);
+			yield return null;
 			_locationProvider = LocationProviderFactory.Instance.DefaultLocationProvider;
 			_locationProvider.OnLocationUpdated += LocationProvider_OnLocationUpdated; ;
 		}

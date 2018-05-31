@@ -90,6 +90,7 @@ public class SceneManager : MonoBehaviour {
 		if (cameraPosition == null) {
 			cameraPosition = GameObject.FindGameObjectWithTag ("cameraPosition");
 		}
+		StartCoroutine (directionHandler.waitForMapLoad ());
 		setCompassDirection ();
 
 		nextPlayerPosition = playerObject.transform.localPosition;
