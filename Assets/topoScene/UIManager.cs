@@ -10,10 +10,8 @@ using SimpleJSON;
 public class UIManager : MonoBehaviour {
 
 	//Setup
-	private Mapbox.Utils.Vector2d[] trailHeads;
-	private Hashtable trailTable;
-	private List<GameObject> resultList;
 	public GameObject searchResultObject;
+	public GameObject playerLocation;
 	public Text errorText;
 	public Text usernameText;
 	public JSONNode parsedUser;
@@ -21,6 +19,7 @@ public class UIManager : MonoBehaviour {
 	public Button logoutButton;
 	public Button exitHikeButton;
 	public bool inAR;
+	private List<GameObject> resultList;
 
 	//Trail UI
 	private string currentSelectedTrail;
@@ -50,8 +49,6 @@ public class UIManager : MonoBehaviour {
 	public Text radiusText;
 	public Toggle annotationsToggle;
 	public Button settingsButton;
-	public InputField usernameInput;
-	public RawImage ProfilePicture;
 
 	//Annotation UI
 	public Button createAnnotationButton;
@@ -65,6 +62,7 @@ public class UIManager : MonoBehaviour {
 	public ScrollRect searchScrollView;
 	public Button toggleARButton;
 	public Button exitSelectionButton;
+	public Button recenterButton;
 
 	//wwwHandler
 	public GameObject wwwHandler;
@@ -98,7 +96,6 @@ public class UIManager : MonoBehaviour {
 	//searchDirectionHandler
 	public GameObject searchDirectionsObject;
 	private DirectionsHandler searchDirectionsHandler;
-	public Button loginButton;
 
 	void Start () {
 		resultList = new List<GameObject> ();
@@ -147,6 +144,7 @@ public class UIManager : MonoBehaviour {
 		settingsButton.onClick.AddListener (enableSettings);
 		toggleARButton.onClick.AddListener (disable2D);
 		exitHikeButton.onClick.AddListener (exitHike);
+		recenterButton.onClick.AddListener (recenter);
 		inAR = true;
 		usernameText.text = GlobalUserManager.Instance.username;
 	}
@@ -288,6 +286,11 @@ public class UIManager : MonoBehaviour {
 		errorText.text = "No network connection detected.";
 	}
 
+	public void recenter(){
+		camera2D.transform.position = new Vector3 (playerLocation.transform.position.x,
+			playerLocation.transform.position.y + 185, playerLocation.transform.position.x);
+	}
+
 	public void enable2D(bool enabled) {
 		if (enabled) {
 			cameraHandler.resetCams();
@@ -296,11 +299,13 @@ public class UIManager : MonoBehaviour {
 			createAnnotationButton.gameObject.SetActive (false);
 			searchInput.gameObject.SetActive (true);
 			toggleARButton.gameObject.SetActive (true);
+			recenterButton.gameObject.SetActive (true);
 			inAR = false;
 			menuHandler.CloseMenu ();
 		} else {
 			createAnnotationButton.gameObject.SetActive (true);
 			toggleARButton.gameObject.SetActive (false);
+			recenterButton.gameObject.SetActive (false);
 			searchInput.gameObject.SetActive (false);
 			inAR = true;
 		}
@@ -430,6 +435,7 @@ public class UIManager : MonoBehaviour {
 		errorText.gameObject.SetActive (false);
 		hikeButton.gameObject.SetActive (false);
 		exitSelectionButton.gameObject.SetActive (false);
+		recenterButton.gameObject.SetActive (false);
 		if(menuHandler.isErrorOpen && errorText.text != "Unable to detect GPS location. Please reload HikAR.")
 			menuHandler.CloseError ();
 		if (menuHandler.isOpen)

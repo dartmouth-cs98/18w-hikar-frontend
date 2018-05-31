@@ -44,6 +44,7 @@ public class CameraHandler : MonoBehaviour {
 		//Switch cameras
 		if (expand) {
 			HUDCam.enabled = false;
+			Cam2D.enabled = true;
 			Cam2D.depth = 2;
 		} else {
 			HUDCam.enabled = true;
