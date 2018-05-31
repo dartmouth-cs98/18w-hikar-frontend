@@ -9,6 +9,7 @@ public class AnnotationHandler : MonoBehaviour
 {
 	//Player cam reference
 	public Camera arCam;
+	public GameObject MainMap;
 	// Annotation assets
 	public GameObject billboardAnnotation;
 	public GameObject rayCastObject;
@@ -66,6 +67,7 @@ public class AnnotationHandler : MonoBehaviour
 				GameObject tempAnnotation;
 				if (parsedAnnotation [i] ["type"].Value == "billboard") {
 					GameObject tempBoard = Instantiate (billboardAnnotation, new Vector3 (annotationUnityVec.x, annoOffset, annotationUnityVec.z), Quaternion.identity);
+					tempBoard.transform.parent = MainMap.transform;
 					billboards.Add(tempBoard);
 					tempAnnotation = (GameObject) billboards [billboards.Count - 1];
 				} else {

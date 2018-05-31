@@ -10,7 +10,6 @@ public class CameraHandler : MonoBehaviour {
 	public Camera HUDCam;
 	public Camera Cam2D;
 	public Camera SearchCam;
-	public Camera LoginCam;
 	public Camera DayCam;
 	public Camera EveningCam;
 	public Camera NightCam;
@@ -31,7 +30,6 @@ public class CameraHandler : MonoBehaviour {
 		if(UIObject != null) {
 			UIManagerObject = (UIManager) UIObject.gameObject.GetComponent(typeof(UIManager));
 		}
-//		Cam2D.transform.eulerAngles = new Vector3 (90, 0, 0);
 	}
 	
 	// Update is called once per frame
@@ -45,27 +43,26 @@ public class CameraHandler : MonoBehaviour {
 	public void expand2D(bool expand) {
 		//Switch cameras
 		if (expand) {
-			HUDCam.depth = 0;
+			HUDCam.enabled = false;
 			Cam2D.depth = 2;
 		} else {
+			HUDCam.enabled = true;
 			HUDCam.depth = 2;
-			Cam2D.depth = 0;
 			ARCam.depth = 1;
+			Cam2D.enabled = false;
 		}
 	}
 
 	public void enableSearchMap() {
 		SearchCam.enabled = true;
+		HUDCam.enabled = false;
+		Cam2D.enabled = false;
 		SearchCam.depth = 3; //highest depth in scene
 	}
 
 	public void disableSearchMap() {
 		SearchCam.enabled = false;
 		SearchCam.depth = -1;
-	}
-
-	public void toggleCam2D(bool enable){
-		Cam2D.enabled = enable;
 	}
 
 	public void enableBackgroundTime() {
@@ -78,10 +75,6 @@ public class CameraHandler : MonoBehaviour {
 			NightCam.depth = 3;
 	}
 
-	public void enableLogin() {
-		LoginCam.depth = 5;
-	}
-
 	public void resetCams() {
 		SearchCam.depth = -1;
 		DayCam.depth = -1;
@@ -90,6 +83,5 @@ public class CameraHandler : MonoBehaviour {
 		HUDCam.depth = -1;
 		Cam2D.depth = -1;
 		ARCam.depth = -1;
-		LoginCam.depth = -1;
 	}
 }

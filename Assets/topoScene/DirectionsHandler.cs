@@ -85,9 +85,6 @@ public class DirectionsHandler : MonoBehaviour {
 	public IEnumerator waitForMapLoad(){
 		yield return new WaitForSeconds (3f);
 		if (castRaycastDownAtPosition (playerRayOrigin) == playerRayOrigin.y) {
-			Debug.Log (castRaycastDownAtPosition (playerRayOrigin));
-			Debug.Log (playerRayOrigin.y);
-			Debug.Log ("same");
 			errorTransitionalObject.TriggerTransition ();
 			errorText.gameObject.SetActive (true);
 			errorText.text = "Unable to detect GPS location. Please reload HikAR.";
