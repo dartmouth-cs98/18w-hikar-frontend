@@ -428,7 +428,7 @@ public class UIManager : MonoBehaviour {
 		errorText.gameObject.SetActive (false);
 		hikeButton.gameObject.SetActive (false);
 		exitSelectionButton.gameObject.SetActive (false);
-		if(menuHandler.isErrorOpen)
+		if(menuHandler.isErrorOpen && errorText.text != "Unable to detect GPS location. Please reload HikAR.")
 			menuHandler.CloseError ();
 		if (menuHandler.isOpen)
 			menuHandler.CloseMenu ();
