@@ -9,6 +9,8 @@
 		[SerializeField]
 		AbstractMap _map;
 
+		public float waitTime = 3f;
+
 		ILocationProvider _locationProvider;
 
 		private void Awake()
@@ -19,7 +21,7 @@
 
 		IEnumerator Start()
 		{
-			yield return null;
+			yield return new WaitForSeconds(waitTime);
 			_locationProvider = LocationProviderFactory.Instance.DefaultLocationProvider;
 			_locationProvider.OnLocationUpdated += LocationProvider_OnLocationUpdated; ;
 		}
