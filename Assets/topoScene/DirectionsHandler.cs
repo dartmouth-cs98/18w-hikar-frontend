@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using SimpleJSON;
 using Mapbox.Utils;
 using Mapbox.Unity.Map;
@@ -31,9 +32,14 @@ public class DirectionsHandler : MonoBehaviour {
 
 	private Vector2 initialLocation;
 
+	private Vector3 playerRayOrigin;
+
 	LineRenderer lineRenderer;
 
 	WWWHandler wwwScript;
+
+	public Text errorText;
+	public TransitionalObject errorTransitionalObject;
 
 	public bool overlayPathOnMap = false;
 
@@ -47,28 +53,44 @@ public class DirectionsHandler : MonoBehaviour {
 
 
 
+
 	// Use this for initialization
 
-	public void prepareForStart(WWWHandler www, Vector2 initLocation) {
+//	public void prepareForStart(WWWHandler www, Vector2 initLocation) {
 
-		wwwScript = www;
-
-		initialLocation = initLocation;
-
-		waypointList = new List<Vector2d>();
+//		wwwScript = www;
+//
+//		initialLocation = initLocation;
+//
+//		waypointList = new List<Vector2d>();
+//
+//		Vector3 playerRayOrigin = new Vector3(initialLocation.x, rayCastObject.transform.position.y, initialLocation.y);
+//
 
 		//this.StartCoroutine(this.getDirectionsFromJSON);
 
-	}
+//	}
 
 	void Start(){
 		_map =  (AbstractMap)map.GetComponent(typeof(AbstractMap));
-
+		playerRayOrigin = new Vector3(initialLocation.x, rayCastObject.transform.position.y, initialLocation.y);
 		if(rayCastObject == null){
 			if(overlayPathOnMap == false)
 				rayCastObject = GameObject.FindGameObjectWithTag("rayCastObject");
 			else
 				rayCastObject = GameObject.FindGameObjectWithTag("rayCastObjectSearch");
+		}
+	}
+
+	public IEnumerator waitForMapLoad(){
+		yield return new WaitForSeconds (3f);
+		if (castRaycastDownAtPosition (playerRayOrigin) == playerRayOrigin.y) {
+			Debug.Log (castRaycastDownAtPosition (playerRayOrigin));
+			Debug.Log (playerRayOrigin.y);
+			Debug.Log ("same");
+			errorTransitionalObject.TriggerTransition ();
+			errorText.gameObject.SetActive (true);
+			errorText.text = "Unable to detect GPS location. Please reload HikAR.";
 		}
 	}
 
@@ -237,7 +259,6 @@ public class DirectionsHandler : MonoBehaviour {
 			//position map at player's level i.e. in front of AR view
 
 			//calculate height at player position for offset
-			Vector3 playerRayOrigin = new Vector3(initialLocation.x, rayCastObject.transform.position.y, initialLocation.y);
 			playerOffset = castRaycastDownAtPosition(playerRayOrigin);
 			playerOffset -= mapOffset; //mapOffset skews it
 		} else if(overlayPathOnMap == true) {
@@ -338,6 +359,7 @@ public class DirectionsHandler : MonoBehaviour {
 		else{
 			Debug.Log("RayCast hit failed: " + hit.distance + " at location: " + rayOrigin);
 			height = rayOrigin.y;
+
 		}
 
 		return height;
