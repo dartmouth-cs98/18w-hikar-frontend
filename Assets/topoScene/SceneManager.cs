@@ -120,6 +120,10 @@ public class SceneManager : MonoBehaviour {
 		if(isHeadingUpdated){
 //			playerLocation.transform.Rotate(Vector3.up, location.Heading);
 		}
+		if(isLatLngUpdated){
+			map = (Mapbox.Unity.Map.AbstractMap) mapObject.GetComponent((typeof(Mapbox.Unity.Map.AbstractMap)));
+			playerObject.transform.MoveToGeocoordinate(location.LatitudeLongitude, map.CenterMercator, map.WorldRelativeScale);
+		}
 	}
 
 	// Update is called once per frame
