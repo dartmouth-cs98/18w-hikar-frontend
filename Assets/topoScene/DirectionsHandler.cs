@@ -214,7 +214,8 @@ public class DirectionsHandler : MonoBehaviour {
 
 	//waits for a couple seconds before loading trail
 	public IEnumerator waitForTime(float time){
-		yield return new WaitForSeconds(time);
+        //yield return new WaitUntil(() => _map.MapVisualizer.State == Mapbox.Unity.Map.ModuleState.Finished);
+        yield return new WaitForSeconds(time);
 		startDirections();
 	}
 
