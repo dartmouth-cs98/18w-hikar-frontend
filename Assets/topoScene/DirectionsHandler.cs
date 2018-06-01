@@ -45,12 +45,19 @@ public class DirectionsHandler : MonoBehaviour {
 
 	AbstractMap _map;
 
+    private float playerOffset;
+
+    private float mapOffset;
+
 	public float totalOffset;
 
 	public float trailElevationBuffer = 0.3f;
 
 	public float loadTime = 1;
 
+    private bool isTrailLoaded = false;
+
+    public LineRenderer extraLine;
 
 
 
@@ -186,14 +193,15 @@ public class DirectionsHandler : MonoBehaviour {
 		StartCoroutine(this.waitForTime(loadTime));
 	}
 
-	public void getDirectionsFromSearchMap(List<Mapbox.Utils.Vector2d> waypointsList, float[] heights){
+	public void getDirectionsFromSearchMap(List<Mapbox.Utils.Vector2d> waypointsList, float[] heightz){
 
 		//initialize arrays
 		waypointList = waypointsList;
 		waypoints = new Vector2d[waypointsList.Count]; //1:1 trail 
 		positions = new Vector3[waypointsList.Count];
 		waypoints = waypointsList.ToArray();
-		float mapOffset = rayCastObject.transform.position.y - map.transform.position.y;
+        heights = heightz;
+		//float mapOffset = rayCastObject.transform.position.y - map.transform.position.y;
 
 		setTotalOffset ();
 		for(int i = 0; i < waypoints.Length; i++){
@@ -249,8 +257,8 @@ public class DirectionsHandler : MonoBehaviour {
 	public void setTotalOffset() {
 
 		//calculate distance to map from rayOrigin
-		float mapOffset = rayCastObject.transform.position.y - map.transform.position.y;
-		float playerOffset = 0;
+		mapOffset = rayCastObject.transform.position.y - map.transform.position.y;
+		playerOffset = 0;
 
 		if(overlayPathOnMap == false){
 			//position map at player's level i.e. in front of AR view
@@ -330,16 +338,37 @@ public class DirectionsHandler : MonoBehaviour {
 		lineRenderer.positionCount = positions.Length;
 		lineRenderer.SetPositions (positions);
 
-		lineRenderer.numCapVertices = 10; //adjust this value for smoother lines (90 MAX)
+		lineRenderer.numCapVertices = 45; //adjust this value for smoother lines (90 MAX)
 
-		//Reset the offset
-		totalOffset = 0;
+        isTrailLoaded = true;
+
+        if(overlayPathOnMap == false){
+            Vector3[] extraPositions = new Vector3[positions.Length];
+            extraLine.positionCount = extraPositions.Length;
+            for (int i = 0; i < extraPositions.Length; i++){
+                float mapHeight = getHeightForPosition(waypoints[i]);
+                Vector3 extraPos = new Vector3(positions[i].x, positions[i].y + map.transform.position.y + trailElevationBuffer, positions[i].z);
+                extraPositions[i] = extraPos;
+                Debug.Log("extra pos at: " + i + " == " + extraPos);
+            }
+            extraLine.SetPositions(extraPositions);
+            extraLine.numCapVertices = 45;
+        }
 	}
 
 	public void clearLine(){
 		//call before updating trail
 		lineRenderer = GetComponent<LineRenderer> ();
 		lineRenderer.positionCount = 0;
+
+        if(overlayPathOnMap == false){
+            extraLine.positionCount = 0;
+        }
+
+        //Reset the offset
+        totalOffset = 0;
+
+        isTrailLoaded = false;
 	}
 
 	public float castRaycastDownAtPosition(Vector3 rayOrigin){
@@ -366,4 +395,33 @@ public class DirectionsHandler : MonoBehaviour {
 		float height = _map.QueryElevationInUnityUnitsAt(position);
 		return height;
 	}
+
+    public void raiseTrailToMap(){
+        if(isTrailLoaded){
+            clearLine();
+
+            for (int i = 0; i < positions.Length; i++){
+                float raisedHeight = heights[i] + totalOffset;
+                Vector3 raisedPos = new Vector3(positions[i].x, raisedHeight, positions[i].z);
+                positions[i] = raisedPos;
+            }
+
+            drawLine();
+        }
+    }
+
+    public void lowerTrailToPlayer(){
+        if (isTrailLoaded)
+        {
+            clearLine();
+
+            for (int i = 0; i < positions.Length; i++)
+            {
+                Vector3 loweredPos = new Vector3(positions[i].x, heights[i], positions[i].z);
+                positions[i] = loweredPos;
+            }
+
+            drawLine();
+        } 
+    }
 }
