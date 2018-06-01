@@ -4164,7 +4164,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &702692367
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4243,7 +4243,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Texture: {fileID: 2800000, guid: 4938d8580118d41c0a48cf1c95c67c55, type: 3}
+  m_Texture: {fileID: 2800000, guid: 7e30d2313038a4f74ac6a023afd0c090, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
