@@ -44,10 +44,12 @@ public class CameraHandler : MonoBehaviour {
 		//Switch cameras
 		if (expand) {
 			HUDCam.enabled = false;
+            HUDCam.gameObject.SetActive(false);
 			Cam2D.enabled = true;
 			Cam2D.depth = 2;
 		} else {
 			HUDCam.enabled = true;
+            HUDCam.gameObject.SetActive(true);
 			HUDCam.depth = 2;
 			ARCam.depth = 1;
 			Cam2D.enabled = false;

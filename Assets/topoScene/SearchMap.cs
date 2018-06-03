@@ -38,7 +38,7 @@ public class SearchMap : MonoBehaviour {
 	public void searchForLocation(Mapbox.Utils.Vector2d location, bool displayTrail){
 		Debug.Log("Searching for Map at: " + location);
 		searchCamera.transform.position = cameraPosition;
-		map.UpdateMap(location, 18);
+		map.UpdateMap(location, 16);
 
 		if(displayTrail == true){
 			directions.getDirectionsFromLatLngs(waypointList);
@@ -51,7 +51,8 @@ public class SearchMap : MonoBehaviour {
 		directions.clearLine();
 
 		Debug.Log("Bounding Map at: " + bounds);
-		map.UpdateMap(bounds.Center, 18);
+        //Mapbox.Map.TileCover.
+		map.UpdateMap(bounds.Center, 16);
 
 		//move camera position to center of trail bounds
 		Vector3 newCameraPosition = map.GeoToWorldPosition(bounds.Center, true);
@@ -59,19 +60,20 @@ public class SearchMap : MonoBehaviour {
 		newCameraPosition.y = cameraPosition.y;
 		searchCamera.transform.position = newCameraPosition;
 
-		/* //trying to get a tilecover given a bounds
-		HashSet<Mapbox.Map.UnwrappedTileId> tiles = Mapbox.Map.TileCover.GetWithWebMerc(bounds, 16);
+		////trying to get a tilecover given a bounds
+		//HashSet<Mapbox.Map.CanonicalTileId> tiles = Mapbox.Map.TileCover.Get(bounds, 16);
+        //IReadOnlyList<Mapbox.Map.UnwrappedTileId> tileList = tiles.ToReadOnlyList();
+        //var boundmap = new Mapbox.Map.Map<Mapbox.Map.RasterTile>(Mapbox.Unity.MapboxAccess.Instance);
+        //boundmap.SetVector2dBoundsZoom(bounds, 16);
+        //Debug.Log(tiles);
+        //for(int i = 0; i < tileList.Count; i++){
+        //  Mapbox.Map.UnwrappedTileId tile = tileList[i];
+        //  Debug.Log(tile.ToString());
+        //  map.MapVisualizer.LoadTile(tile);
+        //}
 
-		IReadOnlyList<Mapbox.Map.UnwrappedTileId> tileList = tiles.ToReadOnlyList();
 
-		Debug.Log(tileList.ToString());
-
-		for(int i = 0; i < tileList.Count; i++){
-			Mapbox.Map.UnwrappedTileId tile = tileList[i];
-			Debug.Log(tile.ToString());
-			map.MapVisualizer.LoadTile(tile);
-		}
-		*/
+		
 
 
 		//load trail

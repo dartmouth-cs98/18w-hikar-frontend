@@ -116,7 +116,10 @@ public class UIManager : MonoBehaviour {
 		}
 		if(wwwHandler != null) {
 			wwwScript = (WWWHandler)wwwHandler.gameObject.GetComponent(typeof(WWWHandler)); 
-		}
+        } else{
+            wwwHandler = GameObject.FindGameObjectWithTag("WWWObject");
+            wwwScript = (WWWHandler)wwwHandler.GetComponent<WWWHandler>();
+        }
 		if (annotationObject != null) {
 			annotationHandler = (AnnotationHandler)annotationObject.gameObject.GetComponent (typeof(AnnotationHandler));
 		}
@@ -302,12 +305,16 @@ public class UIManager : MonoBehaviour {
 			recenterButton.gameObject.SetActive (true);
 			inAR = false;
 			menuHandler.CloseMenu ();
+            //cameraHandler.HUDCam.enabled = false;
+            //directionsHandler.raiseTrailToMap();
 		} else {
 			createAnnotationButton.gameObject.SetActive (true);
 			toggleARButton.gameObject.SetActive (false);
 			recenterButton.gameObject.SetActive (false);
 			searchInput.gameObject.SetActive (false);
 			inAR = true;
+            //cameraHandler.HUDCam.enabled = true;
+            //directionsHandler.lowerTrailToPlayer();
 		}
 		if (isHiking && inAR && !enabled) {
 			transitionHikePanel.TriggerTransition ();
