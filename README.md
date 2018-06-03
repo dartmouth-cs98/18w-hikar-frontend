@@ -24,7 +24,8 @@ Overpass Turbo -- Used to query OpenStreetMaps for trail information which is th
 
     *For Android*: You will need to [download and setup the Android SDK for Unity](https://docs.unity3d.com/Manual/android-sdksetup.html)
 3. Select Build and Run with your mobile device connected
-4. For iOS, the app should open in Xcode and install on your phone. Make sure you have the right signing certificates.
+4. For iOS, the app should open in Xcode and install on your phone. Make sure you have the correct signing certificates.
+   
    For Android, the app will be built into an .apk file which you can transfer to your phone using ADB and the command `adb install <path_to_apk>`
 5. Make sure to enable location services and camera permissions on startup. If you don't have an account, enter your desired credentials and press the [Sign Up] button on the log-in view.
 
