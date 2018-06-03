@@ -91,7 +91,7 @@ public class SceneManager : MonoBehaviour {
 			cameraPosition = GameObject.FindGameObjectWithTag ("cameraPosition");
 		}
 		StartCoroutine (directionHandler.waitForMapLoad ());
-		setCompassDirection ();
+//		setCompassDirection ();
 
 		nextPlayerPosition = playerObject.transform.localPosition;
 	}

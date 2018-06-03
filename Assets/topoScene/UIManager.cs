@@ -288,7 +288,7 @@ public class UIManager : MonoBehaviour {
 
 	public void recenter(){
 		camera2D.transform.position = new Vector3 (playerLocation.transform.position.x,
-			playerLocation.transform.position.y + 185, playerLocation.transform.position.x);
+			playerLocation.transform.position.y + 185, playerLocation.transform.position.z);
 	}
 
 	public void enable2D(bool enabled) {
