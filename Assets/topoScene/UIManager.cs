@@ -305,6 +305,7 @@ public class UIManager : MonoBehaviour {
 			recenterButton.gameObject.SetActive (true);
 			inAR = false;
 			menuHandler.CloseMenu ();
+            //cameraHandler.HUDCam.enabled = false;
             //directionsHandler.raiseTrailToMap();
 		} else {
 			createAnnotationButton.gameObject.SetActive (true);
@@ -312,6 +313,7 @@ public class UIManager : MonoBehaviour {
 			recenterButton.gameObject.SetActive (false);
 			searchInput.gameObject.SetActive (false);
 			inAR = true;
+            //cameraHandler.HUDCam.enabled = true;
             //directionsHandler.lowerTrailToPlayer();
 		}
 		if (isHiking && inAR && !enabled) {
