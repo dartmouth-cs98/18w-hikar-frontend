@@ -305,21 +305,16 @@ public class UIManager : MonoBehaviour {
 			recenterButton.gameObject.SetActive (true);
 			inAR = false;
 			menuHandler.CloseMenu ();
-            //cameraHandler.HUDCam.enabled = false;
-            //directionsHandler.raiseTrailToMap();
 		} else {
 			createAnnotationButton.gameObject.SetActive (true);
 			toggleARButton.gameObject.SetActive (false);
 			recenterButton.gameObject.SetActive (false);
 			searchInput.gameObject.SetActive (false);
 			inAR = true;
-            //cameraHandler.HUDCam.enabled = true;
-            //directionsHandler.lowerTrailToPlayer();
 		}
 		if (isHiking && inAR && !enabled) {
 			transitionHikePanel.TriggerTransition ();
 		}
-		//cameraHandler.toggleCam2D(enabled);
 		quadTreeCameraMovement.enabled = enabled;
 		cameraHandler.expand2D (enabled);
 	}
@@ -443,6 +438,7 @@ public class UIManager : MonoBehaviour {
 		hikeButton.gameObject.SetActive (false);
 		exitSelectionButton.gameObject.SetActive (false);
 		recenterButton.gameObject.SetActive (false);
+        transitionHikePanel.TriggerFadeOut();
 		if(menuHandler.isErrorOpen && errorText.text != "Unable to detect GPS location. Please reload HikAR.")
 			menuHandler.CloseError ();
 		if (menuHandler.isOpen)

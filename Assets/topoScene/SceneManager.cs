@@ -10,8 +10,8 @@ using Vuforia;
 
 public class SceneManager : MonoBehaviour {
 
-	//camera Object
-	public GameObject cameraObject;
+    //camera Object
+    public Camera hudCamera;
 
 	//mapBox
 	public GameObject mapObject;
@@ -90,21 +90,8 @@ public class SceneManager : MonoBehaviour {
 		if (cameraPosition == null) {
 			cameraPosition = GameObject.FindGameObjectWithTag ("cameraPosition");
 		}
-		StartCoroutine (directionHandler.waitForMapLoad ());
-<<<<<<< HEAD
-//		setCompassDirection ();
-=======
-		//setCompassDirection ();
->>>>>>> 98d90105e8282c2ae66403952e5bb31abd8c2425
-
+        StartCoroutine(directionHandler.waitForMapLoad());
 		nextPlayerPosition = playerObject.transform.localPosition;
-	}
-		
-
-	public void setCompassDirection ()
-	{
-		cameraObject.transform.eulerAngles = new Vector3 (0, currentLoc.Heading, 0);
-		mapObject.transform.Rotate(Vector3.up, -Input.compass.trueHeading);
 	}
 
 	public void setMapOrientation(float heading){
@@ -148,7 +135,6 @@ public class SceneManager : MonoBehaviour {
 		cameraPosition.transform.position = newPosition;
 
 		//update hud camera
-		Camera hudCamera = playerObject.GetComponentInChildren<Camera>();
 		Quaternion lookAt = new Quaternion();
 		lookAt.SetLookRotation(UnityEngine.Camera.main.transform.forward, Vector3.up);
 		hudCamera.transform.SetPositionAndRotation(hudCamera.transform.position, lookAt);
