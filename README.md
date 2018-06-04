@@ -44,4 +44,22 @@ Johnny Brady
 Dami Apoeso
 
 ## Demonstration
-https://imgur.com/gallery/h2Wrc
+
+`18W`
+
+[Figuring things out](https://imgur.com/gallery/h2Wrc)
+
+`18S`
+
+[Login](https://i.imgur.com/WlyjqUN.gifv)
+
+[Menu](https://i.imgur.com/NiL5xjM.gifv)
+
+[Search](https://i.imgur.com/rhxI2cH.gifv)
+
+[Annotation](https://i.imgur.com/XOHdBMq.gifv)
+
+[Player Location](https://i.imgur.com/TOURQ7M.gifv)
+
+
+
