@@ -422,7 +422,6 @@ public class UIManager : MonoBehaviour {
 			displayNetworkError ();
 		}
 	}
-		
 
 	public void resetUI() {
 		annotationInput.gameObject.SetActive (false);
@@ -438,7 +437,9 @@ public class UIManager : MonoBehaviour {
 		hikeButton.gameObject.SetActive (false);
 		exitSelectionButton.gameObject.SetActive (false);
 		recenterButton.gameObject.SetActive (false);
-        transitionHikePanel.TriggerFadeOut();
+        cameraHandler.turnOffCams();
+        if(isHiking)
+            transitionHikePanel.TriggerFadeOut();   
 		if(menuHandler.isErrorOpen && errorText.text != "Unable to detect GPS location. Please reload HikAR.")
 			menuHandler.CloseError ();
 		if (menuHandler.isOpen)

@@ -34,7 +34,7 @@ public class CameraHandler : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.touchCount > 0 && HUDRect.Contains (Input.GetTouch (0).position)) {
+        if (Input.touchCount > 0 && HUDRect.Contains (Input.GetTouch (0).position) && UIManagerObject.inAR) {
 			expand2D (true);
 			UIManagerObject.enable2D (true);
 		}
@@ -59,8 +59,11 @@ public class CameraHandler : MonoBehaviour {
 	}
 
 	public void enableSearchMap() {
-		SearchCam.enabled = true;
+        SearchCam.gameObject.SetActive(true);
+        SearchCam.enabled = true;
+        HUDCam.gameObject.SetActive(false);
 		HUDCam.enabled = false;
+        Cam2D.gameObject.SetActive(false);
 		Cam2D.enabled = false;
 		SearchCam.depth = 3; //highest depth in scene
 	}
@@ -89,4 +92,10 @@ public class CameraHandler : MonoBehaviour {
 		Cam2D.depth = -1;
 		ARCam.depth = -1;
 	}
+
+    public void turnOffCams(){
+        SearchCam.gameObject.SetActive(false);
+        Cam2D.gameObject.SetActive(false);
+        HUDCam.gameObject.SetActive(false);
+    }
 }

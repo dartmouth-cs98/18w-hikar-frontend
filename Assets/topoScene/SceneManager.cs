@@ -11,7 +11,7 @@ using Vuforia;
 public class SceneManager : MonoBehaviour {
 
     //camera Object
-    public Camera hudCamera;
+    public Camera hudCamera;    
 
 	//mapBox
 	public GameObject mapObject;
