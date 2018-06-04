@@ -22,7 +22,7 @@ Overpass Turbo -- Used to query OpenStreetMaps for trail information which is th
 1. Download the Unity project and open in Unity
 2. Go to File -> Build -> Build Settings and choose the mobile platform you want to deploy to (iOS or Android)
 
-    *For Android*: You will need to [download and setup the Android SDK for Unity](https://docs.unity3d.com/Manual/android-sdksetup.html)
+    *For Android*: You will need to [download and setup the Android SDK for Unity](https://docs.unity3d.com/Manual/android-sdksetup.html) (Minimum API level: Android 4.4 Kit-Kat)
 3. Select Build and Run with your mobile device connected
 4. For iOS, the app should open in Xcode and install on your phone. Make sure you have the correct signing certificates.
    
