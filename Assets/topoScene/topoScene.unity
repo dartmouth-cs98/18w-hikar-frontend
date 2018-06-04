@@ -4379,7 +4379,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "HikAR v1.5.1\nMade in Hanover, NH\n\xA9Dartmouth College"
+  m_Text: "HikAR v1.7.1\nMade in Hanover, NH\n\xA9Dartmouth College"
 --- !u!222 &752870518
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5652,6 +5652,7 @@ GameObject:
   - component: {fileID: 938390820}
   - component: {fileID: 938390817}
   - component: {fileID: 938390819}
+  - component: {fileID: 938390818}
   m_Layer: 0
   m_Name: CameraHUD
   m_TagString: hudCamera
@@ -5695,6 +5696,21 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &938390818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 938390816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03c1176ef30154c3ba573bc281801fc6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _camera: {fileID: 938390817}
+  _mapRoot: {fileID: 97133399}
+  _mapHolder: {fileID: 1778709996}
+  _playerRoot: {fileID: 656005450}
 --- !u!124 &938390819
 Behaviour:
   m_ObjectHideFlags: 0
